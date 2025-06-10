@@ -1,18 +1,18 @@
-version: '3.8'
-
 services:
   backend:
+    container_name: goalsight-backend
     build: ./backend
     ports:
-      - "5000:5000"
+      - "8000:5000"
     volumes:
       - ./backend:/app
     environment:
       - FLASK_ENV=development
-    depends_on:
-      - frontend
+    networks:
+      - goalsight-network
 
   frontend:
+    container_name: goalsight-frontend
     build: ./frontend
     ports:
       - "3000:3000"
@@ -20,6 +20,10 @@ services:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - REACT_APP_API_URL=http://localhost:5000
-    depends_on:
-      - backend 
+      - REACT_APP_API_URL=http://localhost:8000
+    networks:
+      - goalsight-network
+
+networks:
+  goalsight-network:
+    driver: bridge 
