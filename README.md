@@ -5,11 +5,11 @@ A web page with an AI tool that aggregates and structures advanced football stat
 ## Project Structure
 
 ```
-├── backend/           # Flask backend
-│   ├── app.py        # Main application file
+├── backend/           
+│   ├── app.py        
 │   ├── requirements.txt
-│   └── ml/          # Machine learning modules
-├── frontend/         # React frontend
+│   └── ml/          
+├── frontend/         
 │   ├── src/
 │   └── package.json
 ├── docker-compose.yml
