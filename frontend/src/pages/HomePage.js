@@ -12,7 +12,7 @@ function HomePage() {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get('http://localhost:8000/');
+        const response = await axios.get('http://localhost:5050/');
         setText(response.data.message);
       } catch (error) {
         console.error('Error fetching data:', error);

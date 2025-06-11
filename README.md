@@ -6,9 +6,14 @@ A web page with an AI tool that aggregates and structures advanced football stat
 
 ```
 ├── backend/           
-│   ├── app.py        
+│   ├── manage.py     # Django management script
 │   ├── requirements.txt
-│   └── ml/          
+│   ├── api/         # Django API app
+│   │   ├── views.py # API views
+│   │   └── urls.py  # API URL routing
+│   └── backend/     # Django project settings
+│       ├── settings.py
+│       └── urls.py
 ├── frontend/         
 │   ├── src/
 │   └── package.json
@@ -26,17 +31,27 @@ A web page with an AI tool that aggregates and structures advanced football stat
    ```
 4. Access the application:
    - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5000
+   - Backend API: http://localhost:5050
 
 ## Development
 
 ### Backend
-- Python 3.8+
-- Flask
-- Machine learning libraries (numpy, pandas, scikit-learn)
+- Python 3.11+
+- Django 5.0.2
+- Django REST framework
 
 ### Frontend
-- Node.js
+- Node.js 18
 - React
 - Material-UI
 - Axios for API calls
+
+## API Endpoints
+
+### Django Endpoints
+- `GET /api/`: Returns API data
+
+## Docker Configuration
+- Backend runs on port 8000
+- Frontend runs on port 3000
+- Both services are connected through a Docker network
