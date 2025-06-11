@@ -3,22 +3,32 @@
 A web page with an AI tool that aggregates and structures advanced football statistics from various sources, provides convenient visualizations and summaries of teams and tournaments, and allows you to quickly and intuitively find the information you need. The platform will become a central hub for all football analytics and will greatly simplify the work of coaches, journalists and fans.
 
 ## Project Structure
-
 ```
-├── backend/           
-│   ├── manage.py     # Django management script
-│   ├── requirements.txt
-│   ├── api/         # Django API app
-│   │   ├── views.py # API views
-│   │   └── urls.py  # API URL routing
-│   └── backend/     # Django project settings
-│       ├── settings.py
-│       └── urls.py
-├── frontend/         
-│   ├── src/
-│   └── package.json
-├── docker-compose.yml
-└── README.md
+GoalSight/
+├── backend/                 # Django backend
+│   ├── api/                # API application
+│   │   ├── views.py        # API views
+│   │   ├── urls.py         # API URL configuration
+│   │   └── models.py       # Database models
+│   ├── backend/            # Django project settings
+│   │   ├── settings.py     # Project settings
+│   │   └── urls.py         # Main URL configuration
+│   ├── manage.py           # Django management script
+│   └── requirements.txt    # Python dependencies
+│
+├── frontend/               # React frontend
+│   ├── src/               # Source files
+│   │   ├── components/    # React components
+│   │   ├── App.tsx        # Main application component
+│   │   └── index.tsx      # Application entry point
+│   ├── public/            # Static files
+│   ├── package.json       # Node.js dependencies
+│   ├── tsconfig.json      # TypeScript configuration
+│   ├── tailwind.config.js # Tailwind CSS configuration
+│   └── postcss.config.js  # PostCSS configuration
+│
+├── docker-compose.yml     # Docker Compose configuration
+└── .gitignore            # Git ignore rules
 ```
 
 ## Setup Instructions
@@ -42,8 +52,9 @@ A web page with an AI tool that aggregates and structures advanced football stat
 
 ### Frontend
 - Node.js 18
-- React
-- Material-UI
+- React 18
+- TypeScript
+- Tailwind CSS
 - Axios for API calls
 
 ## API Endpoints
