@@ -1,13 +1,17 @@
+version: '3.8'
+
 services:
   backend:
     container_name: goalsight-backend
     build: ./backend
     ports:
-      - "5050:5000"
+      - "8000:8000"
     volumes:
-      - ./backend:/backend
+      - ./backend:/app
     environment:
-      - PYTHONUNBUFFERED=1
+      - DEBUG=1
+      - DJANGO_SETTINGS_MODULE=backend.settings
+    command: python manage.py runserver 0.0.0.0:8000
     networks:
       - goalsight-network
 
@@ -20,7 +24,10 @@ services:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - REACT_APP_API_URL=http://localhost:8000
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - backend
     networks:
       - goalsight-network
 
