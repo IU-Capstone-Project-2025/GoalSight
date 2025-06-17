@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-interface BackendData {
+interface BackendResponse {
     message: string;
 }
 
 const BackendData: React.FC = () => {
-    const [data, setData] = useState<BackendData | null>(null);
+    const [data, setData] = useState<BackendResponse | null>(null);
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -14,7 +14,7 @@ const BackendData: React.FC = () => {
         const fetchData = async () => {
             try {
                 console.log('Attempting to fetch data from backend...');
-                const response = await axios.get<BackendData>('http://localhost:8000/api/', {
+                const response = await axios.get<BackendResponse>('http://localhost:8000/api/', {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
