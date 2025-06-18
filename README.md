@@ -77,7 +77,7 @@ GoalSight/
    ```
 4. Access the application:
    - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5050
+   - Backend API: http://localhost:8000
 
 ## Development
 
