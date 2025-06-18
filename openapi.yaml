@@ -1,0 +1,208 @@
+openapi: 3.0.3
+info:
+  title: GoalSight API
+  version: 1.0.0
+  description: Football API with matches, teams and tournaments
+paths:
+  /matches/:
+    get:
+      operationId: matches_retrieve
+      summary: nearest four matches
+      tags:
+        - matches
+      parameters:
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+          description: today's date
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+        - {}
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  team_1:
+                    type: string
+                  team_2:
+                    type: string
+                  predicted_winner:
+                    type: string
+              example:
+                - id: 123
+                  date: "2025-06-18T19:30:00Z"
+                  home_team: "Arsenal"
+                  away_team: "Chelsea"
+                - id: 124
+                  date: "2025-06-19T21:00:00Z"
+                  home_team: "Real Madrid"
+                  away_team: "Liverpool"
+                - id: 125
+                  date: "2025-06-20T19:30:00Z"
+                  home_team: "PSG"
+                  away_team: "Zenit"
+                - id: 126
+                  date: "2025-06-21T21:00:00Z"
+                  home_team: "CSKA"
+                  away_team: "Liverpool"
+
+  /matches/predict/:
+    post:
+      summary: Match outcome forecast
+      tags:
+        - matches
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                home_team:
+                  type: string
+                  example: Arsenal
+                away_team:
+                  type: string
+                  example: Chelsea
+              required:
+                - home_team
+                - away_team
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  prediction:
+                    type: string
+                    example: Arsenal
+                  confidence:
+                    type: number
+                    example: 0.88
+
+  /teams/:
+    get:
+      operationId: team_retrieve
+      summary: Team statistic
+      tags:
+        - team
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: team title
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+        - {}
+      responses:
+        '200':
+          description: Team statistic
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  country:
+                    type: string
+                  coach:
+                    type: string
+                  market_value:
+                    type: number
+                    format: float
+                  avg_age:
+                    type: number
+                    format: float
+                  last_5_matches_wdl:
+                    type: object
+                  xG:
+                    type: number
+                    format: float
+                  ball_possession:
+                    type: number
+                    format: float
+                  shots_on_target:
+                    type: integer
+                  big_chances_created:
+                    type: integer
+              examples:
+                sample_team_stats:
+                  value:
+                    logo_url: "https://example.com/logo.png"
+                    country: "Spain"
+                    coach: "Luis Enrique"
+                    market_value: 450.5
+                    avg_age: 27.3
+                    last_5_matches_wdl:
+                      wins: 3
+                      draws: 1
+                      losses: 1
+                    xG: 1.8
+                    ball_possession: 56.4
+                    shots_on_target: 7
+                    big_chances_created: 4
+          
+  /tournaments/:
+    get:
+      operationId: teams_title_retrieve
+      summary: Titles of all team in tournament
+      tags:
+      - tournament
+      parameters:
+        - in: query
+          name: tournament_title
+          schema:
+            type: string
+          description: tournament title
+        - in: query
+          name: year
+          schema:
+            type: integer
+          description: year of tournament 
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: Titles and logos of all team in tournament
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    logo_url:
+                      type: string
+                      format: uri
+                example:
+                - name: "Arsenal"
+                  logo_url: "https://example.com/logos/arsenal.png"
+                - name: "Real Madrid"
+                  logo_url: "https://example.com/logos/realmadrid.png"
+                - name: "Bayern Munich"
+                  logo_url: "https://example.com/logos/bayern.png"
+
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

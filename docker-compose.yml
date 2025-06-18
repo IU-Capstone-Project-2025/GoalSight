@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - goalsight-network
+      
   backend:
     container_name: goalsight-backend
     build: ./backend
@@ -10,7 +24,11 @@ services:
       - ./backend:/app
     environment:
       - DEBUG=1
-      - DJANGO_SETTINGS_MODULE=backend.settings
+      - DJANGO_SETTINGS_MODULE=goalsight.settings
+    env_file:
+      - .env
+    depends_on:
+      - db
     command: python manage.py runserver 0.0.0.0:8000
     networks:
       - goalsight-network
@@ -31,6 +49,17 @@ services:
     networks:
       - goalsight-network
 
+  model:
+    build: ./model
+    container_name: model
+    ports:
+      - "8001:8001"
+    networks:
+      - goalsight-network
+
 networks:
   goalsight-network:
     driver: bridge 
+
+volumes:
+  postgres_data:
