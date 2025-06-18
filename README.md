@@ -102,3 +102,7 @@ GoalSight/
 - Backend runs on port 8000
 - Frontend runs on port 3000
 - Both services are connected through a Docker network
+
+## 📘 API Documentation
+
+▶️ [View API Docs via Swagger UI](https://editor.swagger.io/?url=https://raw.githubusercontent.com/IU-Capstone-Project-2025/GoalSight/main/openapi.yaml)
