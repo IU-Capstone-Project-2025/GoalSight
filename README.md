@@ -52,15 +52,21 @@ GoalSight/
 │   └── Dockerfile         # Model Docker configuration
 │
 ├── frontend/               # React frontend
-│   ├── src/               # Source files
-│   │   ├── components/    # React components
-│   │   ├── App.tsx        # Main application component
-│   │   └── index.tsx      # Application entry point
-│   ├── public/            # Static files
-│   ├── package.json       # Node.js dependencies
-│   ├── tsconfig.json      # TypeScript configuration
-│   ├── tailwind.config.js # Tailwind CSS configuration
-│   └── postcss.config.js  # PostCSS configuration
+│   ├── src/                # Source files
+│   │   ├── pages/          # Application pages
+│   │   ├── components/     # Reusable components
+│   │   ├── api/            # API clients and requests
+│   │   ├── styles/         # Global styles and themes
+│   │   ├── utils/          # Helper functions
+│   │   ├── types/          # TypeScript types and interfaces
+│   │   ├── constants/      # Constants and configurations
+│   │   ├── assets/         # Static resources (images, icons)
+│   │   └── index.tsx       # Application entry point
+│   ├── public/             # Static files
+│   ├── package.json        # Node.js dependencies
+│   ├── tsconfig.json       # TypeScript configuration
+│   ├── tailwind.config.js  # Tailwind CSS configuration
+│   └── postcss.config.js   # PostCSS configuration
 │
 ├── docker-compose.yml     # Docker Compose configuration
 ├── openapi.yaml          # OpenAPI specification
