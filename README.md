@@ -6,15 +6,50 @@ A web page with an AI tool that aggregates and structures advanced football stat
 ```
 GoalSight/
 ├── backend/                 # Django backend
-│   ├── api/                # API application
-│   │   ├── views.py        # API views
-│   │   ├── urls.py         # API URL configuration
-│   │   └── models.py       # Database models
-│   ├── backend/            # Django project settings
-│   │   ├── settings.py     # Project settings
-│   │   └── urls.py         # Main URL configuration
-│   ├── manage.py           # Django management script
+│   ├── goalsight/          # Django project
+│   │   ├── goalsight/      # Project settings
+│   │   │   ├── __init__.py
+│   │   │   ├── asgi.py     # ASGI configuration
+│   │   │   ├── settings.py # Project settings
+│   │   │   ├── urls.py     # Main URL configuration
+│   │   │   └── wsgi.py     # WSGI configuration
+│   │   ├── matches/        # Matches Django app
+│   │   │   ├── migrations/ # Database migrations
+│   │   │   ├── __init__.py
+│   │   │   ├── admin.py    # Admin interface
+│   │   │   ├── apps.py     # App configuration
+│   │   │   ├── models.py   # Database models
+│   │   │   ├── tests.py    # Tests
+│   │   │   ├── urls.py     # URL routing
+│   │   │   └── views.py    # Views
+│   │   ├── teams/          # Teams Django app
+│   │   │   ├── migrations/ # Database migrations
+│   │   │   ├── __init__.py
+│   │   │   ├── admin.py    # Admin interface
+│   │   │   ├── apps.py     # App configuration
+│   │   │   ├── models.py   # Database models
+│   │   │   ├── tests.py    # Tests
+│   │   │   ├── urls.py     # URL routing
+│   │   │   └── views.py    # Views
+│   │   ├── tournaments/    # Tournaments Django app
+│   │   │   ├── migrations/ # Database migrations
+│   │   │   ├── __init__.py
+│   │   │   ├── admin.py    # Admin interface
+│   │   │   ├── apps.py     # App configuration
+│   │   │   ├── models.py   # Database models
+│   │   │   ├── tests.py    # Tests
+│   │   │   ├── urls.py     # URL routing
+│   │   │   └── views.py    # Views
+│   │   ├── manage.py       # Django management script
+│   │   └── erd.png         # Entity Relationship Diagram
+│   ├── Dockerfile          # Backend Docker configuration
+│   ├── entrypoint.sh       # Docker entrypoint script
 │   └── requirements.txt    # Python dependencies
+│
+├── model/                  # AI/ML model service
+│   ├── main.py            # Model service entry point
+│   ├── requirements.txt   # Model dependencies
+│   └── Dockerfile         # Model Docker configuration
 │
 ├── frontend/               # React frontend
 │   ├── src/               # Source files
@@ -28,7 +63,8 @@ GoalSight/
 │   └── postcss.config.js  # PostCSS configuration
 │
 ├── docker-compose.yml     # Docker Compose configuration
-└── .gitignore            # Git ignore rules
+├── openapi.yaml          # OpenAPI specification
+└── README.md             # Project documentation
 ```
 
 ## Setup Instructions
