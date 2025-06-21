@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './styles/index.css';
-import MainPage from './pages/MainPage';
+import MainPage from './pages/HomePage';
 import TournamentPage from './pages/TournamentPage';
 
 const root = ReactDOM.createRoot(
