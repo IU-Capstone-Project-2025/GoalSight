@@ -14,3 +14,6 @@ class Team(models.Model):
     ball_possession = models.FloatField()
     shots_on_target = models.IntegerField()
     big_chances_created = models.IntegerField()
+
+    def __str__(self):
+        return self.name
