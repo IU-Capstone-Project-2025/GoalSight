@@ -6,3 +6,6 @@ class Match(models.Model):
     away_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='away_matches')
     date = models.DateField()
 
+    def __str__(self):
+        return f"{self.home_team} vs {self.away_team} ({self.date})"
+

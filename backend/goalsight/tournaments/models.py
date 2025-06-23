@@ -5,4 +5,7 @@ class Tournament(models.Model):
     name = models.CharField(max_length=255)
     year = models.IntegerField()
     teams = models.ManyToManyField(Team, related_name='tournaments')
+
+    def __str__(self):
+        return f"{self.name} ({self.year})"
     
