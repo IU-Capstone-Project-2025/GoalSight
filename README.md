@@ -111,4 +111,4 @@ GoalSight/
 
 ## 📘 API Documentation
 
-▶️ [View API Docs via Swagger UI](https://editor.swagger.io/?url=https://raw.githubusercontent.com/IU-Capstone-Project-2025/GoalSight/main/openapi.yaml)
+▶️ [View API Docs via Swagger UI](https://editor.swagger.io/?url=https://raw.githubusercontent.com/IU-Capstone-Project-2025/GoalSight/refs/heads/main/openapi.yaml)
