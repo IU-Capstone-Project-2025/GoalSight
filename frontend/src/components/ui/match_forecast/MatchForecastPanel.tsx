@@ -1,15 +1,5 @@
 import React from 'react';
-
-type Team = {
-    id: number;
-    name: string;
-    country: string;
-    wins: number;
-    draw: number;
-    loss: number;
-    goals: number;
-    conceded: number;
-};
+import { Team } from '../team_item/Team.types';
 
 type MatchForecastPanelProps = {
     team1: Team;
