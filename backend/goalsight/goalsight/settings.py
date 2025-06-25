@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'teams',
     'tournaments',
     'django_extensions',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -39,6 +40,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = "goalsight.urls"
@@ -126,3 +128,5 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Football API with matches, teams and tournaments',
     'VERSION': '1.0.0',
 }
+
+CORS_ALLOW_ALL_ORIGINS = True
