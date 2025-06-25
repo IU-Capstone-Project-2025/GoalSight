@@ -57,7 +57,7 @@ paths:
     post:
       summary: Match outcome forecast
       tags:
-        - matches
+        - predictions
       requestBody:
         required: true
         content:
