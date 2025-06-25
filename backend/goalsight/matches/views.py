@@ -16,7 +16,7 @@ def matches_list(request):
             return Response({'error': 'Invalid date format. Use YYYY-MM-DD.'}, status=400)
     else:
         date = timezone.now().date()
-    matches = Match.objects.filter(date__gte=date).order_by('date')[:4]
+    matches = Match.objects.filter(date__gte=date).order_by('date')[:5]
     data = MatchSerializer(matches, many=True).data
     return Response(data)
 
