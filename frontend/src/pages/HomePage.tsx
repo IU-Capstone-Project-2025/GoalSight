@@ -3,7 +3,6 @@ import NavigationBar from '../components/navigation/NavigationBar';
 import { NextMatchCard } from '../components/ui/nextMatch/NextMatchCard';
 import { nextMatch } from '../components/ui/nextMatch/nextMatchData';
 import { UpcomingMatches } from '../components/ui/upcomingMatches/UpcomingMatches';
-import { upcomingMatches } from '../components/ui/upcomingMatches/matchesData';
 
 function MainPage() {
     return (
@@ -24,7 +23,7 @@ function MainPage() {
                             </div>
                         </div>
                         <div>
-                            <UpcomingMatches matches={upcomingMatches.slice(0, 4)} />
+                            <UpcomingMatches />
                         </div>
                     </div>
                 </div>
