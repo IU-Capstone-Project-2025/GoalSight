@@ -58,7 +58,7 @@ class PredictionService:
                 },
                 'confidence': float(np.max(probabilities)),
                 'model_type': 'logistic_regression',
-                'model_accuracy': 0.49  # Из ваших результатов
+                'model_accuracy': 0.48  # Из ваших результатов
             }
         except Exception as e:
             return {"error": f"Ошибка предсказания: {str(e)}"}
