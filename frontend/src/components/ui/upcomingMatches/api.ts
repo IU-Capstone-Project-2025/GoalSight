@@ -22,6 +22,6 @@ export async function fetchUpcomingMatches(date: string): Promise<MatchApiRespon
     } else {
       console.error("❌ Unknown error:", error);
     }
-    throw error; // пробрасываем дальше, чтобы UI мог отреагировать (например, показать ошибку)
+    throw error;
   }
 }
