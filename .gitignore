@@ -311,3 +311,5 @@ yarn-error.log*
 .cache/
 .temp/
 .tmp/
+
+test.py

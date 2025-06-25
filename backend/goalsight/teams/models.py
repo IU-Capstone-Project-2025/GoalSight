@@ -15,5 +15,15 @@ class Team(models.Model):
     shots_on_target = models.IntegerField()
     big_chances_created = models.IntegerField()
 
+    #model
+    buildUpPlaySpeed = models.IntegerField(null=True, blank=True)
+    buildUpPlayPassing = models.IntegerField(null=True, blank=True)
+    chanceCreationPassing = models.IntegerField(null=True, blank=True)
+    chanceCreationCrossing = models.IntegerField(null=True, blank=True)
+    chanceCreationShooting = models.IntegerField(null=True, blank=True)
+    defencePressure = models.IntegerField(null=True, blank=True)
+    defenceAggression = models.IntegerField(null=True, blank=True)
+    defenceTeamWidth = models.IntegerField(null=True, blank=True)
+
     def __str__(self):
         return self.name

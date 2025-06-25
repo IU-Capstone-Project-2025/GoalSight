@@ -5,7 +5,7 @@ from teams.models import Team
 from datetime import datetime
 
 API_KEY = "75kwgw7361l0l1ir"
-API_URL = "https://api.sstats.net/games/list?leagueid=15&year=2025"  
+API_URL = "https://api.sstats.net/games/list?leagueid=15&year=2025&IncludeOdds=true"  
 
 class Command(BaseCommand):
     help = "Import matches by API"
@@ -35,10 +35,33 @@ class Command(BaseCommand):
 
             match_date = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
 
+            odds_data = item.get("odds", [])
+            home_odds = away_odds = draw_odds = None
+
+            if odds_data and odds_data[0].get("odds"):
+                for odd in odds_data[0]["odds"]:
+                    if odd["name"] == "Home":
+                        home_odds = odd["value"]
+                    elif odd["name"] == "Away":
+                        away_odds = odd["value"]
+                    elif odd["name"] == "Draw":
+                        draw_odds = odd["value"]
+
             match, created = Match.objects.get_or_create(
                 home_team=home_team,
                 away_team=away_team,
                 date=match_date,
+                defaults={
+                    "home": home_odds,
+                    "away": away_odds,
+                    "draw": draw_odds,
+                }
             )
+
+            if not created:
+                match.home = home_odds
+                match.away = away_odds
+                match.draw = draw_odds
+                match.save()
 
             self.stdout.write(f"{'Create' if created else 'Already exists'} match: {home_team} vs {away_team} ({match_date})")
