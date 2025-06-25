@@ -26,6 +26,14 @@ class Command(BaseCommand):
                         'ball_possession': float(row['ball_possession']) if row['ball_possession'] else 0,
                         'shots_on_target': int(row['shots_on_target']) if row['shots_on_target'] else 0,
                         'big_chances_created': int(row['big_chances_created']) if row['big_chances_created'] else 0,
+                        'buildUpPlaySpeed': int(row['buildUpPlaySpeed']) if row['buildUpPlaySpeed'] else 0,
+                        'buildUpPlayPassing': int(row['buildUpPlayPassing']) if row['buildUpPlayPassing'] else 0,
+                        'chanceCreationPassing': int(row['chanceCreationPassing']) if row['chanceCreationPassing'] else 0,
+                        'chanceCreationCrossing': int(row['chanceCreationCrossing']) if row['chanceCreationCrossing'] else 0,
+                        'chanceCreationShooting': int(row['chanceCreationShooting']) if row['chanceCreationShooting'] else 0,
+                        'defencePressure': int(row['defencePressure']) if row['defencePressure'] else 0,
+                        'defenceAggression': int(row['defenceAggression']) if row['defenceAggression'] else 0,
+                        'defenceTeamWidth': int(row['defenceTeamWidth']) if row['defenceTeamWidth'] else 0,
                     }
                 )
                 action = 'Created' if created else 'Updated'
