@@ -1,15 +1,15 @@
 import csv
 from django.core.management.base import BaseCommand
 from teams.models import Team
+import os
 
 class Command(BaseCommand):
-    help = 'Import team from CSV file'
+    help = 'Import teams from a hardcoded CSV file'
 
-    def add_arguments(self, parser):
-        parser.add_argument('csv_filepath', type=str, help='Path')
+    def handle(self, *args, **kwargs):
+        filepath = os.path.join(os.path.dirname(__file__), '../../data/initial_data.csv')
+        filepath = os.path.abspath(filepath)
 
-    def handle(self, *args, **options):
-        filepath = options['csv_filepath']
         with open(filepath, encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
