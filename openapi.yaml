@@ -53,7 +53,7 @@ paths:
                   home_team: "CSKA"
                   away_team: "Liverpool"
 
-  /matches/predict/:
+  /api/ml/predict/:
     post:
       summary: Match outcome forecast
       tags:
