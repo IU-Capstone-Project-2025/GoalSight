@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import NavigationBar from '../components/navigation/NavigationBar';
 import { Team } from '../components/ui/team_item/Team.types';
 import { TeamItem } from '../components/ui/team_item/TeamItem';
+import MatchForecastPanel from '../components/ui/match_forecast/MatchForecastPanel';
 
 function TournamentPage() {
     const [teams] = useState<Team[]>([
@@ -116,6 +117,21 @@ function TournamentPage() {
         return selectedTeams.includes(teamId) || selectedTeams.length < 2;
     };
 
+    const calculateMatchForecast = () => {
+        if (selectedTeams.length === 2) {
+            const team1 = teams.find((t) => t.id === selectedTeams[0]);
+            const team2 = teams.find((t) => t.id === selectedTeams[1]);
+            if (!team1 || !team2) return null;
+            const team1Score = (team1.wins * 3 + team1.draw) / (team1.wins + team1.draw + team1.loss);
+            const team2Score = (team2.wins * 3 + team2.draw) / (team2.wins + team2.draw + team2.loss);
+            const team1Chance = ((team1Score / (team1Score + team2Score)) * 100).toFixed(1);
+            const team2Chance = (100 - Number(team1Chance)).toFixed(1);
+            return { team1, team2, team1Chance, team2Chance };
+        }
+        return null;
+    };
+    const forecast = calculateMatchForecast();
+
     return (
         <div className="min-h-screen bg-gray-900 text-white">
             <NavigationBar />
@@ -129,6 +145,14 @@ function TournamentPage() {
                             The ultimate football championship featuring the world's best clubs
                         </p>
                     </div>
+                    {forecast && (
+                        <MatchForecastPanel
+                            team1={forecast.team1}
+                            team2={forecast.team2}
+                            team1Chance={forecast.team1Chance}
+                            team2Chance={forecast.team2Chance}
+                        />
+                    )}
                     <div className="bg-gray-800 rounded-lg overflow-hidden">
                         {teams.map((team) => (
                             <TeamItem
