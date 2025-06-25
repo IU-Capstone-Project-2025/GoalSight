@@ -41,7 +41,7 @@ function NavigationBar() {
                                 TOURNAMENT
                             </NavLink>
                         </li>
-                        <li>
+                        {/* <li>
                             <NavLink
                                 to="/about"
                                 className={({ isActive }) =>
@@ -54,7 +54,7 @@ function NavigationBar() {
                             >
                                 ABOUT US
                             </NavLink>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
             </div>

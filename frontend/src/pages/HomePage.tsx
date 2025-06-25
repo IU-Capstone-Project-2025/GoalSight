@@ -4,7 +4,7 @@ import { NextMatchCard } from '../components/ui/nextMatch/NextMatchCard';
 import { UpcomingMatches } from '../components/ui/upcomingMatches/UpcomingMatches';
 import { useMatchesSeparated } from '../components/ui/upcomingMatches/useUpcomingMatches';
 
-function MainPage() {
+function HomePage() {
   const { nextMatch, upcomingMatches, loading } = useMatchesSeparated();
 
   if (loading) {
@@ -51,4 +51,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export default HomePage;

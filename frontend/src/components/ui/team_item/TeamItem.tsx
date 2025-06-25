@@ -48,10 +48,9 @@ export const TeamItem: React.FC<TeamItemProps> = ({
                             <span className="ml-2 text-gray-400 text-sm">{team.country}</span>
                         </div>
                         <div className="flex items-center space-x-4 text-sm text-gray-300">
-                            <span>W: {team.wins}</span>
-                            <span>D: {team.draw}</span>
-                            <span>L: {team.loss}</span>
-                            <span className="text-red-400">Pts: {team.total_points}</span>
+                            <span>W: {team.last_5_matches_wdl.wins}</span>
+                            <span>D: {team.last_5_matches_wdl.draws}</span>
+                            <span>L: {team.last_5_matches_wdl.losses}</span>
                         </div>
                     </div>
                 </div>
