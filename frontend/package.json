@@ -22,6 +22,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "test:ci": "react-scripts test --coverage --watchAll=false --passWithNoTests",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -44,7 +46,9 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
+    "identity-obj-proxy": "^3.0.0",
     "postcss": "^8.4.31",
-    "tailwindcss": "^3.3.0"
+    "tailwindcss": "^3.3.0",
+    "ts-jest": "^29.4.0"
   }
 }
