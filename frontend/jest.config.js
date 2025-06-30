@@ -8,5 +8,10 @@ module.exports = {
   transform: {
     ...tsJestTransformCfg,
   },
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/__tests__/cypress/',
+    '/__tests__/mocks/',
+  ],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };

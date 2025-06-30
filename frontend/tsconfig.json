@@ -48,10 +48,11 @@
       "@assets/*": [
         "assets/*"
       ]
-    }
+    },
+    "types": ["jest"]
   },
   "include": [
     "src",
-    "cypress"
+    "__tests__/cypress"
   ]
 }

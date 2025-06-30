@@ -1,5 +1,5 @@
-import { fetchTeams, fetchTeamStats, fetchMatchPrediction } from '../../frontend/src/components/ui/team_item/tournamentApi';
-import { server } from '../../mocks/server';
+import { fetchTeams, fetchTeamStats, fetchMatchPrediction } from '../../src/components/ui/team_item/tournamentApi';
+import { server } from '../mocks/server';
 import { http, HttpResponse } from 'msw';
 
 describe('fetchTeams', () => {
