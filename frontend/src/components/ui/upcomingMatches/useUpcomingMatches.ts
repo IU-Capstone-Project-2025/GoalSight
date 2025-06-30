@@ -14,6 +14,11 @@ export function useMatchesSeparated() {
         setNextMatch(data[0] || null);
         setUpcomingMatches(data.slice(1, 5));
       })
+      .catch((error) => {
+        console.error('Error fetching upcoming matches:', error);
+        setNextMatch(null);
+        setUpcomingMatches([]);
+      })
       .finally(() => setLoading(false));
   }, []);
 
