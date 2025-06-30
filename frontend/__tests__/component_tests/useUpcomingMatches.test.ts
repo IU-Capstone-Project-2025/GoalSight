@@ -1,14 +1,14 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { useMatchesSeparated } from '../components/ui/upcomingMatches/useUpcomingMatches';
-import { MatchApiResponse } from '../components/ui/upcomingMatches/types';
+import { useMatchesSeparated } from '../../src/components/ui/upcomingMatches/useUpcomingMatches';
+import { MatchApiResponse } from '../../src/components/ui/upcomingMatches/types';
 
 // Mock the entire module
-jest.mock('../components/ui/upcomingMatches/api', () => ({
+jest.mock('../../src/components/ui/upcomingMatches/api', () => ({
     fetchUpcomingMatches: jest.fn()
 }));
 
 // Import the mocked function
-import { fetchUpcomingMatches } from '../components/ui/upcomingMatches/api';
+import { fetchUpcomingMatches } from '../../src/components/ui/upcomingMatches/api';
 const mockFetchUpcomingMatches = fetchUpcomingMatches as jest.MockedFunction<typeof fetchUpcomingMatches>;
 
 describe('useMatchesSeparated Hook', () => {

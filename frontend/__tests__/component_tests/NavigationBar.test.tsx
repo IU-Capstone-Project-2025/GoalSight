@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
-import NavigationBar from '../components/navigation/NavigationBar';
+import NavigationBar from '../../src/components/navigation/NavigationBar';
 
 // Wrapper component to provide router context
 const renderWithRouter = (component: React.ReactElement) => {

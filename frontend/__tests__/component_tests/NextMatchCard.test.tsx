@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { NextMatchCard } from '../components/ui/nextMatch/NextMatchCard';
+import { NextMatchCard } from '../../src/components/ui/nextMatch/NextMatchCard';
 
 describe('NextMatchCard Component', () => {
     const defaultProps = {

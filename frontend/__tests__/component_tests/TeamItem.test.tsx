@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { TeamItem } from '../components/ui/team_item/TeamItem';
-import { Team } from '../components/ui/team_item/Team.types';
+import { TeamItem } from '../../src/components/ui/team_item/TeamItem';
+import { Team } from '../../src/components/ui/team_item/Team.types';
 
 // Mock data for testing
 const mockTeam: Team = {

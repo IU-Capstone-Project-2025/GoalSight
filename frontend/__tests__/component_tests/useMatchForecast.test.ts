@@ -1,13 +1,13 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { useMatchPrediction } from '../components/ui/team_item/useMatchForecast';
+import { useMatchPrediction } from '../../src/components/ui/team_item/useMatchForecast';
 
 // Mock the entire module
-jest.mock('../components/ui/team_item/tournamentApi', () => ({
+jest.mock('../../src/components/ui/team_item/tournamentApi', () => ({
     fetchMatchPrediction: jest.fn()
 }));
 
 // Import the mocked function
-import { fetchMatchPrediction } from '../components/ui/team_item/tournamentApi';
+import { fetchMatchPrediction } from '../../src/components/ui/team_item/tournamentApi';
 const mockFetchMatchPrediction = fetchMatchPrediction as jest.MockedFunction<typeof fetchMatchPrediction>;
 
 describe('useMatchPrediction Hook', () => {

@@ -2,7 +2,7 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
     setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
-    moduleNameMapping: {
+    moduleNameMapper: {
         '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
         '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
             '<rootDir>/__mocks__/fileMock.js',
@@ -11,8 +11,8 @@ module.exports = {
         '^.+\\.(ts|tsx)$': 'ts-jest',
     },
     testMatch: [
-        '<rootDir>/src/**/__tests__/**/*.{ts,tsx}',
-        '<rootDir>/src/**/*.{test,spec}.{ts,tsx}',
+        '<rootDir>/src/**/__tests__/**/*.[jt]s?(x)',
+        '<rootDir>/__tests__/**/*.test.[jt]s?(x)',
     ],
     collectCoverageFrom: [
         'src/**/*.{ts,tsx}',

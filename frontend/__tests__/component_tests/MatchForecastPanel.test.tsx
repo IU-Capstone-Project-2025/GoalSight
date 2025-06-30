@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import MatchForecastPanel from '../components/ui/match_forecast/MatchForecastPanel';
+import MatchForecastPanel from '../../src/components/ui/match_forecast/MatchForecastPanel';
 
 describe('MatchForecastPanel Component', () => {
     const defaultProps = {

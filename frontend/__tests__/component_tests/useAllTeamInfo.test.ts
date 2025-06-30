@@ -1,15 +1,15 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { useAllTeamInfo } from '../components/ui/team_item/useAllTeamInfo';
-import { TeamsApiResponse, TeamStatsApiResponse } from '../components/ui/team_item/Team.types';
+import { useAllTeamInfo } from '../../src/components/ui/team_item/useAllTeamInfo';
+import { TeamsApiResponse, TeamStatsApiResponse } from '../../src/components/ui/team_item/Team.types';
 
 // Mock the entire module
-jest.mock('../components/ui/team_item/tournamentApi', () => ({
+jest.mock('../../src/components/ui/team_item/tournamentApi', () => ({
     fetchTeams: jest.fn(),
     fetchTeamStats: jest.fn()
 }));
 
 // Import the mocked functions
-import { fetchTeams, fetchTeamStats } from '../components/ui/team_item/tournamentApi';
+import { fetchTeams, fetchTeamStats } from '../../src/components/ui/team_item/tournamentApi';
 const mockFetchTeams = fetchTeams as jest.MockedFunction<typeof fetchTeams>;
 const mockFetchTeamStats = fetchTeamStats as jest.MockedFunction<typeof fetchTeamStats>;
 
