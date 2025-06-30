@@ -15,6 +15,7 @@ function NavigationBar() {
                         <li>
                             <NavLink
                                 to="/"
+                                data-cy="nav-home"
                                 end
                                 className={({ isActive }) =>
                                     `text-grey-300 hover:text-red-500 px-3 py-2 rounded-md text-md font-medium transition-colors duration-200 ${
@@ -30,6 +31,7 @@ function NavigationBar() {
                         <li>
                             <NavLink
                                 to="/tournaments"
+                                data-cy="nav-tournament"
                                 className={({ isActive }) =>
                                     `text-grey-300 hover:text-red-500 px-3 py-2 rounded-md text-md font-medium transition-colors duration-200 ${
                                         isActive

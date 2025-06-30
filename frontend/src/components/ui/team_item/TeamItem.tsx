@@ -28,12 +28,13 @@ export const TeamItem: React.FC<TeamItemProps> = ({
     };
 
     return (
-        <div className="bg-gray-800 rounded-lg overflow-hidden">
+        <div className="bg-gray-800 rounded-lg overflow-hidden" data-cy="team-item">
             <div className="flex items-center p-4 border-b border-gray-700 hover:bg-gray-750 cursor-pointer"
                 onClick={handleTeamClick}>
                 <div className="flex items-center">
                     <input
                         id={`checkbox-${team.id}`}
+                        data-cy={`team-checkbox-${team.id}`}
                         type="checkbox"
                         className="mr-4 w-4 h-4 text-red-600 bg-gray-700 border-gray-600 rounded focus:ring-red-500"
                         checked={isSelected}

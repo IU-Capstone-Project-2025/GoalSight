@@ -1,7 +1,11 @@
+/** @type {import("jest").Config} **/
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
-    setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+    setupFilesAfterEnv: [
+    '<rootDir>/jest.setup.ts', 
+    '<rootDir>/src/setupTests.ts' 
+  ],
     moduleNameMapper: {
         '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
         '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
@@ -30,7 +34,12 @@ module.exports = {
         },
     },
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-    testPathIgnorePatterns: ['/node_modules/', '/build/'],
+    testPathIgnorePatterns: [
+    '/node_modules/',
+    '/__tests__/cypress/',
+    '/__tests__/mocks/',
+    '/build/',
+  ],
     transformIgnorePatterns: [
         'node_modules/(?!(axios|react-router|@babel)/)',
     ],
