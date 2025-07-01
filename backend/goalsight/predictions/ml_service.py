@@ -1,4 +1,3 @@
-import pickle
 import joblib
 import json
 import numpy as np
@@ -16,8 +15,7 @@ class PredictionService:
 
     def load_model(self):
         try:
-            # Пути к файлам модели
-            model_path = os.path.join(settings.BASE_DIR, 'ml_models', 'best_logistic_model.pkl')
+            model_path = os.path.join(settings.BASE_DIR, 'ml_models', 'model.pkl')
             scaler_path = os.path.join(settings.BASE_DIR, 'ml_models', 'scaler.pkl')
             features_path = os.path.join(settings.BASE_DIR, 'ml_models', 'features.json')
             mapping_path = os.path.join(settings.BASE_DIR, 'ml_models', 'class_mapping.json')
@@ -37,7 +35,6 @@ class PredictionService:
         if self.model is None:
             return {"error": "The model has not been loaded"}
         try:
-            # Подготовка фичей в правильном порядке
             features_array = []
             for feature_name in self.features:
                 if feature_name in features_dict:
@@ -58,9 +55,9 @@ class PredictionService:
                 },
                 'confidence': float(np.max(probabilities)),
                 'model_type': 'logistic_regression',
-                'model_accuracy': 0.48  # Из ваших результатов
+                'model_accuracy': 0.48
             }
         except Exception as e:
-            return {"error": f"Ошибка предсказания: {str(e)}"}
+            return {"error": f"Prediction error: {str(e)}"}
 
 prediction_service = PredictionService()
