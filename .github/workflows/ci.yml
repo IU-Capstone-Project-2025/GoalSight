@@ -30,7 +30,7 @@ jobs:
       # Use docker-compose to build and run backend and db
       - name: Build and start backend and db containers
         run: |
-          docker-compose -f docker-compose.prod.yml up -d --build
+          docker-compose -f ../../docker-compose.prod.yml up -d --build
       
       - name: Wait for backend DB to be ready
         run: |
