@@ -1,3 +1,25 @@
+      - name: Debug env in backend container
+        run: |
+          docker run --rm \
+            --network ci-network \
+            -e DATABASE_NAME=test_db \
+            -e DATABASE_USER=test_user \
+            -e DATABASE_PASSWORD=test_pass \
+            -e DATABASE_HOST=postgres-backend \
+            -e DATABASE_PORT=5432 \
+            -e DJANGO_SETTINGS_MODULE=goalsight.settings \
+            goalsight-backend env
+      - name: Print Django DB settings
+        run: |
+          docker run --rm \
+            --network ci-network \
+            -e DATABASE_NAME=test_db \
+            -e DATABASE_USER=test_user \
+            -e DATABASE_PASSWORD=test_pass \
+            -e DATABASE_HOST=postgres-backend \
+            -e DATABASE_PORT=5432 \
+            -e DJANGO_SETTINGS_MODULE=goalsight.settings \
+            goalsight-backend python -c "from django.conf import settings; print(settings.DATABASES)"
 name: CI
 
 on:
