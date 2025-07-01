@@ -15,11 +15,9 @@ module.exports = {
         '<rootDir>/__tests__/**/*.test.[jt]s?(x)',
     ],
     collectCoverageFrom: [
-        'src/**/*.{ts,tsx}',
-        '!src/**/*.d.ts',
-        '!src/index.tsx',
-        '!src/react-app-env.d.ts',
-        '!src/setupTests.ts',
+        'src/components/**/*.{ts,tsx}',
+        '!src/components/**/*.d.ts',
+        '!src/components/**/index.tsx',
     ],
     coverageThreshold: {
         global: {
@@ -35,4 +33,5 @@ module.exports = {
         'node_modules/(?!(axios|react-router|@babel)/)',
     ],
     moduleDirectories: ['node_modules', 'src'],
+    coverageDirectory: 'coverage/components',
 };

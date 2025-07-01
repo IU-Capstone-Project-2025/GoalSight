@@ -27,7 +27,10 @@
     "test:api": "jest --config=jest.config.api.js",
     "test:components": "jest --config=jest.config.components.js",
     "test:all": "npm run test:api && npm run test:components",
-    "test:e2e": "npx cypress run"
+    "test:e2e": "npx cypress run",
+    "test:coverage:components": "jest --config=jest.config.components.js --coverage",
+    "test:coverage:api": "jest --config=jest.config.api.js --coverage",
+    "test:coverage:all": "npm run test:coverage:api && npm run test:coverage:components"
   },
   "eslintConfig": {
     "extends": [
