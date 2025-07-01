@@ -56,8 +56,9 @@ jobs:
         
       - name: Create Docker network
         run: docker network create ci-network
-        
+
       - name: Run PostgreSQL container for backend tests
+        id: start_postgres
         run: |
           docker run -d \
             --name postgres-backend \
@@ -67,12 +68,23 @@ jobs:
             -e POSTGRES_PASSWORD=test_pass \
             -p 5433:5432 \
             postgres:15
-            
+
       - name: Wait for PostgreSQL container
+        id: wait_postgres
         run: |
           timeout 30 bash -c 'until docker exec postgres-backend pg_isready -U test_user -d test_db; do sleep 2; done'
-          
+
+      - name: Check PostgreSQL container status
+        id: check_postgres
+        run: |
+          status=$(docker inspect -f '{{.State.Running}}' postgres-backend)
+          if [ "$status" != "true" ]; then
+            echo "PostgreSQL container failed to start. Skipping backend tests."
+            exit 1
+          fi
+
       - name: Run migrations in backend container
+        if: steps.check_postgres.outcome == 'success'
         run: |
           docker run --rm \
             --network ci-network \
@@ -83,8 +95,9 @@ jobs:
             -e DATABASE_PORT=5432 \
             -e DJANGO_SETTINGS_MODULE=goalsight.settings \
             goalsight-backend python goalsight/manage.py migrate
-            
+
       - name: Run tests in backend container
+        if: steps.check_postgres.outcome == 'success'
         run: |
           docker run --rm \
             --network ci-network \
@@ -95,7 +108,7 @@ jobs:
             -e DATABASE_PORT=5432 \
             -e DJANGO_SETTINGS_MODULE=goalsight.settings \
             goalsight-backend python goalsight/manage.py test
-            
+
       - name: Cleanup
         if: always()
         run: |
