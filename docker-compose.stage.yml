@@ -1,0 +1,59 @@
+services:
+  db-stage:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - goalsight-network
+      
+  backend-stage:
+    container_name: goalsight-backend-stage
+    build: 
+      context: ./backend
+      dockerfile: ./Dockerfile.stage
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - DEBUG=1
+      - DJANGO_SETTINGS_MODULE=goalsight.settings
+    env_file:
+      - .env
+    depends_on:
+      - db-stage
+    working_dir: /app/goalsight
+    networks:
+      - goalsight-network
+
+  frontend-stage:
+    container_name: goalsight-frontend-stage
+    build: 
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - backend-stage
+    networks:
+      - goalsight-network
+
+networks:
+  goalsight-network:
+    driver: bridge 
+
+volumes:
+  postgres_data:

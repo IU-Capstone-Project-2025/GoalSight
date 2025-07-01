@@ -15,7 +15,9 @@ services:
       
   backend:
     container_name: goalsight-backend
-    build: ./backend
+    build: 
+      context: ./backend
+      dockerfile: ./Dockerfile.prod
     ports:
       - "8000:8000"
     volumes:
@@ -35,7 +37,9 @@ services:
 
   frontend:
     container_name: goalsight-frontend
-    build: ./frontend
+    build: 
+      context: ./frontend
+      dockerfile: ./Dockerfile
     ports:
       - "3000:3000"
     volumes:
