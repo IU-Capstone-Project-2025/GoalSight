@@ -21,8 +21,11 @@ jobs:
         with:
           python-version: '3.11'
           
-      - name: Install Graphviz system dependencies
-        run: sudo apt-get update && sudo apt-get install -y graphviz graphviz-dev
+      # Install docker-compose
+      - name: Install docker-compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
         
       # Use docker-compose to build and run backend and db
       - name: Build and start backend and db containers
