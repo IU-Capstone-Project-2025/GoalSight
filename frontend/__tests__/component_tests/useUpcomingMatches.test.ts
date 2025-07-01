@@ -2,12 +2,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { useMatchesSeparated } from '../../src/components/ui/upcomingMatches/useUpcomingMatches';
 import { MatchApiResponse } from '../../src/components/ui/upcomingMatches/types';
 
-// Mock the entire module
 jest.mock('../../src/components/ui/upcomingMatches/api', () => ({
     fetchUpcomingMatches: jest.fn()
 }));
 
-// Import the mocked function
 import { fetchUpcomingMatches } from '../../src/components/ui/upcomingMatches/api';
 const mockFetchUpcomingMatches = fetchUpcomingMatches as jest.MockedFunction<typeof fetchUpcomingMatches>;
 
@@ -16,12 +14,17 @@ describe('useMatchesSeparated Hook', () => {
         jest.clearAllMocks();
     });
 
-    it('should initialize with loading state', () => {
+    it('should initialize with loading state', async () => {
         mockFetchUpcomingMatches.mockResolvedValue([]);
         const { result } = renderHook(() => useMatchesSeparated());
+
         expect(result.current.loading).toBe(true);
         expect(result.current.nextMatch).toBe(null);
         expect(result.current.upcomingMatches).toEqual([]);
+
+        await waitFor(() => {
+            expect(result.current.loading).toBe(false);
+        });
     });
 
     it('should fetch matches and separate next match from upcoming matches', async () => {
@@ -42,7 +45,7 @@ describe('useMatchesSeparated Hook', () => {
         });
 
         expect(result.current.nextMatch).toEqual(mockMatches[0]);
-        expect(result.current.upcomingMatches).toEqual(mockMatches.slice(1, 5)); // Only first 4 upcoming matches
+        expect(result.current.upcomingMatches).toEqual(mockMatches.slice(1, 5));
         expect(mockFetchUpcomingMatches).toHaveBeenCalledTimes(1);
     });
 

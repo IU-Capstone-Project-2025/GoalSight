@@ -2,13 +2,11 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { useAllTeamInfo } from '../../src/components/ui/team_item/useAllTeamInfo';
 import { TeamsApiResponse, TeamStatsApiResponse } from '../../src/components/ui/team_item/Team.types';
 
-// Mock the entire module
 jest.mock('../../src/components/ui/team_item/tournamentApi', () => ({
     fetchTeams: jest.fn(),
     fetchTeamStats: jest.fn()
 }));
 
-// Import the mocked functions
 import { fetchTeams, fetchTeamStats } from '../../src/components/ui/team_item/tournamentApi';
 const mockFetchTeams = fetchTeams as jest.MockedFunction<typeof fetchTeams>;
 const mockFetchTeamStats = fetchTeamStats as jest.MockedFunction<typeof fetchTeamStats>;
@@ -18,10 +16,9 @@ describe('useAllTeamInfo Hook', () => {
         jest.clearAllMocks();
     });
 
-    it('should initialize with loading state', () => {
+    it('should initialize with loading state', async () => {
         mockFetchTeams.mockResolvedValue([]);
         mockFetchTeamStats.mockResolvedValue({
-            logoUrl: 'test-logo.png',
             country: 'Test Country',
             coach: 'Test Coach',
             market_value: 100000000,
@@ -30,11 +27,18 @@ describe('useAllTeamInfo Hook', () => {
             xG: 1.5,
             ball_possession: 60,
             shots_on_target: 5,
-            big_chances_created: 2
+            big_chances_created: 2,
+            logoUrl: 'logo.png'
         });
+
         const { result } = renderHook(() => useAllTeamInfo());
+
         expect(result.current.loadingTeams).toBe(true);
         expect(result.current.teams).toEqual([]);
+
+        await waitFor(() => {
+            expect(result.current.loadingTeams).toBe(false);
+        });
     });
 
     it('should fetch teams and their stats successfully', async () => {
@@ -44,7 +48,6 @@ describe('useAllTeamInfo Hook', () => {
         ];
 
         const mockStatsResponse = {
-            logoUrl: 'test-logo.png',
             country: 'Test Country',
             coach: 'Test Coach',
             market_value: 100000000,
@@ -53,11 +56,13 @@ describe('useAllTeamInfo Hook', () => {
             xG: 1.5,
             ball_possession: 60,
             shots_on_target: 5,
-            big_chances_created: 2
+            big_chances_created: 2,
+            logoUrl: 'logo.png'
         };
 
         mockFetchTeams.mockResolvedValue(mockTeamsResponse);
         mockFetchTeamStats.mockResolvedValue(mockStatsResponse);
+
         const { result } = renderHook(() => useAllTeamInfo());
 
         await waitFor(() => {
@@ -74,6 +79,7 @@ describe('useAllTeamInfo Hook', () => {
     it('should handle API errors gracefully', async () => {
         const error = new Error('API Error');
         mockFetchTeams.mockRejectedValue(error);
+
         const { result } = renderHook(() => useAllTeamInfo());
 
         await waitFor(() => {
@@ -89,7 +95,6 @@ describe('useAllTeamInfo Hook', () => {
         ];
 
         const mockStatsResponse = {
-            logoUrl: 'test-logo.png',
             country: 'Test Country',
             coach: 'Test Coach',
             market_value: 100000000,
@@ -98,11 +103,13 @@ describe('useAllTeamInfo Hook', () => {
             xG: 1.5,
             ball_possession: 60,
             shots_on_target: 5,
-            big_chances_created: 2
+            big_chances_created: 2,
+            logoUrl: 'logo.png'
         };
 
         mockFetchTeams.mockResolvedValue(mockTeamsResponse);
         mockFetchTeamStats.mockResolvedValue(mockStatsResponse);
+
         const { result } = renderHook(() => useAllTeamInfo());
 
         await waitFor(() => {
@@ -115,4 +122,4 @@ describe('useAllTeamInfo Hook', () => {
             losses: 1
         });
     });
-}); 
+});

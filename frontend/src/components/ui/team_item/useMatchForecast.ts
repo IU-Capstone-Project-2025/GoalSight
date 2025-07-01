@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { MatchPredictionApiResponse, MatchPrediction } from './Team.types';
 import { fetchMatchPrediction } from './tournamentApi';
+import { MatchPrediction } from './Team.types';
 
 export function useMatchPrediction(homeTeam: string | null, awayTeam: string | null) {
   const [prediction, setPrediction] = useState<MatchPrediction | null>(null);
@@ -9,37 +9,50 @@ export function useMatchPrediction(homeTeam: string | null, awayTeam: string | n
   useEffect(() => {
     if (!homeTeam || !awayTeam) return;
 
-    setLoadingPrediction(true);
+    let isMounted = true;
 
-    fetchMatchPrediction(homeTeam, awayTeam)
-      .then((data: MatchPredictionApiResponse) => {
-        const { prediction, confidence } = data;
-        const conf = confidence * 100;
+    async function getPrediction() {
+      setLoadingPrediction(true);
 
-        let result: MatchPrediction;
-        if (prediction === homeTeam) {
+      try {
+        const data = await fetchMatchPrediction(homeTeam!, awayTeam!);
+        if (!isMounted) return;
+
+        const conf = data.confidence * 100;
+        let result: MatchPrediction | null = null;
+
+        if (data.prediction === homeTeam) {
           result = {
-            name1: homeTeam,
+            name1: homeTeam!,
             confidence1: parseFloat(conf.toFixed(1)),
-            name2: awayTeam,
+            name2: awayTeam!,
             confidence2: parseFloat((100 - conf).toFixed(1)),
           };
         } else {
           result = {
-            name1: awayTeam,
+            name1: awayTeam!,
             confidence1: parseFloat(conf.toFixed(1)),
-            name2: homeTeam,
+            name2: homeTeam!,
             confidence2: parseFloat((100 - conf).toFixed(1)),
           };
         }
 
         setPrediction(result);
-      })
-      .catch((e) => {
+      } catch (e) {
+        if (!isMounted) return;
         console.error(e);
         setPrediction(null);
-      })
-      .finally(() => setLoadingPrediction(false));
+      } finally {
+        if (!isMounted) return;
+        setLoadingPrediction(false);
+      }
+    }
+
+    getPrediction();
+
+    return () => {
+      isMounted = false;
+    };
   }, [homeTeam, awayTeam]);
 
   return { prediction, loadingPrediction };

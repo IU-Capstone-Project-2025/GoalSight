@@ -10,6 +10,8 @@ export function useAllTeamInfo() {
     const [loadingTeams, setLoadingTeams] = useState(true);
 
     useEffect(() => {
+        let isMounted = true;
+
         const loadTeamData = async () => {
             try {
                 const teamResponses: TeamsApiResponse[] = await fetchTeams(TOURNAMENT_TITLE, YEAR);
@@ -40,15 +42,25 @@ export function useAllTeamInfo() {
                     })
                 );
 
-                setTeams(detailedTeams);
+                if (isMounted) {
+                    setTeams(detailedTeams);
+                }
             } catch (error) {
-                console.error("❌ Error loading commands or statistics:", error);
+                if (isMounted) {
+                    console.error("❌ Error loading commands or statistics:", error);
+                }
             } finally {
-                setLoadingTeams(false);
+                if (isMounted) {
+                    setLoadingTeams(false);
+                }
             }
         };
 
         loadTeamData();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     return { teams, loadingTeams };
