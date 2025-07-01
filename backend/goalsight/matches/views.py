@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from .models import Match
 from teams.models import Team
 from django.utils import timezone
-from .serializers import MatchSerializer, MatchPredictionSerializer
+from .serializers import MatchSerializer
 from datetime import datetime
 
 @api_view(['GET'])
@@ -19,13 +19,3 @@ def matches_list(request):
     matches = Match.objects.filter(date__gte=date).order_by('date')[:5]
     data = MatchSerializer(matches, many=True).data
     return Response(data)
-
-# @api_view(['POST'])
-# def get_prediction(request):
-#     home_team = request.data.get("home_team")
-#     away_team = request.data.get("away_team")
-
-#     if not home_team or not away_team:
-#         return Response({"error": "Both 'home_team' and 'away_team' are required."}, status=400)
-#     result = {"prediction": home_team, "confidence": 0.88}
-#     return Response(result)

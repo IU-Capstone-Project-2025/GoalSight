@@ -5,7 +5,3 @@ class MatchSerializer(serializers.Serializer):
     date = serializers.DateField()
     home_team = serializers.CharField()
     away_team = serializers.CharField()
-
-class MatchPredictionSerializer(serializers.Serializer):
-    prediction = serializers.CharField()
-    confidence = serializers.FloatField() 
