@@ -56,7 +56,7 @@ jobs:
             -e DATABASE_PASSWORD=test_pass \
             -e DATABASE_HOST=host.docker.internal \
             -e DATABASE_PORT=5432 \
-            goalsight-backend pytest matches/tests predictions/tests teams/tests tournaments/tests
+            goalsight-backend python goalsight/manage.py test
 
   frontend:
     runs-on: ubuntu-latest
@@ -71,7 +71,15 @@ jobs:
           node-version: '20'
       - name: Install dependencies
         run: npm ci
-      - name: Run tests
-        run: npm test -- --ci --passWithNoTests __tests__/api __tests__/component_tests
+      - name: Run component tests
+        run: npm run test:components
+      - name: Run API integration tests
+        run: npm run test:api
+      - name: Run end-to-end tests
+        run: npm run test:e2e
+      - name: Generate coverage for components
+        run: npm run test:coverage:components
+      - name: Generate coverage for API integration
+        run: npm run test:coverage:api
       - name: Lint
         run: npm run lint || echo "Lint errors (not failing build)"
