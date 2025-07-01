@@ -18,6 +18,8 @@ module.exports = {
         'src/components/**/*.{ts,tsx}',
         '!src/components/**/*.d.ts',
         '!src/components/**/index.tsx',
+        '!src/components/**/api.ts',
+        '!src/components/**/tournamentApi.ts',
     ],
     coverageThreshold: {
         global: {

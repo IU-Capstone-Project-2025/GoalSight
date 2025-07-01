@@ -18,4 +18,30 @@ describe('fetchUpcomingMatches', () => {
 
     await expect(fetchUpcomingMatches('2025-06-24')).rejects.toThrow();
   });
+
+  it('handles axios error with response', async () => {
+    const error = {
+      isAxiosError: true,
+      message: 'Request failed',
+      response: { status: 500, data: { error: 'fail' } },
+    };
+    jest.spyOn(require('axios'), 'get').mockRejectedValueOnce(error);
+    await expect(fetchUpcomingMatches('d')).rejects.toEqual(error);
+  });
+
+  it('handles axios error with request', async () => {
+    const error = {
+      isAxiosError: true,
+      message: 'No response',
+      request: {},
+    };
+    jest.spyOn(require('axios'), 'get').mockRejectedValueOnce(error);
+    await expect(fetchUpcomingMatches('d')).rejects.toEqual(error);
+  });
+
+  it('handles non-axios error', async () => {
+    const error = new Error('Some error');
+    jest.spyOn(require('axios'), 'get').mockRejectedValueOnce(error);
+    await expect(fetchUpcomingMatches('d')).rejects.toThrow('Some error');
+  });
 });
