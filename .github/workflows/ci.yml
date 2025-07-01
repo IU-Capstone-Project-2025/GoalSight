@@ -42,21 +42,19 @@ jobs:
       - name: Run migrations in backend container
         run: |
           docker run --rm \
-            --network host \
             -e DATABASE_NAME=test_db \
             -e DATABASE_USER=test_user \
             -e DATABASE_PASSWORD=test_pass \
-            -e DATABASE_HOST=localhost \
+            -e DATABASE_HOST=host.docker.internal \
             -e DATABASE_PORT=5432 \
             goalsight-backend python goalsight/manage.py migrate
       - name: Run tests in backend container
         run: |
           docker run --rm \
-            --network host \
             -e DATABASE_NAME=test_db \
             -e DATABASE_USER=test_user \
             -e DATABASE_PASSWORD=test_pass \
-            -e DATABASE_HOST=localhost \
+            -e DATABASE_HOST=host.docker.internal \
             -e DATABASE_PORT=5432 \
             goalsight-backend pytest matches/tests predictions/tests teams/tests tournaments/tests
 
