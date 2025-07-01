@@ -12,20 +12,6 @@ jobs:
     defaults:
       run:
         working-directory: backend/goalsight
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: test_db
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_pass
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U test_user -d test_db" 
-          --health-interval=10s 
-          --health-timeout=5s 
-          --health-retries=5
 
     steps:
       - uses: actions/checkout@v4
@@ -38,29 +24,29 @@ jobs:
       - name: Install Graphviz system dependencies
         run: sudo apt-get update && sudo apt-get install -y graphviz graphviz-dev
         
-      - name: Install dependencies
-        working-directory: backend
+      # Use docker-compose to build and run backend and db
+      - name: Build and start backend and db containers
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          
-      - name: Wait for PostgreSQL
+          docker-compose -f docker-compose.prod.yml up -d --build
+      
+      - name: Wait for backend DB to be ready
         run: |
-          timeout 30 bash -c 'until pg_isready -h localhost -p 5432 -U test_user; do sleep 1; done'
+          timeout 60 bash -c 'until docker-compose -f docker-compose.prod.yml exec -T postgres pg_isready -U test_user -d test_db; do sleep 2; done'
         env:
           PGPASSWORD: test_pass
-          
-      - name: Build backend Docker image
-        working-directory: backend
-        run: docker build -f Dockerfile.prod -t goalsight-backend .
-        
-      - name: Create Docker network
-        run: docker network create ci-network
 
-      - name: Run PostgreSQL container for backend tests
-        id: start_postgres
+      - name: Run migrations
         run: |
-          docker run -d \
+          docker-compose -f docker-compose.prod.yml exec -T backend python goalsight/manage.py migrate
+
+      - name: Run backend tests
+        run: |
+          docker-compose -f docker-compose.prod.yml exec -T backend python goalsight/manage.py test
+
+      - name: Stop containers
+        if: always()
+        run: |
+          docker-compose -f docker-compose.prod.yml down
             --name postgres-backend \
             --network ci-network \
             -e POSTGRES_DB=test_db \
