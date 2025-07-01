@@ -40,17 +40,16 @@ GoalSight/
 │   │   │   ├── tests.py    # Tests
 │   │   │   ├── urls.py     # URL routing
 │   │   │   └── views.py    # Views
+│   │   ├── predictions/    # ML service integration
+│   │   ├── ml_models/      # ML models, scalers, mappings
 │   │   ├── manage.py       # Django management script
 │   │   └── erd.png         # Entity Relationship Diagram
 │   ├── Dockerfile          # Backend Docker configuration
 │   ├── entrypoint.sh       # Docker entrypoint script
 │   └── requirements.txt    # Python dependencies
 │
-├── model/                  # AI/ML model service
-│   ├── main.py            # Model service entry point
-│   ├── requirements.txt   # Model dependencies
-│   └── Dockerfile         # Model Docker configuration
-│
+├── notebooks/              # Jupyter notebooks for ML/data analysis
+│   └── ML_part_data.ipynb
 ├── frontend/               # React frontend
 │   ├── src/                # Source files
 │   │   ├── pages/          # Application pages
@@ -72,6 +71,46 @@ GoalSight/
 ├── openapi.yaml          # OpenAPI specification
 └── README.md             # Project documentation
 ```
+
+## Backend Setup & Usage
+
+### Requirements
+- Python 3.11+
+- Django 5.0.2
+- Django REST framework
+
+### Local Development (without Docker)
+
+```bash
+cd backend/goalsight
+python -m venv venv
+source venv/bin/activate
+pip install -r ../requirements.txt
+```
+
+#### Apply migrations and load initial data
+```bash
+python manage.py migrate
+python manage.py import_teams
+python manage.py import_tournaments
+python manage.py fetch_matches
+```
+
+#### Run development server
+```bash
+python manage.py runserver
+```
+
+### Running Backend Tests
+```bash
+python manage.py test
+```
+
+### ML Models
+The `ml_models/` directory contains serialized ML models, scalers, and class mappings used for match outcome predictions.
+
+### Jupyter Notebooks
+The `notebooks/` directory contains Jupyter notebooks for data analysis and building ML models (e.g., `ML_part_data.ipynb`).
 
 ## Setup Instructions
 
