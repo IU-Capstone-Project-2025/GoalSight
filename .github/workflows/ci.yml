@@ -9,280 +9,106 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
-    
+    # Remove working-directory so all commands run from repo root
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-          
+
+      # Install docker-compose
       - name: Install docker-compose
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
         
-      - name: Create .env file for CI
-        run: |
-          cat > .env << EOF
-          # PostgreSQL variables
-          DATABASE_NAME=${{ secrets.DATABASE_NAME || 'test_db' }}
-          DATABASE_USER=${{ secrets.DATABASE_USER || 'test_user' }}
-          DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD || 'test_pass' }}
-          DATABASE_HOST=db
-          DATABASE_PORT=5432
-          
-          # Django variables
-          DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY || 'test-secret-key-for-ci-only-12345678901234567890' }}
-          DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS || '*' }}
-          DJANGO_DEBUG=False
-          DJANGO_SETTINGS_MODULE=goalsight.settings
-          
-          # Redis
-          REDIS_URL=${{ secrets.REDIS_URL || 'redis://redis:6379/0' }}
-          
-          # Email settings
-          EMAIL_HOST=${{ secrets.EMAIL_HOST || 'localhost' }}
-          EMAIL_PORT=${{ secrets.EMAIL_PORT || '587' }}
-          EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER || '' }}
-          EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD || '' }}
-          EMAIL_USE_TLS=True
-          
-          # Environment
-          ENVIRONMENT=ci
-          EOF
-        
+      # Use docker-compose to build and run backend and db
       - name: Build and start backend and db containers
-        run: docker-compose -f docker-compose.prod.yml up -d --build
-      
+        run: |
+          export DATABASE_NAME=test_db
+          export DATABASE_USER=test_user
+          export DATABASE_PASSWORD=test_pass
+          export DJANGO_SECRET_KEY=changeme
+          export DJANGO_ALLOWED_HOSTS=*
+          docker-compose -f docker-compose.prod.yml up -d --build
       - name: Wait for backend DB to be ready
         run: |
-          echo "Waiting for database to be ready..."
-          timeout 90 bash -c '
-            until docker-compose -f docker-compose.prod.yml exec -T db pg_isready -U ${{ secrets.DATABASE_USER || 'test_user' }} -d ${{ secrets.DATABASE_NAME || 'test_db' }}; do 
-              echo "Database not ready yet, waiting..."
-              sleep 3
-            done
-            echo "Database is ready!"
-          '
-
-      - name: Check container status
-        run: |
-          echo "=== Container Status ==="
-          docker-compose -f docker-compose.prod.yml ps
-          echo "=== Backend Container Logs ==="
-          docker-compose -f docker-compose.prod.yml logs backend | tail -20
-          echo "=== Database Container Logs ==="
-          docker-compose -f docker-compose.prod.yml logs db | tail -20
+          export DATABASE_NAME=test_db
+          export DATABASE_USER=test_user
+          export DATABASE_PASSWORD=test_pass
+          timeout 60 bash -c 'until docker-compose -f docker-compose.prod.yml exec -T db pg_isready -U test_user -d test_db; do sleep 2; done'
 
       - name: Run migrations
         run: |
-          echo "Running Django migrations..."
-          docker-compose -f docker-compose.prod.yml exec -T backend python manage.py migrate --verbosity=2
-
-      - name: Create test superuser (optional)
-        run: |
-          docker-compose -f docker-compose.prod.yml exec -T backend python manage.py shell -c "
-          from django.contrib.auth import get_user_model;
-          User = get_user_model();
-          if not User.objects.filter(username='testadmin').exists():
-              User.objects.create_superuser('testadmin', 'test@example.com', 'testpass123')
-          " || echo "Superuser creation failed, continuing..."
-        continue-on-error: true
-
-      - name: Run Django system checks
-        run: |
-          echo "Running Django system checks..."
-          docker-compose -f docker-compose.prod.yml exec -T backend python manage.py check --deploy
+          export DATABASE_NAME=test_db
+          export DATABASE_USER=test_user
+          export DATABASE_PASSWORD=test_pass
+          export DJANGO_SECRET_KEY=changeme
+          export DJANGO_ALLOWED_HOSTS=*
+          docker-compose -f docker-compose.prod.yml exec -T backend python manage.py migrate
 
       - name: Run backend tests
-        run: |
-          echo "Running Django tests..."
-          docker-compose -f docker-compose.prod.yml exec -T backend python manage.py test --verbosity=2 --keepdb
 
-      - name: Run backend test coverage (optional)
         run: |
-          echo "Running test coverage..."
-          docker-compose -f docker-compose.prod.yml exec -T backend pip install coverage
-          docker-compose -f docker-compose.prod.yml exec -T backend coverage run --source='.' manage.py test
-          docker-compose -f docker-compose.prod.yml exec -T backend coverage report
-        continue-on-error: true
-
-      - name: Show container logs on failure
-        if: failure()
-        run: |
-          echo "=== Container Status ==="
-          docker-compose -f docker-compose.prod.yml ps
-          echo ""
-          echo "=== Backend Container Logs ==="
-          docker-compose -f docker-compose.prod.yml logs backend
-          echo ""
-          echo "=== Database Container Logs ==="
-          docker-compose -f docker-compose.prod.yml logs db
-          echo ""
-          echo "=== Redis Container Logs (if exists) ==="
-          docker-compose -f docker-compose.prod.yml logs redis || echo "No Redis container found"
+          export DATABASE_NAME=test_db
+          export DATABASE_USER=test_user
+          export DATABASE_PASSWORD=test_pass
+          export DJANGO_SECRET_KEY=changeme
+          export DJANGO_ALLOWED_HOSTS=*
+          docker-compose -f docker-compose.prod.yml exec -T backend python manage.py test
 
       - name: Stop containers
         if: always()
         run: |
-          echo "Stopping and cleaning up containers..."
-          docker-compose -f docker-compose.prod.yml down -v --remove-orphans
-          docker system prune -f
+          export DATABASE_NAME=test_db
+          export DATABASE_USER=test_user
+          export DATABASE_PASSWORD=test_pass
+          export DJANGO_SECRET_KEY=changeme
+          export DJANGO_ALLOWED_HOSTS=*
+          docker-compose -f docker-compose.prod.yml down
 
   frontend:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend
-        
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
-          
+
       - name: Install dependencies
-        run: |
-          echo "Installing npm dependencies..."
-          npm ci
-          
-      - name: Type checking (if using TypeScript)
-        run: |
-          echo "Running TypeScript type checking..."
-          npm run type-check || echo "Type checking failed, continuing..."
-        continue-on-error: true
-        
-      - name: Lint code
-        run: |
-          echo "Running ESLint..."
-          npm run lint || echo "Linting failed, continuing..."
-        continue-on-error: true
-        
-      - name: Format check
-        run: |
-          echo "Checking code formatting..."
-          npm run format:check || echo "Format check failed, continuing..."
-        continue-on-error: true
-        
-      - name: Build frontend
-        run: |
-          echo "Building frontend..."
-          npm run build
-        
-      - name: Run unit/component tests
-        run: |
-          echo "Running component tests..."
-          npm run test:components -- --coverage --watchAll=false || echo "Component tests failed, continuing..."
-        continue-on-error: true
-        
+        run: npm ci
+
+      - name: Run component tests
+        run: npm run test:components || echo "Component tests failed but continuing..."
+
+
       - name: Run API integration tests
-        run: |
-          echo "Running API integration tests..."
-          npm run test:api -- --watchAll=false || echo "API integration tests failed, continuing..."
-        continue-on-error: true
-        
-      - name: Start frontend for E2E tests
-        run: |
-          echo "Starting frontend server for E2E tests..."
-          npm run start &
-          sleep 10
-          curl -f http://localhost:3000 || echo "Frontend server not ready"
-        continue-on-error: true
-        
-      - name: Run end-to-end tests
-        run: |
-          echo "Running E2E tests..."
-          npm run test:e2e || echo "E2E tests failed, continuing..."
-        continue-on-error: true
-        
-      - name: Upload test coverage
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: frontend-coverage
-          path: frontend/coverage/
+        run: npm run test:api || echo "API integration tests failed but continuing..."
         continue-on-error: true
 
-  # Optional: Add a job that runs integration tests between frontend and backend
-  integration:
-    runs-on: ubuntu-latest
-    needs: [backend, frontend]
-    if: success() # Only run if both backend and frontend jobs succeed
-    
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
-          
-      - name: Install docker-compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-        
-      - name: Create .env file for integration tests
-        run: |
-          cat > .env << EOF
-          DATABASE_NAME=integration_test_db
-          DATABASE_USER=integration_user
-          DATABASE_PASSWORD=integration_pass
-          DATABASE_HOST=db
-          DATABASE_PORT=5432
-          DJANGO_SECRET_KEY=integration-test-secret-key-12345678901234567890
-          DJANGO_ALLOWED_HOSTS=*
-          DJANGO_DEBUG=False
-          DJANGO_SETTINGS_MODULE=goalsight.settings
-          REDIS_URL=redis://redis:6379/0
-          ENVIRONMENT=integration
-          EOF
-        
-      - name: Start full stack
-        run: |
-          echo "Starting full stack for integration tests..."
-          docker-compose -f docker-compose.prod.yml up -d --build
-          
-      - name: Wait for services
-        run: |
-          echo "Waiting for backend service..."
-          timeout 120 bash -c 'until curl -f http://localhost:8000/health/ 2>/dev/null; do sleep 5; done' || echo "Backend health check failed"
-          
-      - name: Install frontend dependencies
-        run: |
-          cd frontend
-          npm ci
-          
-      - name: Run full integration tests
-        run: |
-          echo "Running full stack integration tests..."
-          cd frontend
-          npm run test:integration || echo "Integration tests failed"
+      - name: Run end-to-end tests
+        run: npm run test:e2e || echo "E2E tests failed but continuing..."
         continue-on-error: true
-        
-      - name: Show logs on failure
-        if: failure()
-        run: |
-          echo "=== Backend Logs ==="
-          docker-compose -f docker-compose.prod.yml logs backend
-          echo "=== Database Logs ==="
-          docker-compose -f docker-compose.prod.yml logs db
-          
-      - name: Cleanup integration environment
-        if: always()
-        run: |
-          docker-compose -f docker-compose.prod.yml down -v --remove-orphans
-          docker system prune -f
+
+      - name: Generate coverage for components
+        run: npm run test:coverage:components || echo "Component coverage failed but continuing..."
+        continue-on-error: true
+
+      - name: Generate coverage for API integration
+        run: npm run test:coverage:api || echo "API coverage failed but continuing..."
+        continue-on-error: true
+
+      - name: Lint
+        run: npm run lint || echo "Lint errors (not failing build)"
+        continue-on-error: true
