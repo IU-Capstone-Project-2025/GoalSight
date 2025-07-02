@@ -10,8 +10,11 @@ jobs:
   backend:
     runs-on: ubuntu-latest
     env:
-      DATABASE_USER: postgres
-      DATABASE_NAME: goalsight
+      DATABASE_USER: ${{ secrets.DATABASE_USER }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+      DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
 
     steps:
       - uses: actions/checkout@v4
