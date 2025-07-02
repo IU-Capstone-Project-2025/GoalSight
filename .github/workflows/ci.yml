@@ -28,45 +28,46 @@ jobs:
       # Use docker-compose to build and run backend and db
       - name: Build and start backend and db containers
         run: |
+          export DATABASE_NAME=test_db
+          export DATABASE_USER=test_user
+          export DATABASE_PASSWORD=test_pass
+          export DJANGO_SECRET_KEY=changeme
+          export DJANGO_ALLOWED_HOSTS=*
           docker-compose -f docker-compose.prod.yml up -d --build
-        env:
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-          DATABASE_USER: ${{ secrets.DATABASE_USER }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
       
       - name: Wait for backend DB to be ready
         run: |
-          timeout 60 bash -c 'until docker-compose -f docker-compose.prod.yml exec -T postgres pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do sleep 2; done'
-        env:
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-          DATABASE_USER: ${{ secrets.DATABASE_USER }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          export DATABASE_NAME=test_db
+          export DATABASE_USER=test_user
+          export DATABASE_PASSWORD=test_pass
+          timeout 60 bash -c 'until docker-compose -f docker-compose.prod.yml exec -T db pg_isready -U test_user -d test_db; do sleep 2; done'
 
       - name: Run migrations
         run: |
-          docker-compose -f docker-compose.prod.yml exec -T backend python goalsight/manage.py migrate
-        env:
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-          DATABASE_USER: ${{ secrets.DATABASE_USER }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+          export DATABASE_NAME=test_db
+          export DATABASE_USER=test_user
+          export DATABASE_PASSWORD=test_pass
+          export DJANGO_SECRET_KEY=changeme
+          export DJANGO_ALLOWED_HOSTS=*
+          docker-compose -f docker-compose.prod.yml exec -T backend python manage.py migrate
 
       - name: Run backend tests
         run: |
-          docker-compose -f docker-compose.prod.yml exec -T backend python goalsight/manage.py test
-        env:
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-          DATABASE_USER: ${{ secrets.DATABASE_USER }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+          export DATABASE_NAME=test_db
+          export DATABASE_USER=test_user
+          export DATABASE_PASSWORD=test_pass
+          export DJANGO_SECRET_KEY=changeme
+          export DJANGO_ALLOWED_HOSTS=*
+          docker-compose -f docker-compose.prod.yml exec -T backend python manage.py test
 
       - name: Stop containers
         if: always()
         run: |
+          export DATABASE_NAME=test_db
+          export DATABASE_USER=test_user
+          export DATABASE_PASSWORD=test_pass
+          export DJANGO_SECRET_KEY=changeme
+          export DJANGO_ALLOWED_HOSTS=*
           docker-compose -f docker-compose.prod.yml down
 
 
