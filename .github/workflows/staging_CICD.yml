@@ -63,11 +63,11 @@ jobs:
         run: docker network create goalsight-network || true
 
       - name: Pull latest images
-        run: docker compose -f docker/production/docker-compose.yml pull
+        run: docker compose -f docker/staging/docker-compose.yml pull
         continue-on-error: true
 
       - name: Build and start backend and db containers
-        run: docker compose -f docker/production/docker-compose.yml up -d --build db backend
+        run: docker compose -f docker/staging/docker-compose.yml up -d --build db backend
         continue-on-error: true
 
       - name: Check container status
@@ -75,7 +75,7 @@ jobs:
         continue-on-error: true
 
       - name: Show DB container logs (for debugging)
-        run: docker compose -f docker/production/docker-compose.yml logs db
+        run: docker compose -f docker/staging/docker-compose.yml logs db
         continue-on-error: true
 
       - name: Wait for PostgreSQL to be ready
@@ -87,16 +87,16 @@ jobs:
         continue-on-error: true
 
       - name: Run migrations
-        run: docker compose -f docker/production/docker-compose.yml exec -T backend python manage18 manage.py migrate
+        run: docker compose -f docker/staging/docker-compose.yml exec -T backend python manage18 manage.py migrate
         continue-on-error: false
 
       - name: Run backend tests
-        run: docker compose -f docker/production/docker-compose.yml exec -T backend python manage.py test
+        run: docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py test
         continue-on-error: false
 
       - name: Stop containers
         if: always()
-        run: docker compose -f docker/production/docker-compose.yml down --volumes
+        run: docker compose -f docker/staging/docker-compose.yml down --volumes
 
   frontend:
     runs-on: ubuntu-latest
