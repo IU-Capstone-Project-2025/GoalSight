@@ -90,12 +90,3 @@ jobs:
       - name: Lint
         run: npm run lint || echo "Lint errors (not failing build)"
         continue-on-error: true
-
-services:
-  backend:
-    environment:
-      - DATABASE_USER
-      - DATABASE_NAME
-      - DATABASE_PASSWORD
-      - DJANGO_SECRET_KEY
-      - DJANGO_ALLOWED_HOSTS
