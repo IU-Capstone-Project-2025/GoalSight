@@ -17,7 +17,7 @@ class MatchModelTest(TestCase):
         match = Match.objects.create(home_team=self.team_a, away_team=self.team_b, date="2025-06-18")
         self.assertEqual(match.home_team, self.team_a)
         self.assertEqual(match.away_team, self.team_b)
-        self.assertEqual(str(match.date), "2025-06-18")
+        self.assertEqual(str(match.date), "2026-06-18")
 
 class MatchSerializerTest(TestCase):
     def setUp(self):
