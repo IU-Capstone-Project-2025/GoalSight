@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { MatchPredictionApiResponse, TeamsApiResponse, TeamStatsApiResponse } from './Team.types';
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 export async function fetchTeams(tournament_title: string, year: number): Promise<TeamsApiResponse[]> {
     try {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { MatchApiResponse } from './types';
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 export async function fetchUpcomingMatches(date: string): Promise<MatchApiResponse[]> {
   try {
