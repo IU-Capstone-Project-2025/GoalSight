@@ -9,7 +9,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
       - goalsight-network
       
@@ -19,7 +19,7 @@ services:
       context: ./backend
       dockerfile: ./Dockerfile.stage
     ports:
-      - "8001:8000"
+      - "8000:8000"
     volumes:
       - ./backend:/app
     environment:
@@ -39,7 +39,7 @@ services:
       context: ./frontend
       dockerfile: ./Dockerfile
     ports:
-      - "3001:3000"
+      - "3000:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -49,6 +49,19 @@ services:
       - REACT_APP_API_URL=http://91.108.246.106:8000
     depends_on:
       - backend-stage
+    networks:
+      - goalsight-network
+
+  nginx:
+    container_name: goalsight-nginx-stage
+    build:
+      context: ../..
+      dockerfile: docker/staging/Dockerfile.nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - backend-stage
+      - frontend-stage
     networks:
       - goalsight-network
 

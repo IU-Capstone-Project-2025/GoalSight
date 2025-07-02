@@ -6,18 +6,17 @@ RUN apt-get update && apt-get install -y \
     libpq-dev gcc netcat-openbsd pkg-config python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+COPY ../../backend/requirements.txt .
 
 RUN pip install --upgrade pip setuptools wheel
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-
-COPY . .
+COPY ../../backend .
 
 WORKDIR /app/goalsight
 
-COPY entrypoint.sh /entrypoint.sh
+COPY ../../backend/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
