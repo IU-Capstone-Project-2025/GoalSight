@@ -51,6 +51,11 @@ GoalSight/
 ├── notebooks/              # Jupyter notebooks for ML/data analysis
 │   └── ML_part_data.ipynb
 ├── frontend/               # React frontend
+│   ├── __tests__/          # Frontend tests
+│   │   ├── api/            # API integration tests for frontend (Jest)
+│   │   ├── component_tests/# Component unit tests for frontend (Jest)
+│   │   ├── cypress/        # End-to-end (E2E) tests (Cypress)
+│   │   └── mocks/          # Mock server and test utilities
 │   ├── src/                # Source files
 │   │   ├── pages/          # Application pages
 │   │   ├── components/     # Reusable components
@@ -111,6 +116,23 @@ The `ml_models/` directory contains serialized ML models, scalers, and class map
 
 ### Jupyter Notebooks
 The `notebooks/` directory contains Jupyter notebooks for data analysis and building ML models (e.g., `ML_part_data.ipynb`).
+
+## Frontend testing
+
+Running tests for the frontend parts: react components tests(unit tests), integration tests for API endpoints, and end-to-end tests
+
+```bash
+cd frontend
+npm run test:components
+npm run test:api
+npm run test:e2e
+```
+Gettins code coverage report for component and API integration tests
+
+```bash
+npm run test:coverage:components
+npm run test:coverage:api
+```
 
 ## Setup Instructions
 

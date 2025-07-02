@@ -7,6 +7,32 @@ describe('fetchTeams', () => {
     const data = await fetchTeams('Champions League', 2025);
     expect(data[0].name).toBe('Arsenal');
   });
+
+  it('handles axios error with response', async () => {
+    const error = {
+      isAxiosError: true,
+      message: 'Request failed',
+      response: { status: 500, data: { error: 'fail' } },
+    };
+    jest.spyOn(require('axios'), 'get').mockRejectedValueOnce(error);
+    await expect(fetchTeams('t', 2025)).rejects.toEqual(error);
+  });
+
+  it('handles axios error with request', async () => {
+    const error = {
+      isAxiosError: true,
+      message: 'No response',
+      request: {},
+    };
+    jest.spyOn(require('axios'), 'get').mockRejectedValueOnce(error);
+    await expect(fetchTeams('t', 2025)).rejects.toEqual(error);
+  });
+
+  it('handles non-axios error', async () => {
+    const error = new Error('Some error');
+    jest.spyOn(require('axios'), 'get').mockRejectedValueOnce(error);
+    await expect(fetchTeams('t', 2025)).rejects.toThrow('Some error');
+  });
 });
 
 describe('fetchTeamStats', () => {
@@ -14,6 +40,32 @@ describe('fetchTeamStats', () => {
     const stats = await fetchTeamStats('Arsenal');
     expect(stats.coach).toBe('Mikel Arteta');
     expect(stats.avg_age).toBeGreaterThan(20);
+  });
+
+  it('handles axios error with response', async () => {
+    const error = {
+      isAxiosError: true,
+      message: 'Request failed',
+      response: { status: 500, data: { error: 'fail' } },
+    };
+    jest.spyOn(require('axios'), 'get').mockRejectedValueOnce(error);
+    await expect(fetchTeamStats('t')).rejects.toEqual(error);
+  });
+
+  it('handles axios error with request', async () => {
+    const error = {
+      isAxiosError: true,
+      message: 'No response',
+      request: {},
+    };
+    jest.spyOn(require('axios'), 'get').mockRejectedValueOnce(error);
+    await expect(fetchTeamStats('t')).rejects.toEqual(error);
+  });
+
+  it('handles non-axios error', async () => {
+    const error = new Error('Some error');
+    jest.spyOn(require('axios'), 'get').mockRejectedValueOnce(error);
+    await expect(fetchTeamStats('t')).rejects.toThrow('Some error');
   });
 });
 
@@ -32,5 +84,31 @@ describe('fetchMatchPrediction', () => {
     );
 
     await expect(fetchMatchPrediction('', '')).rejects.toThrow();
+  });
+
+  it('handles axios error with response', async () => {
+    const error = {
+      isAxiosError: true,
+      message: 'Request failed',
+      response: { status: 500, data: { error: 'fail' } },
+    };
+    jest.spyOn(require('axios'), 'post').mockRejectedValueOnce(error);
+    await expect(fetchMatchPrediction('a', 'b')).rejects.toEqual(error);
+  });
+
+  it('handles axios error with request', async () => {
+    const error = {
+      isAxiosError: true,
+      message: 'No response',
+      request: {},
+    };
+    jest.spyOn(require('axios'), 'post').mockRejectedValueOnce(error);
+    await expect(fetchMatchPrediction('a', 'b')).rejects.toEqual(error);
+  });
+
+  it('handles non-axios error', async () => {
+    const error = new Error('Some error');
+    jest.spyOn(require('axios'), 'post').mockRejectedValueOnce(error);
+    await expect(fetchMatchPrediction('a', 'b')).rejects.toThrow('Some error');
   });
 });
