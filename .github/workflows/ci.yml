@@ -23,6 +23,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
+      - name: Create external Docker network
+        run: docker network create goalsight-network || true
+
       - name: Build and start backend and db containers
         run: docker-compose -f docker-compose.prod.yml up -d --build
 
