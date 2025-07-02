@@ -14,7 +14,7 @@ class MatchModelTest(TestCase):
                                             last_5_matches_wdl=["L","L","W","D","W"], xG=1.0, ball_possession=50.0,
                                             shots_on_target=4, big_chances_created=2)
     def test_create_match(self):
-        match = Match.objects.create(home_team=self.team_a, away_team=self.team_b, date="2025-06-18")
+        match = Match.objects.create(home_team=self.team_a, away_team=self.team_b, date="2026-06-18")
         self.assertEqual(match.home_team, self.team_a)
         self.assertEqual(match.away_team, self.team_b)
         self.assertEqual(str(match.date), "2026-06-18")
@@ -29,7 +29,7 @@ class MatchSerializerTest(TestCase):
                                             shots_on_target=4, big_chances_created=2)
 
     def test_serializer_fields(self):
-        match = Match.objects.create(home_team=self.team_a, away_team=self.team_b, date="2025-06-18")
+        match = Match.objects.create(home_team=self.team_a, away_team=self.team_b, date="2026-06-18")
         serializer = MatchSerializer(match)
         expected_fields = {'id', 'home_team', 'away_team', 'date'}
         self.assertEqual(set(serializer.data.keys()), expected_fields)
