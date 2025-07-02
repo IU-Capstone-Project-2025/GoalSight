@@ -80,7 +80,7 @@ jobs:
 
       - name: Wait for PostgreSQL to be ready
         run: |
-          timeout 180 bash -c 'until docker compose -f docker/production/docker-compose.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do echo "Waiting for DB..."; sleep 5; done'
+          timeout 180 bash -c 'until docker compose -f docker/staging/docker-compose.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do echo "Waiting for DB..."; sleep 5; done'
         env:
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}  # Исправлено: используем секрет напрямую
