@@ -9,7 +9,6 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
-    # Remove working-directory so all commands run from repo root
 
     steps:
       - uses: actions/checkout@v4
@@ -19,56 +18,27 @@ jobs:
         with:
           python-version: '3.11'
 
-      # Install docker-compose
       - name: Install docker-compose
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
-        
-      # Use docker-compose to build and run backend and db
+
       - name: Build and start backend and db containers
-        run: |
-          export DATABASE_NAME=test_db
-          export DATABASE_USER=test_user
-          export DATABASE_PASSWORD=test_pass
-          export DJANGO_SECRET_KEY=changeme
-          export DJANGO_ALLOWED_HOSTS=*
-          docker-compose -f docker-compose.prod.yml up -d --build
+        run: docker-compose -f docker-compose.prod.yml up -d --build
+
       - name: Wait for backend DB to be ready
         run: |
-          export DATABASE_NAME=test_db
-          export DATABASE_USER=test_user
-          export DATABASE_PASSWORD=test_pass
-          timeout 60 bash -c 'until docker-compose -f docker-compose.prod.yml exec -T db pg_isready -U test_user -d test_db; do sleep 2; done'
+          timeout 60 bash -c 'until docker-compose -f docker-compose.prod.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do sleep 2; done'
 
       - name: Run migrations
-        run: |
-          export DATABASE_NAME=test_db
-          export DATABASE_USER=test_user
-          export DATABASE_PASSWORD=test_pass
-          export DJANGO_SECRET_KEY=changeme
-          export DJANGO_ALLOWED_HOSTS=*
-          docker-compose -f docker-compose.prod.yml exec -T backend python manage.py migrate
+        run: docker-compose -f docker-compose.prod.yml exec -T backend python manage.py migrate
 
       - name: Run backend tests
-
-        run: |
-          export DATABASE_NAME=test_db
-          export DATABASE_USER=test_user
-          export DATABASE_PASSWORD=test_pass
-          export DJANGO_SECRET_KEY=changeme
-          export DJANGO_ALLOWED_HOSTS=*
-          docker-compose -f docker-compose.prod.yml exec -T backend python manage.py test
+        run: docker-compose -f docker-compose.prod.yml exec -T backend python manage.py test
 
       - name: Stop containers
         if: always()
-        run: |
-          export DATABASE_NAME=test_db
-          export DATABASE_USER=test_user
-          export DATABASE_PASSWORD=test_pass
-          export DJANGO_SECRET_KEY=changeme
-          export DJANGO_ALLOWED_HOSTS=*
-          docker-compose -f docker-compose.prod.yml down
+        run: docker-compose -f docker-compose.prod.yml down
 
   frontend:
     runs-on: ubuntu-latest
@@ -92,7 +62,6 @@ jobs:
       - name: Run component tests
         run: npm run test:components || echo "Component tests failed but continuing..."
 
-
       - name: Run API integration tests
         run: npm run test:api || echo "API integration tests failed but continuing..."
         continue-on-error: true
@@ -111,4 +80,4 @@ jobs:
 
       - name: Lint
         run: npm run lint || echo "Lint errors (not failing build)"
-        continue-on-error: true
+        continue-on-error:
