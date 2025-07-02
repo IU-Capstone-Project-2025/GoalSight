@@ -80,4 +80,4 @@ jobs:
 
       - name: Lint
         run: npm run lint || echo "Lint errors (not failing build)"
-        continue-on-error:
+        continue-on-error: true
