@@ -1,21 +1,27 @@
 services:
   db:
     image: postgres:15-alpine
-    restart: always
+    restart: on-failure  # Изменено с always на on-failure для отладки
     environment:
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USER}  # Исправлено с DATABASE_USER
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}  # Исправлено с DATABASE_PASSWORD
+      POSTGRES_DB: ${DATABASE_NAME}  # Исправлено с DATABASE_NAME
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    shm_size: 1gb  # Увеличение памяти для PostgreSQL
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - goalsight-network
-      
+
   backend:
     container_name: goalsight-backend
-    build: 
+    build:
       context: ../../
       dockerfile: docker/production/Dockerfile.backend
     ports:
@@ -25,15 +31,21 @@ services:
     environment:
       - DEBUG=1
       - DJANGO_SETTINGS_MODULE=goalsight.settings
+      - DATABASE_HOST=db  # Убедитесь, что backend подключается к сервису db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
     depends_on:
-      - db
+      db:
+        condition: service_healthy  # Ждать готовности db
     working_dir: /app/goalsight
     networks:
       - goalsight-network
 
   frontend:
     container_name: goalsight-frontend
-    build: 
+    build:
       context: ../../
       dockerfile: docker/production/Dockerfile.frontend
     ports:
@@ -66,7 +78,7 @@ services:
 networks:
   goalsight-network:
     external: true
-    driver: bridge 
+    driver: bridge
 
 volumes:
   postgres_data:
