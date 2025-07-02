@@ -60,18 +60,21 @@ jobs:
           echo "DATABASE_PORT=$DATABASE_PORT"
         continue-on-error: true
 
-      - name: Debug backend container
-        run: |
-          docker compose -f docker/staging/docker-compose.yml exec -T backend ls -la /app/goalsight
-          docker compose -f docker/staging/docker-compose.yml exec -T backend find /app -name manage.py
-        continue-on-error: true
-
       - name: Create external Docker network
         run: docker network create goalsight-network || true
 
       - name: Pull latest images
         run: docker compose -f docker/staging/docker-compose.yml pull
         continue-on-error: true
+
+      - name: Clean database volume
+        run: docker volume rm $(docker volume ls -q -f name=postgres_data) || true
+        continue-on-error: true
+
+      - name: Reset test database
+        run: |
+          docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py reset_db --noinput
+          docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py migrate
 
       - name: Build and start backend and db containers
         run: docker compose -f docker/staging/docker-compose.yml up -d --build db backend
@@ -91,10 +94,6 @@ jobs:
         env:
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-        continue-on-error: true
-
-      - name: Clean database volume
-        run: docker volume rm $(docker volume ls -q -f name=postgres_data) || true
         continue-on-error: true
 
       - name: Run migrations
