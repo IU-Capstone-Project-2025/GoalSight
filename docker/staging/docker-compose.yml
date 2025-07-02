@@ -36,6 +36,7 @@ services:
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_NAME=${DATABASE_NAME}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
     depends_on:
       db:
         condition: service_healthy  # Ждать готовности db
