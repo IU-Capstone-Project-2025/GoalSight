@@ -17,7 +17,7 @@ jobs:
       DATABASE_HOST: db
       DATABASE_PORT: 5432
       DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+      DJANGO_SECRET_KEY: ${{ secrets.SECRET_KEY }}
       DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
       API_URL: ${{ secrets.API_URL }}
 
