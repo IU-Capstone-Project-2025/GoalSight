@@ -1,5 +1,5 @@
 services:
-  db-stage:
+  db:
     image: postgres:15-alpine
     restart: always
     environment:
@@ -13,55 +13,55 @@ services:
     networks:
       - goalsight-network
       
-  backend-stage:
-    container_name: goalsight-backend-stage
+  backend:
+    container_name: goalsight-backend
     build: 
-      context: ./backend
-      dockerfile: ./Dockerfile.stage
+      context: ../../
+      dockerfile: docker/production/Dockerfile.backend
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
+      - ../../backend:/app
     environment:
       - DEBUG=1
       - DJANGO_SETTINGS_MODULE=goalsight.settings
     env_file:
       - .env
     depends_on:
-      - db-stage
+      - db
     working_dir: /app/goalsight
     networks:
       - goalsight-network
 
-  frontend-stage:
-    container_name: goalsight-frontend-stage
+  frontend:
+    container_name: goalsight-frontend
     build: 
-      context: ./frontend
-      dockerfile: ./Dockerfile
+      context: ../../
+      dockerfile: docker/production/Dockerfile.frontend
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app
+      - ../../frontend:/app
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
-      - REACT_APP_API_URL=${API_URL}
+      - REACT_APP_API_URL=http://${API_URL}:8000
     depends_on:
-      - backend-stage
+      - backend
     networks:
       - goalsight-network
 
   nginx:
-    container_name: goalsight-nginx-stage
+    container_name: goalsight-nginx
     build:
       context: ../..
-      dockerfile: docker/staging/Dockerfile.nginx
+      dockerfile: docker/production/Dockerfile.nginx
     ports:
       - "80:80"
     depends_on:
-      - backend-stage
-      - frontend-stage
+      - backend
+      - frontend
     networks:
       - goalsight-network
 
