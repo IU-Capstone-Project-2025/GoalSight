@@ -41,39 +41,41 @@ jobs:
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
           sudo systemctl start docker
           sudo systemctl enable docker
+          # Проверка установки docker compose
+          docker compose version || echo "docker compose not found"
 
       - name: Create external Docker network
         run: docker network create goalsight-network || true
 
       - name: Pull latest images
-        run: docker-compose -f docker/production/docker-compose.yml pull
+        run: docker compose -f docker/production/docker-compose.yml pull
         continue-on-error: true
 
       - name: Build and start backend and db containers
-        run: docker-compose -f docker/production/docker-compose.yml up -d --build
+        run: docker compose -f docker/production/docker-compose.yml up -d --build
 
       - name: Wait for PostgreSQL to be ready
         run: |
-          timeout 60 bash -c 'until docker-compose -f docker/production/docker-compose.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do echo "Waiting for DB..."; sleep 5; done'
+          timeout 120 bash -c 'until docker compose -f docker/production/docker-compose.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do echo "Waiting for DB..."; sleep 5; done'
         env:
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
 
       - name: Show DB container logs (for debugging)
-        run: docker-compose -f docker/production/docker-compose.yml logs db
+        run: docker compose -f docker/production/docker-compose.yml logs db
         continue-on-error: true
 
       - name: Run migrations
-        run: docker-compose -f docker/production/docker-compose.yml exec -T backend python manage.py migrate
+        run: docker compose -f docker/production/docker-compose.yml exec -T backend python manage.py migrate
         continue-on-error: false
 
       - name: Run backend tests
-        run: docker-compose -f docker/production/docker-compose.yml exec -T backend python manage.py test
+        run: docker compose -f docker/production/docker-compose.yml exec -T backend python manage.py test
         continue-on-error: false
 
       - name: Stop containers
         if: always()
-        run: docker-compose -f docker/production/docker-compose.yml down --volumes
+        run: docker compose -f docker/production/docker-compose.yml down --volumes
 
   frontend:
     runs-on: ubuntu-latest
