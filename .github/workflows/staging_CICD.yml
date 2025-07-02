@@ -40,14 +40,13 @@ jobs:
       - name: Build and start backend and db containers
         run: docker-compose -f docker/production/docker-compose.yml up -d --build
 
-      - name: Show DB container logs (for debugging)
-        if: failure()
-        run: docker-compose -f docker/production/docker-compose.yml logs db
-
       - name: Wait for backend DB to be ready
         run: |
           timeout 60 bash -c 'until docker-compose -f docker/production/docker-compose.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do sleep 2; done'
 
+      - name: Show DB container logs (for debugging)
+        run: docker-compose -f docker/production/docker-compose.yml logs db
+        
       - name: Run migrations
         run: docker-compose -f docker/production/docker-compose.yml exec -T backend python manage.py migrate
 
