@@ -9,6 +9,9 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_USER: postgres
+      DATABASE_NAME: goalsight
 
     steps:
       - uses: actions/checkout@v4
@@ -27,21 +30,21 @@ jobs:
         run: docker network create goalsight-network || true
 
       - name: Build and start backend and db containers
-        run: docker-compose -f docker-compose.prod.yml up -d --build
+        run: docker-compose -f docker/production/docker-compose.yml up -d --build
 
       - name: Wait for backend DB to be ready
         run: |
-          timeout 60 bash -c 'until docker-compose -f docker-compose.prod.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do sleep 2; done'
+          timeout 60 bash -c 'until docker-compose -f docker/production/docker-compose.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do sleep 2; done'
 
       - name: Run migrations
-        run: docker-compose -f docker-compose.prod.yml exec -T backend python manage.py migrate
+        run: docker-compose -f docker/production/docker-compose.yml exec -T backend python manage.py migrate
 
       - name: Run backend tests
-        run: docker-compose -f docker-compose.prod.yml exec -T backend python manage.py test
+        run: docker-compose -f docker/production/docker-compose.yml exec -T backend python manage.py test
 
       - name: Stop containers
         if: always()
-        run: docker-compose -f docker-compose.prod.yml down
+        run: docker-compose -f docker/production/docker-compose.yml down
 
   frontend:
     runs-on: ubuntu-latest
@@ -63,7 +66,7 @@ jobs:
         run: npm ci
 
       - name: Run component tests
-        run: npm run test:components || echo "Component tests failed but continuing..."
+        run: npm run test:components
 
       - name: Run API integration tests
         run: npm run test:api || echo "API integration tests failed but continuing..."
