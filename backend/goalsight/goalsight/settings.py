@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 allowed_hosts = os.getenv('DJANGO_ALLOWED_HOSTS', '')
-ALLOWED_HOSTS = ['*'] if allowed_hosts == '*' else allowed_hosts.split(',')
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
