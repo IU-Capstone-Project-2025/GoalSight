@@ -103,7 +103,6 @@ jobs:
       - name: Run backend tests
         env:
           DJANGO_SECRET_KEY: ${{ secrets.SECRET_KEY }}  # Добавляем ключ
-          DJANGO_DEBUG: "False"
         run: docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py test
         continue-on-error: false
 
