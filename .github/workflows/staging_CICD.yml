@@ -67,6 +67,14 @@ jobs:
         run: docker compose -f docker/staging/docker-compose.yml pull
         continue-on-error: true
 
+      - name: Build and start backend and db containers
+        run: docker compose -f docker/staging/docker-compose.yml up -d --build db backend
+        continue-on-error: true
+
+      - name: Check container status
+        run: docker ps -a
+        continue-on-error: true
+
       - name: Clean database volume
         run: docker volume rm $(docker volume ls -q -f name=postgres_data) || true
         continue-on-error: true
@@ -75,14 +83,6 @@ jobs:
         run: |
           docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py reset_db --noinput
           docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py migrate
-
-      - name: Build and start backend and db containers
-        run: docker compose -f docker/staging/docker-compose.yml up -d --build db backend
-        continue-on-error: true
-
-      - name: Check container status
-        run: docker ps -a
-        continue-on-error: true
 
       - name: Show DB container logs (for debugging)
         run: docker compose -f docker/staging/docker-compose.yml logs db
