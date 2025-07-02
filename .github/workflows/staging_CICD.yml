@@ -57,6 +57,13 @@ jobs:
           echo "DATABASE_NAME=$DATABASE_NAME"
           echo "DATABASE_PASSWORD=${DATABASE_PASSWORD:0:3}..."
           echo "DATABASE_HOST=$DATABASE_HOST"
+          echo "DATABASE_PORT=$DATABASE_PORT"
+        continue-on-error: true
+
+      - name: Debug backend container
+        run: |
+          docker compose -f docker/staging/docker-compose.yml exec -T backend ls -la /app/goalsight
+          docker compose -f docker/staging/docker-compose.yml exec -T backend find /app -name manage.py
         continue-on-error: true
 
       - name: Create external Docker network
@@ -83,7 +90,11 @@ jobs:
           timeout 180 bash -c 'until docker compose -f docker/staging/docker-compose.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do echo "Waiting for DB..."; sleep 5; done'
         env:
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}  # Исправлено: используем секрет напрямую
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+        continue-on-error: true
+
+      - name: Clean database volume
+        run: docker volume rm $(docker volume ls -q -f name=postgres_data) || true
         continue-on-error: true
 
       - name: Run migrations
