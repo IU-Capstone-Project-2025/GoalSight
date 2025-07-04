@@ -1,1 +1,1 @@
-*/1 * * * * python manage.py fetch_matches >> /var/log/cron.log 2>&1
+*/1 * * * * /usr/local/bin/python manage.py fetch_matches >> /var/log/cron.log 2>&1
