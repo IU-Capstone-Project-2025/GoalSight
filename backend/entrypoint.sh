@@ -18,5 +18,8 @@ python manage.py fetch_matches
 echo "📥 Importing tournaments..."
 python manage.py import_tournaments
 
+echo "🔁 Starting cron..."
+service cron start
+
 echo "🚀 Starting the server..."
 exec "$@"
