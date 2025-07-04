@@ -1,3 +1,8 @@
-#!/bin/sh
-echo "Running cron task at $(date)"
-python manage.py fetch_matches
+#!/bin/bash
+
+set -a
+source /app/.env
+set +a
+
+cd /app/goalsight
+/usr/local/bin/python /app/goalsight/manage.py fetch_matches
