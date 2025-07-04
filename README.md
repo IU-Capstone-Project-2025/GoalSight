@@ -225,6 +225,6 @@ To decrypt `.env.gpg` and obtain the `.env` file, you need access to the GPG pri
    ```
 3. **Decrypt the file**:
    ```bash
-   gpg --decrypt .env.gpg
+   gpg --decrypt .env.gpg > .env
    ```
 > **Note:** Never commit decrypted `.env` files to version control!
