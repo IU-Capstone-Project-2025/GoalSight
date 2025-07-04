@@ -13,6 +13,11 @@ RUN pip install --upgrade pip setuptools wheel
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN apt-get update && apt-get install -y cron
+
+COPY ./../backend/cron/crontab.txt /etc/cron.d/app-cron
+RUN chmod 0644 /etc/cron.d/app-cron && crontab /etc/cron.d/app-cron
+
 COPY ../../backend .
 
 WORKDIR /app/goalsight

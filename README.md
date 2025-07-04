@@ -2,6 +2,8 @@
 
 A web page with an AI tool that aggregates and structures advanced football statistics from various sources, provides convenient visualizations and summaries of teams and tournaments, and allows you to quickly and intuitively find the information you need. The platform will become a central hub for all football analytics and will greatly simplify the work of coaches, journalists and fans.
 
+[Link to our deploy](http://goalsight.ru)
+
 ## Project Structure
 ```
 GoalSight/
@@ -15,6 +17,9 @@ GoalSight/
 │   │   │   └── wsgi.py     # WSGI configuration
 │   │   ├── matches/        # Matches Django app
 │   │   │   ├── migrations/ # Database migrations
+│   │   │   ├── management/ # Custom management commands
+│   │   │   │   └── commands/
+│   │   │   │       ├── fetch_matches.py    # Import matches from external sources
 │   │   │   ├── __init__.py
 │   │   │   ├── admin.py    # Admin interface
 │   │   │   ├── apps.py     # App configuration
@@ -24,6 +29,9 @@ GoalSight/
 │   │   │   └── views.py    # Views
 │   │   ├── teams/          # Teams Django app
 │   │   │   ├── migrations/ # Database migrations
+│   │   │   ├── management/ # Custom management commands
+│   │   │   │   └── commands/
+│   │   │   │       ├── import_teams.py     # Import teams from external sources
 │   │   │   ├── __init__.py
 │   │   │   ├── admin.py    # Admin interface
 │   │   │   ├── apps.py     # App configuration
@@ -33,6 +41,9 @@ GoalSight/
 │   │   │   └── views.py    # Views
 │   │   ├── tournaments/    # Tournaments Django app
 │   │   │   ├── migrations/ # Database migrations
+│   │   │   ├── management/ # Custom management commands
+│   │   │   │   └── commands/
+│   │   │   │       ├── import_tournaments.py # Import tournaments from external sources
 │   │   │   ├── __init__.py
 │   │   │   ├── admin.py    # Admin interface
 │   │   │   ├── apps.py     # App configuration
@@ -41,10 +52,15 @@ GoalSight/
 │   │   │   ├── urls.py     # URL routing
 │   │   │   └── views.py    # Views
 │   │   ├── predictions/    # ML service integration
-│   │   ├── ml_models/      # ML models, scalers, mappings
+│   │   ├── ml_models/      # ML models and artifacts
+│   │   │   ├── model.pkl              # Main ML model
+│   │   │   ├── best_logistic_model.pkl# Alternative/best model
+│   │   │   ├── scaler.pkl             # Feature scaler
+│   │   │   ├── features.json          # Feature list
+│   │   │   ├── class_mapping.json     # Class mapping
+│   │   │   └── metrics.json           # Model metrics
 │   │   ├── manage.py       # Django management script
 │   │   └── erd.png         # Entity Relationship Diagram
-│   ├── Dockerfile          # Backend Docker configuration
 │   ├── entrypoint.sh       # Docker entrypoint script
 │   └── requirements.txt    # Python dependencies
 │
@@ -72,9 +88,31 @@ GoalSight/
 │   ├── tailwind.config.js  # Tailwind CSS configuration
 │   └── postcss.config.js   # PostCSS configuration
 │
-├── docker-compose.yml     # Docker Compose configuration
-├── openapi.yaml          # OpenAPI specification
-└── README.md             # Project documentation
+├── docker/                 # Docker configurations for different environments
+│   ├── local/
+│   │   ├── Dockerfile.backend
+│   │   ├── Dockerfile.frontend
+│   │   ├── docker-compose.yml
+│   │   └── .env.gpg
+│   ├── production/
+│   │   ├── Dockerfile.backend
+│   │   ├── Dockerfile.frontend
+│   │   ├── Dockerfile.nginx
+│   │   ├── docker-compose.yml
+│   │   └── nginx/
+│   │       └── nginx.conf
+│   └── staging/
+│       ├── Dockerfile.backend
+│       ├── Dockerfile.frontend
+│       ├── Dockerfile.nginx
+│       ├── docker-compose.yml
+│       └── nginx/
+│           └── nginx.conf
+│
+├── .github/                # GitHub workflows and issue templates
+│   └── ...
+├── openapi.yaml            # OpenAPI specification
+└── README.md               # Project documentation
 ```
 
 ## Backend Setup & Usage
@@ -138,11 +176,12 @@ npm run test:coverage:api
 
 1. Clone the repository
 2. Install Docker and Docker Compose
-3. Run the application:
+3. Go to docker/local
+4. Run the application:
    ```bash
    docker-compose up --build
    ```
-4. Access the application:
+5. Access the application:
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000
 
@@ -173,3 +212,22 @@ npm run test:coverage:api
 ## 📘 API Documentation
 
 ▶️ [View API Docs via Swagger UI](https://editor.swagger.io/?url=https://raw.githubusercontent.com/IU-Capstone-Project-2025/GoalSight/refs/heads/main/openapi.yaml)
+
+## Decrypting .env.gpg
+
+Some environments (e.g., docker/local) use an encrypted environment file `.env.gpg` to store sensitive configuration variables (API keys, secrets, etc.).
+
+To decrypt `.env.gpg` and obtain the `.env` file, you need access to the GPG private key used for encryption.
+
+### Steps to decrypt:
+
+1. **Obtain the private key** (ask @arino4ka_myr).
+2. **Go to docker/local**
+   ```bash
+   cd docker/local
+   ```
+3. **Decrypt the file**:
+   ```bash
+   gpg --decrypt .env.gpg > .env
+   ```
+> **Note:** Never commit decrypted `.env` files to version control!
