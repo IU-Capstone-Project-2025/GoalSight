@@ -2,7 +2,7 @@
 
 A web page with an AI tool that aggregates and structures advanced football statistics from various sources, provides convenient visualizations and summaries of teams and tournaments, and allows you to quickly and intuitively find the information you need. The platform will become a central hub for all football analytics and will greatly simplify the work of coaches, journalists and fans.
 
-[Link to our deploy](goalsight.ru)
+[Link to our deploy](http://goalsight.ru)
 
 ## Project Structure
 ```
