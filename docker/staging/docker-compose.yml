@@ -1,16 +1,16 @@
 services:
   db:
     image: postgres:15-alpine
-    restart: on-failure  # Изменено с always на on-failure для отладки
+    restart: on-failure 
     environment:
-      POSTGRES_USER: ${DATABASE_USER}  # Исправлено с DATABASE_USER
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}  # Исправлено с DATABASE_PASSWORD
-      POSTGRES_DB: ${DATABASE_NAME}  # Исправлено с DATABASE_NAME
+      POSTGRES_USER: ${DATABASE_USER} 
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    shm_size: 1gb  # Увеличение памяти для PostgreSQL
+    shm_size: 1gb 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}"]
       interval: 5s
@@ -31,7 +31,7 @@ services:
     environment:
       - DEBUG=1
       - DJANGO_SETTINGS_MODULE=goalsight.settings
-      - DATABASE_HOST=db  # Убедитесь, что backend подключается к сервису db
+      - DATABASE_HOST=db  
       - DATABASE_PORT=5432
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_NAME=${DATABASE_NAME}
@@ -39,7 +39,7 @@ services:
       - SECRET_KEY=${SECRET_KEY}
     depends_on:
       db:
-        condition: service_healthy  # Ждать готовности db
+        condition: service_healthy 
     working_dir: /app/goalsight
     networks:
       - goalsight-network
