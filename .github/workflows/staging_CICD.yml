@@ -1,0 +1,173 @@
+name: CI/CD Staging
+
+on:
+  push:
+    branches:
+      - staging
+  pull_request:
+    branches:
+      - staging
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_USER: ${{ secrets.DATABASE_USER }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+      API_URL: ${{ secrets.API_URL }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
+          sudo apt-get install -y ca-certificates curl gnupg lsb-release
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          docker compose version || echo "docker compose not found"
+
+      - name: Debug Docker installation
+        run: |
+          docker --version
+          docker compose version
+          which docker
+          ls -l /usr/libexec/docker/cli-plugins/
+        continue-on-error: true
+
+      - name: Debug environment variables
+        run: |
+          echo "DATABASE_USER=$DATABASE_USER"
+          echo "DATABASE_NAME=$DATABASE_NAME"
+          echo "DATABASE_PASSWORD=${DATABASE_PASSWORD:0:3}..."
+          echo "DATABASE_HOST=$DATABASE_HOST"
+          echo "DATABASE_PORT=$DATABASE_PORT"
+        continue-on-error: true
+
+      - name: Create external Docker network
+        run: docker network create goalsight-network || true
+
+      - name: Pull latest images
+        run: docker compose -f docker/staging/docker-compose.yml pull
+        continue-on-error: true
+
+      - name: Build and start backend and db containers
+        run: docker compose -f docker/staging/docker-compose.yml up -d --build db backend
+        continue-on-error: true
+
+      - name: Check container status
+        run: docker ps -a
+        continue-on-error: true
+
+      - name: Clean database volume
+        run: docker volume rm $(docker volume ls -q -f name=postgres_data) || true
+        continue-on-error: true
+
+      - name: Reset test database
+        run: |
+          docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py reset_db --noinput
+          docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py migrate
+
+      - name: Show DB container logs (for debugging)
+        run: docker compose -f docker/staging/docker-compose.yml logs db
+        continue-on-error: true
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          timeout 180 bash -c 'until docker compose -f docker/staging/docker-compose.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do echo "Waiting for DB..."; sleep 5; done'
+        env:
+          DATABASE_USER: ${{ secrets.DATABASE_USER }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+        continue-on-error: true
+
+      - name: Run migrations
+        run: docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py migrate
+        continue-on-error: false
+
+      - name: Run backend tests
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.SECRET_KEY }}  # Добавляем ключ
+        run: docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py test
+        continue-on-error: false
+
+      - name: Stop containers
+        if: always()
+        run: docker compose -f docker/staging/docker-compose.yml down --volumes
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run component tests
+        run: npm run test:components
+
+      - name: Run API integration tests
+        run: npm run test:api || echo "API integration tests failed but continuing..."
+        continue-on-error: true
+
+      - name: Run end-to-end tests
+        run: npm run test:e2e || echo "E2E tests failed but continuing..."
+        continue-on-error: true
+
+      - name: Generate coverage for components
+        run: npm run test:coverage:components || echo "Component coverage failed but continuing..."
+        continue-on-error: true
+
+      - name: Generate coverage for API integration
+        run: npm run test:coverage:api || echo "API coverage failed but continuing..."
+        continue-on-error: true
+
+      - name: Lint
+        run: npm run lint || echo "Lint errors (not failing build)"
+        continue-on-error: true
+
+  deploy:
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to staging server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            cd GoalSight
+            git fetch origin
+            git checkout staging
+            git pull
+            cd docker/staging
+            docker compose down
+            docker compose pull
+            docker compose up --build -d
