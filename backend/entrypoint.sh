@@ -19,7 +19,7 @@ echo "📥 Importing tournaments..."
 python manage.py import_tournaments
 
 echo "🔁 Starting cron..."
-service cron start
+cron &
 
 echo "🚀 Starting the server..."
 exec "$@"
