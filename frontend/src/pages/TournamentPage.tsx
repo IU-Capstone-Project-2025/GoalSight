@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import NavigationBar from '../components/navigation/NavigationBar';
 import { TeamItem } from '../components/ui/team_item/TeamItem';
 import MatchForecastPanel from '../components/ui/match_forecast/MatchForecastPanel';
@@ -47,30 +47,35 @@ function TournamentPage() {
             <NavigationBar />
             <main>
                 <div className="max-w-7xl mx-auto px-6 py-8">
-                    <div className="bg-gradient-to-r from-red-900 to-black rounded-lg p-8 mb-8 text-center">
-                        <h2 className="text-4xl font-bold mb-2">
+                    <div className="bg-gradient-to-r from-red-900 to-black rounded-lg p-8 mb-4 text-center">
+                        <h1 className="text-4xl font-bold mb-4">
                             2025 CLUB TOURNAMENT
-                        </h2>
-                        <p className="text-red-100">
+                        </h1>
+                        <p className='text-xl text-gray-300'>
                             The ultimate football championship featuring the world's best clubs
                         </p>
                     </div>
-                    {selectedTeams.length < 2 && (
-                        <InstructionPanel selectedCount={selectedTeams.length} />
-                    )}
-                    {(selectedTeams.length === 2 && loadingPrediction) &&
-                        <div className="text-center text-gray-300 pt-12">
-                            Loading Prediction...
-                        </div>}
-                    {prediction && (
-                        <MatchForecastPanel
-                            team1={prediction.name1}
-                            team2={prediction.name2}
-                            team1Chance={prediction.confidence1}
-                            team2Chance={prediction.confidence2}
-                        />
-                    )}
-                    <div className="bg-gray-800 rounded-lg overflow-hidden">
+
+                    <div className="sticky top-0 z-10 bg-gray-900 py-4">
+                        {selectedTeams.length < 2 && (
+                            <InstructionPanel selectedCount={selectedTeams.length} />
+                        )}
+                        {(selectedTeams.length === 2 && loadingPrediction) && (
+                            <div className="text-center text-gray-300 text-xl w-full">Loading Prediction...</div>
+                        )}
+                        {prediction && selectedTeams.length === 2 && (
+                            <div className="w-full" data-cy="prediction-panel">
+                                <MatchForecastPanel
+                                    team1={prediction.name1}
+                                    team2={prediction.name2}
+                                    team1Chance={prediction.confidence1}
+                                    team2Chance={prediction.confidence2}
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="bg-gray-800 rounded-lg overflow-hidden mt-4">
                         {teams.map((team) => (
                             <TeamItem
                                 key={team.id}

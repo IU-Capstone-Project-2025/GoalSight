@@ -6,8 +6,7 @@ interface InstructionPanelProps {
 
 const InstructionPanel: React.FC<InstructionPanelProps> = ({ selectedCount }) => {
     return (
-        <div className="bg-gray-800 text-white rounded-lg p-6 mb-8 shadow-lg flex flex-col items-center animate-fade-in border border-red-600">
-            {/* <div className="text-4xl mb-2">⚽️</div> */}
+        <div className="bg-gray-800 text-white rounded-lg p-6 shadow-lg flex flex-1 flex-col items-center justify-center border border-red-600 w-full h-full">
             <h3 className="text-2xl font-semibold mb-2 text-red-400">How does it work?</h3>
             <ol className="list-decimal list-inside text-lg mb-2 text-gray-200">
                 <li>Select <span className="font-bold text-red-400">two teams</span> from the list below</li>
