@@ -4,6 +4,7 @@ import { TeamItem } from '../components/ui/team_item/TeamItem';
 import MatchForecastPanel from '../components/ui/match_forecast/MatchForecastPanel';
 import { useAllTeamInfo } from '../components/ui/team_item/useAllTeamInfo';
 import { useMatchPrediction } from '../components/ui/team_item/useMatchForecast';
+import InstructionPanel from '../components/ui/tournament/InstructionPanel';
 
 function TournamentPage() {
     const { teams, loadingTeams } = useAllTeamInfo();
@@ -54,6 +55,9 @@ function TournamentPage() {
                             The ultimate football championship featuring the world's best clubs
                         </p>
                     </div>
+                    {selectedTeams.length < 2 && (
+                        <InstructionPanel selectedCount={selectedTeams.length} />
+                    )}
                     {(selectedTeams.length === 2 && loadingPrediction) &&
                         <div className="text-center text-gray-300 pt-12">
                             Loading Prediction...
