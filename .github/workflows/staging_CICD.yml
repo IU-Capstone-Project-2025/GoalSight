@@ -153,6 +153,20 @@ jobs:
           docker compose version || echo "docker compose not found"
         working-directory: ./
 
+      - name: Generate .env file for docker-compose
+        run: |
+          cat <<EOF > docker/local/.env
+          DATABASE_USER=${DATABASE_USER}
+          DATABASE_NAME=${DATABASE_NAME}
+          DATABASE_HOST=${DATABASE_HOST}
+          DATABASE_PORT=${DATABASE_PORT}
+          DATABASE_PASSWORD=${DATABASE_PASSWORD}
+          SECRET_KEY=${SECRET_KEY}
+          DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+          API_URL=${API_URL}
+          EOF
+        working-directory: ./
+
       - name: Start full stack (frontend + backend + db)
         run: docker compose -f docker-compose.yml up -d --build
         working-directory: ./docker/local
