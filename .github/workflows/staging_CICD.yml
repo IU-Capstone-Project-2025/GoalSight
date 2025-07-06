@@ -182,8 +182,9 @@ jobs:
           done
         working-directory: ./
 
-      # - name: Run component tests
-      #   run: npm run test:components
+      - name: Run component tests
+        run: npm run test:components
+        continue-on-error: true
 
       - name: Run API integration tests
         run: npm run test:api || echo "API integration tests failed but continuing..."
@@ -191,7 +192,7 @@ jobs:
 
       - name: Run end-to-end tests
         run: npm run test:e2e || echo "E2E tests failed but continuing..."
-        continue-on-error: true
+        # continue-on-error: true
 
       - name: Generate coverage for components
         run: npm run test:coverage:components || echo "Component coverage failed but continuing..."
