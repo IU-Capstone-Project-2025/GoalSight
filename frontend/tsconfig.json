@@ -53,6 +53,7 @@
   },
   "include": [
     "src",
-    "__tests__/cypress"
+    "__tests__",
+    "jest.setup.ts"
   ]
 }
