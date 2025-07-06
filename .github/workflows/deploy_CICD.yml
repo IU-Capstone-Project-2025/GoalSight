@@ -101,6 +101,15 @@ jobs:
 
   frontend:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_USER: ${{ secrets.DATABASE_USER }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+      API_URL: ${{ secrets.DEPLOY_HOST }}
     defaults:
       run:
         working-directory: frontend
@@ -118,8 +127,53 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # - name: Run component tests
-      #   run: npm run test:components
+      - name: Install Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
+          sudo apt-get install -y ca-certificates curl gnupg lsb-release
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          docker compose version || echo "docker compose not found"
+        working-directory: ./
+
+      - name: Generate .env file for docker-compose
+        run: |
+          cat <<EOF > docker/local/.env
+          DATABASE_USER=${DATABASE_USER}
+          DATABASE_NAME=${DATABASE_NAME}
+          DATABASE_HOST=${DATABASE_HOST}
+          DATABASE_PORT=${DATABASE_PORT}
+          DATABASE_PASSWORD=${DATABASE_PASSWORD}
+          SECRET_KEY=${SECRET_KEY}
+          DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+          API_URL=${API_URL}
+          EOF
+        working-directory: ./
+
+      - name: Start full stack (frontend + backend + db)
+        run: docker compose -f docker-compose.yml up -d --build
+        working-directory: ./docker/local
+      
+      - name: Wait for frontend to be ready
+        run: |
+          n=0
+          until [ $n -ge 15 ]; do
+            curl -f http://localhost:3000 && break
+            echo "⏳ Waiting for frontend..."
+            n=$((n+1))
+            sleep 5
+          done
+        working-directory: ./
+
+      - name: Run component tests
+        run: npm run test:components || echo "Components tests failed but continuing..."
+        continue-on-error: true
 
       - name: Run API integration tests
         run: npm run test:api || echo "API integration tests failed but continuing..."
@@ -127,7 +181,7 @@ jobs:
 
       - name: Run end-to-end tests
         run: npm run test:e2e || echo "E2E tests failed but continuing..."
-        continue-on-error: true
+        # continue-on-error: true
 
       - name: Generate coverage for components
         run: npm run test:coverage:components || echo "Component coverage failed but continuing..."
