@@ -30,10 +30,10 @@ export function useMatchPrediction(homeTeam: string | null, awayTeam: string | n
           };
         } else {
           result = {
-            name1: awayTeam!,
-            confidence1: parseFloat(conf.toFixed(1)),
-            name2: homeTeam!,
-            confidence2: parseFloat((100 - conf).toFixed(1)),
+            name1: homeTeam!,
+            confidence1: parseFloat((100 - conf).toFixed(1)),
+            name2: awayTeam!,
+            confidence2: parseFloat(conf.toFixed(1)),
           };
         }
 

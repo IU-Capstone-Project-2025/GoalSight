@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Team } from './Team.types';
 import TeamStatsPanel from './TeamStatsPanel';
 
@@ -30,7 +30,7 @@ export const TeamItem: React.FC<TeamItemProps> = ({
     return (
         <div className="bg-gray-800 rounded-lg overflow-hidden" data-cy="team-item">
             <div className="flex items-center p-4 border-b border-gray-700 hover:bg-gray-750 cursor-pointer"
-                onClick={handleTeamClick}>
+            >
                 <div className="flex items-center">
                     <input
                         id={`checkbox-${team.id}`}
@@ -48,14 +48,9 @@ export const TeamItem: React.FC<TeamItemProps> = ({
                             <span className="font-semibold text-lg">{team.name}</span>
                             <span className="ml-2 text-gray-400 text-sm">{team.country}</span>
                         </div>
-                        <div className="flex items-center space-x-4 text-sm text-gray-300">
-                            <span>W: {team.last_5_matches_wdl.wins}</span>
-                            <span>D: {team.last_5_matches_wdl.draws}</span>
-                            <span>L: {team.last_5_matches_wdl.losses}</span>
-                        </div>
                     </div>
                 </div>
-                <div className="ml-4">
+                <div className="ml-4" onClick={handleTeamClick}>
                     <svg
                         className={`w-5 h-5 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                         fill="none"
