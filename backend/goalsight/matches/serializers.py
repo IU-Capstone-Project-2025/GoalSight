@@ -2,6 +2,6 @@ from rest_framework import serializers
 
 class MatchSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    date = serializers.DateField()
+    date = serializers.DateTimeField()
     home_team = serializers.CharField()
     away_team = serializers.CharField()

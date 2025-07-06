@@ -6,6 +6,9 @@ while ! nc -z db 5432; do
 done
 echo "✅ PostgreSQL is up and running"
 
+echo "📦 Making migrations..."
+python manage.py makemigrations
+
 echo "📦 Applying migrations..."
 python manage.py migrate
 
