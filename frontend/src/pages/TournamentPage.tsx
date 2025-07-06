@@ -42,7 +42,7 @@ function TournamentPage() {
     <div className="min-h-screen bg-gray-900 text-white">
       <NavigationBar />
       <main>
-        <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="bg-gradient-to-r from-red-900 to-black rounded-lg p-8 mb-4 text-center">
             <h1 className="text-4xl font-bold mb-4">
               2025 CLUB TOURNAMENT
