@@ -7,10 +7,6 @@ import { useMatchesSeparated } from '../components/ui/upcomingMatches/useUpcomin
 function HomePage() {
   const { nextMatch, upcomingMatches, loading } = useMatchesSeparated();
 
-  if (loading) {
-    return <div className="text-center text-gray-300 pt-12">Loading matches...</div>;
-  }
-
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <NavigationBar />
@@ -24,25 +20,41 @@ function HomePage() {
               <p className='text-xl text-gray-300 mb-6'>
                 The ultimate football championship featuring the world's best clubs
               </p>
-              {nextMatch && (
+
+              {loading ? (
+                <div className="h-32 bg-gray-700 animate-pulse rounded-lg" />
+              ) : nextMatch ? (
                 <NextMatchCard
                   teamA={nextMatch.home_team}
                   teamB={nextMatch.away_team}
                   date={new Date(nextMatch.date).toISOString().split('T')[0]}
                   time={new Date(nextMatch.date).toTimeString().slice(0, 5)}
                 />
+              ) : (
+                <p className="text-gray-400">No upcoming match found.</p>
               )}
             </div>
+
             <div>
-              <UpcomingMatches matches={upcomingMatches.map((match) => {
-                const dateObj = new Date(match.date);
-                return {
-                  teamA: match.home_team,
-                  teamB: match.away_team,
-                  date: dateObj.toISOString().split('T')[0],
-                  time: dateObj.toTimeString().slice(0, 5),
-                };
-              })} />
+              {loading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="h-24 bg-gray-700 animate-pulse rounded-lg" />
+                  ))}
+                </div>
+              ) : (
+                <UpcomingMatches
+                  matches={upcomingMatches.map((match) => {
+                    const dateObj = new Date(match.date);
+                    return {
+                      teamA: match.home_team,
+                      teamB: match.away_team,
+                      date: dateObj.toISOString().split('T')[0],
+                      time: dateObj.toTimeString().slice(0, 5),
+                    };
+                  })}
+                />
+              )}
             </div>
           </div>
         </div>
