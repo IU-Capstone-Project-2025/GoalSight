@@ -129,6 +129,36 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
+          sudo apt-get install -y ca-certificates curl gnupg lsb-release
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          docker compose version || echo "docker compose not found"
+        working-directory: ./
+
+      - name: Start full stack (frontend + backend + db)
+        run: docker compose -f docker-compose.yml up -d --build
+        working-directory: ./docker/local
+      
+      - name: Wait for frontend to be ready
+        run: |
+          n=0
+          until [ $n -ge 15 ]; do
+            curl -f http://localhost:3000 && break
+            echo "⏳ Waiting for frontend..."
+            n=$((n+1))
+            sleep 5
+          done
+        working-directory: ./
+
       # - name: Run component tests
       #   run: npm run test:components
 
