@@ -58,7 +58,7 @@ class TeamStatsSerializerTest(TestCase):
     def setUp(self):
         self.team = Team.objects.create(
             name="Test Team",
-            logo_url_32="http://example.com/logo.png",
+            logo_url_64="http://example.com/logo.png",
             country="Testland",
             coach="John Doe",
             market_value=123.45,
@@ -83,14 +83,14 @@ class TeamStatsSerializerTest(TestCase):
         data = serializer.data
 
         expected_fields = [
-            'logo_url_32', 'country', 'coach', 'market_value', 'avg_age',
+            'logo_url_64', 'country', 'coach', 'market_value', 'avg_age',
             'xG', 'ball_possession', 'shots_on_target', 'big_chances_created',
             'last_5_matches_wdl'
         ]
 
         self.assertEqual(set(data.keys()), set(expected_fields))
 
-        self.assertEqual(data['logo_url_32'], self.team.logo_url_32)
+        self.assertEqual(data['logo_url_64'], self.team.logo_url_64)
         self.assertEqual(data['country'], self.team.country)
         self.assertEqual(data['coach'], self.team.coach)
         self.assertEqual(data['market_value'], self.team.market_value)
