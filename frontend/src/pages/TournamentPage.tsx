@@ -2,12 +2,12 @@ import { useState } from 'react';
 import NavigationBar from '../components/navigation/NavigationBar';
 import { TeamItem } from '../components/ui/team_item/TeamItem';
 import MatchForecastPanel from '../components/ui/match_forecast/MatchForecastPanel';
-import { useAllTeamInfo } from '../components/ui/team_item/useAllTeamInfo';
+import { useTeams } from '../components/ui/team_item/useTeams';
 import { useMatchPrediction } from '../components/ui/team_item/useMatchForecast';
 import InstructionPanel from '../components/ui/tournament/InstructionPanel';
 
 function TournamentPage() {
-  const { teams, loadingTeams } = useAllTeamInfo();
+  const { teams, loadingTeams } = useTeams();
 
   const [selectedTeams, setSelectedTeams] = useState<number[]>([]);
   const [expandedTeam, setExpandedTeam] = useState<number | null>(null);
