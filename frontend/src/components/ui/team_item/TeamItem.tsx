@@ -42,7 +42,7 @@ export const TeamItem: React.FC<TeamItemProps> = ({
                         disabled={!canSelect && !isSelected}
                     />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1" onClick={handleTeamClick}>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             <span className="font-semibold text-lg">{team.name}</span>
