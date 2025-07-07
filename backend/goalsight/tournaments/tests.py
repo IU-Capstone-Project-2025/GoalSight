@@ -69,6 +69,7 @@ class TournamentTeamSerializerTest(TestCase):
     def test_valid_data(self):
         data = {
             'name': 'Team A',
+            'country': 'Country A',
             'logo_url_32': 'http://example.com/logo.png'
         }
         serializer = TournamentTeamSerializer(data=data)
@@ -78,6 +79,7 @@ class TournamentTeamSerializerTest(TestCase):
 
     def test_missing_name(self):
         data = {
+            'country': 'Country A',
             'logo_url_32': 'http://example.com/logo.png'
         }
         serializer = TournamentTeamSerializer(data=data)
@@ -87,6 +89,7 @@ class TournamentTeamSerializerTest(TestCase):
     def test_invalid_logo_url(self):
         data = {
             'name': 'Team A',
+            'country': 'Country A',
             'logo_url_32': 'not-a-valid-url'
         }
         serializer = TournamentTeamSerializer(data=data)
