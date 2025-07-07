@@ -3,10 +3,10 @@ from django.core.management.base import BaseCommand
 from teams.models import Team
 import os
 
-BASE_URL = "https://github.com/Leo4815162342/football-logos/tree/main/logos"
+# BASE_URL = "https://github.com/Leo4815162342/football-logos/tree/main/logos"
 
-def sanitize_name(name):
-    return name.replace(" ", "-").replace(".", "").replace("/", "-")
+# def sanitize_name(name):
+#     return name.replace(" ", "-").replace(".", "").replace("/", "-")
 
 class Command(BaseCommand):
     help = 'Import teams from a hardcoded CSV file'
@@ -21,6 +21,8 @@ class Command(BaseCommand):
                 team, created = Team.objects.update_or_create(
                     name=row['name'],
                     defaults={
+                        'logo_url_32': row['logo_url_32'],
+                        'logo_url_64': row['logo_url_64'],
                         'country': row['country'],
                         'coach': row['coach'],
                         'market_value': float(row['market_value']) if row['market_value'] else 0,
@@ -40,11 +42,11 @@ class Command(BaseCommand):
                         'defenceTeamWidth': int(row['defenceTeamWidth']) if row['defenceTeamWidth'] else 0,
                     }
                 )
-                filename = sanitize_name(row['name'].lower()) + ".png"
-                logo_url_32 = BASE_URL + "/" + row['country'].lower() + "/" +"32x32/" +filename
-                logo_url_64 = BASE_URL + "/" + row['country'].lower() + "/" +"64x64/" +filename
-                team.logo_url_32 = logo_url_32
-                team.logo_url_64 = logo_url_64
-                team.save()
+                # filename = sanitize_name(row['name'].lower()) + ".png"
+                # logo_url_32 = BASE_URL + "/" + row['country'].lower() + "/" +"32x32/" +filename
+                # logo_url_64 = BASE_URL + "/" + row['country'].lower() + "/" +"64x64/" +filename
+                # team.logo_url_32 = logo_url_32
+                # team.logo_url_64 = logo_url_64
+                # team.save()
                 action = 'Created' if created else 'Updated'
                 self.stdout.write(f'{action} team: {team.name}')
