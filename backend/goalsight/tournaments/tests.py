@@ -9,6 +9,7 @@ class TournamentModelTest(TestCase):
     def setUp(self):
         self.team1 = Team.objects.create(
             name="Team One",
+            logo_url_32="http://example.com/logo_a.png",
             country="Country1",
             coach="Coach1",
             market_value=1.0,
@@ -29,6 +30,7 @@ class TournamentModelTest(TestCase):
         )
         self.team2 = Team.objects.create(
             name="Team Two",
+            logo_url_32="http://example.com/logo_b.png",
             country="Country2",
             coach="Coach2",
             market_value=1.1,
@@ -67,16 +69,16 @@ class TournamentTeamSerializerTest(TestCase):
     def test_valid_data(self):
         data = {
             'name': 'Team A',
-            'logo_url_64': 'http://example.com/logo.png'
+            'logo_url_32': 'http://example.com/logo.png'
         }
         serializer = TournamentTeamSerializer(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertEqual(serializer.validated_data['name'], data['name'])
-        self.assertEqual(serializer.validated_data['logo_url_64'], data['logo_url_64'])
+        self.assertEqual(serializer.validated_data['logo_url_32'], data['logo_url_32'])
 
     def test_missing_name(self):
         data = {
-            'logo_url_64': 'http://example.com/logo.png'
+            'logo_url_32': 'http://example.com/logo.png'
         }
         serializer = TournamentTeamSerializer(data=data)
         self.assertFalse(serializer.is_valid())
@@ -85,16 +87,17 @@ class TournamentTeamSerializerTest(TestCase):
     def test_invalid_logo_url(self):
         data = {
             'name': 'Team A',
-            'logo_url_64': 'not-a-valid-url'
+            'logo_url_32': 'not-a-valid-url'
         }
         serializer = TournamentTeamSerializer(data=data)
         self.assertFalse(serializer.is_valid())
-        self.assertIn('logo_url_64', serializer.errors)
+        self.assertIn('logo_url_32', serializer.errors)
 
 class TournamentsListAPITest(APITestCase):
     def setUp(self):
         self.team1 = Team.objects.create(
             name="Team One",
+            logo_url_32="http://example.com/logo_a.png",
             country="Country1",
             coach="Coach1",
             market_value=1.0,
@@ -115,6 +118,7 @@ class TournamentsListAPITest(APITestCase):
         )
         self.team2 = Team.objects.create(
             name="Team Two",
+            logo_url_32="http://example.com/logo_b.png",
             country="Country2",
             coach="Coach2",
             market_value=1.1,
@@ -158,4 +162,4 @@ class TournamentsListAPITest(APITestCase):
 
         first_team = response.data[0]
         self.assertIn('name', first_team)
-        self.assertIn('logo_url_64', first_team)
+        self.assertIn('logo_url_32', first_team)
