@@ -47,6 +47,6 @@ export type TeamStatsApiResponse = {
 }
 
 export type MatchPredictionApiResponse = {
-    prediction: string;
-    confidence: number;
+    home_win: number;
+    away_win: number;
 };
