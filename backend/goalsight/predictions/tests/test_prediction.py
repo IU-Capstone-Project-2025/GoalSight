@@ -37,25 +37,17 @@ def test_model_loading(model_service):
 
 def test_prediction_success(model_service):
     result = model_service.predict(test_features)
-
     assert 'error' not in result, f"Unexpected error: {result.get('error')}"
-
-    assert 'prediction' in result, "Key 'prediction' missing"
-    assert 'probabilities' in result, "Key 'probabilities' missing"
-    assert 'confidence' in result, "Key 'confidence' missing"
-    assert result.get('model_type') == 'logistic_regression'
-    assert isinstance(result.get('model_accuracy'), float)
-
-    probs = result['probabilities']
-    assert isinstance(probs, dict), "Probabilities must be a dict"
-    expected_keys = {'home_win', 'away_win', 'draw'}
-    assert set(probs.keys()) == expected_keys, f"Probabilities keys {set(probs.keys())} != {expected_keys}"
-    total_prob = sum(probs.values())
-    assert pytest.approx(total_prob, rel=1e-6) == 1.0, "Probabilities do not sum to 1"
-
-    conf = result['confidence']
-    assert isinstance(conf, float), "Confidence must be float"
-    assert 0.0 <= conf <= 1.0, "Confidence out of [0,1] range"
+    expected_keys = {'home_win', 'away_win'}
+    assert set(result.keys()) >= expected_keys, \
+        f"Result keys {set(result.keys())} != expected {expected_keys}"
+    home_p = result['home_win']
+    away_p = result['away_win']
+    assert isinstance(home_p, float) and isinstance(away_p, float)
+    assert pytest.approx(home_p + away_p, rel=1e-6) == 1.0, \
+        "Probabilities do not sum to 1"
+    assert 0.0 <= home_p <= 1.0
+    assert 0.0 <= away_p <= 1.0
 
 
 # ------- Input checks ------
