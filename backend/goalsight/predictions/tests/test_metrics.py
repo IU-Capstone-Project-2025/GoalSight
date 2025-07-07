@@ -4,8 +4,8 @@ import pytest
 from django.conf import settings
 
 # thresholds
-MIN_CV_ACCURACY = 0.40
-MIN_F1_MACRO   = 0.40
+MIN_CV_ACCURACY = 0.65
+MIN_F1_MACRO   = 0.65
 
 @pytest.fixture(scope="module")
 def metrics():
