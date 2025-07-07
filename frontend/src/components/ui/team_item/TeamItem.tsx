@@ -1,9 +1,9 @@
 import React from 'react';
-import { Team } from './Team.types';
+import { TeamListItem } from './Team.types';
 import TeamStatsPanel from './TeamStatsPanel';
 
 interface TeamItemProps {
-    team: Team;
+    team: TeamListItem;
     isExpanded: boolean;
     onToggleExpansion: (teamId: number) => void;
     isSelected: boolean;
@@ -68,7 +68,7 @@ export const TeamItem: React.FC<TeamItemProps> = ({
             </div>
 
             {isExpanded && (
-                <TeamStatsPanel stats={team} />
+                <TeamStatsPanel name={team.name} />
             )}
         </div>
     );

@@ -17,6 +17,29 @@ export type Team = {
     big_chances_created: number;
 }
 
+export type TeamListItem = {
+    id: number;
+    name: string;
+    country: string;
+    logoUrl: string;
+}
+
+export type TeamStats = {
+    country: string;
+    coach: string;
+    market_value: number;
+    avg_age: number;
+    last_5_matches_wdl: {
+        wins: number;
+        draws: number;
+        losses: number;
+    };
+    xG: number;
+    ball_possession: number;
+    shots_on_target: number;
+    big_chances_created: number;
+}
+
 export type MatchPrediction = {
     name1: string;
     confidence1: number;
@@ -26,7 +49,8 @@ export type MatchPrediction = {
 
 export type TeamsApiResponse = {
     name: string;
-    logoUrl: string;
+    country: string;
+    logo_url_32: string;
 }
 
 export type TeamStatsApiResponse = {
