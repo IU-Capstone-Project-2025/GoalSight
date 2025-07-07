@@ -313,3 +313,6 @@ coverage/
 .tmp/
 
 test.py
+/notebooks/Data/EuroSoccer.sqlite
+/notebooks/Data/WorldSoccer.sqlite
+/notebooks/embeddings_data.pkl
