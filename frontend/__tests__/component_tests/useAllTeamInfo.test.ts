@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { useAllTeamInfo } from '../../src/components/ui/team_item/useTeamStats';
+import { useAllTeamInfo } from '../../src/components/ui/team_item/useAllTeamInfo';
 import { TeamsApiResponse, TeamStatsApiResponse } from '../../src/components/ui/team_item/Team.types';
 
 jest.mock('../../src/components/ui/team_item/tournamentApi', () => ({

@@ -2,8 +2,7 @@ from django.db import models
 
 class Team(models.Model):
     name = models.CharField(max_length=255)
-    logo_url_32 = models.URLField(blank=True, null=True)
-    logo_url_64 = models.URLField(blank=True, null=True)
+    logo_url = models.URLField(blank=True, null=True)
     country = models.CharField(max_length=255)
     coach = models.CharField(max_length=255)
     market_value = models.FloatField()

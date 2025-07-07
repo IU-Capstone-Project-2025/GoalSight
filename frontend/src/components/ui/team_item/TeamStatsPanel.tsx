@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { useTeamStats } from './useTeamStats';
+import { Team } from './Team.types';
 
 type TeamStatsPanelProps = {
-    name: string;
+    stats: Team;
 };
 
-const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
-    const { stats, loadingStats } = useTeamStats(name);
+const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ stats }) => {
     const [activeTab, setActiveTab] = useState('overview');
-
-    if (loadingStats) return <div className="p-6">Loading statistics...</div>;
-    if (!stats) return <div className="p-6">No data</div>;
 
     return (
         <div className="bg-gray-750 p-6">
