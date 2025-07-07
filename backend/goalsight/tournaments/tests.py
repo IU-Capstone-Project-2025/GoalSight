@@ -67,16 +67,16 @@ class TournamentTeamSerializerTest(TestCase):
     def test_valid_data(self):
         data = {
             'name': 'Team A',
-            'logo_url': 'http://example.com/logo.png'
+            'logo_url_32': 'http://example.com/logo.png'
         }
         serializer = TournamentTeamSerializer(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertEqual(serializer.validated_data['name'], data['name'])
-        self.assertEqual(serializer.validated_data['logo_url'], data['logo_url'])
+        self.assertEqual(serializer.validated_data['logo_url_32'], data['logo_url_32'])
 
     def test_missing_name(self):
         data = {
-            'logo_url': 'http://example.com/logo.png'
+            'logo_url_32': 'http://example.com/logo.png'
         }
         serializer = TournamentTeamSerializer(data=data)
         self.assertFalse(serializer.is_valid())
@@ -85,11 +85,11 @@ class TournamentTeamSerializerTest(TestCase):
     def test_invalid_logo_url(self):
         data = {
             'name': 'Team A',
-            'logo_url': 'not-a-valid-url'
+            'logo_url_32': 'not-a-valid-url'
         }
         serializer = TournamentTeamSerializer(data=data)
         self.assertFalse(serializer.is_valid())
-        self.assertIn('logo_url', serializer.errors)
+        self.assertIn('logo_url_32', serializer.errors)
 
 class TournamentsListAPITest(APITestCase):
     def setUp(self):
@@ -158,4 +158,4 @@ class TournamentsListAPITest(APITestCase):
 
         first_team = response.data[0]
         self.assertIn('name', first_team)
-        self.assertIn('logo_url', first_team)
+        self.assertIn('logo_url_32', first_team)
