@@ -8,7 +8,7 @@ class TeamModelTest(TestCase):
     def setUp(self):
         self.team_data = {
             "name": "Test Team",
-            "logo_url": "http://example.com/logo.png",
+            "logo_url_32": "http://example.com/logo.png",
             "country": "Testland",
             "coach": "John Doe",
             "market_value": 123.45,
@@ -31,7 +31,7 @@ class TeamModelTest(TestCase):
     def test_create_team(self):
         team = Team.objects.create(**self.team_data)
         self.assertEqual(team.name, self.team_data["name"])
-        self.assertEqual(team.logo_url, self.team_data["logo_url"])
+        self.assertEqual(team.logo_url_32, self.team_data["logo_url_32"])
         self.assertEqual(team.country, self.team_data["country"])
         self.assertEqual(team.coach, self.team_data["coach"])
         self.assertAlmostEqual(team.market_value, self.team_data["market_value"])
@@ -58,7 +58,7 @@ class TeamStatsSerializerTest(TestCase):
     def setUp(self):
         self.team = Team.objects.create(
             name="Test Team",
-            logo_url="http://example.com/logo.png",
+            logo_url_32="http://example.com/logo.png",
             country="Testland",
             coach="John Doe",
             market_value=123.45,
@@ -83,14 +83,14 @@ class TeamStatsSerializerTest(TestCase):
         data = serializer.data
 
         expected_fields = [
-            'logo_url', 'country', 'coach', 'market_value', 'avg_age',
+            'logo_url_32', 'country', 'coach', 'market_value', 'avg_age',
             'xG', 'ball_possession', 'shots_on_target', 'big_chances_created',
             'last_5_matches_wdl'
         ]
 
         self.assertEqual(set(data.keys()), set(expected_fields))
 
-        self.assertEqual(data['logo_url'], self.team.logo_url)
+        self.assertEqual(data['logo_url_32'], self.team.logo_url_32)
         self.assertEqual(data['country'], self.team.country)
         self.assertEqual(data['coach'], self.team.coach)
         self.assertEqual(data['market_value'], self.team.market_value)
@@ -100,7 +100,7 @@ class TeamsListAPITest(APITestCase):
     def setUp(self):
         self.team_a = Team.objects.create(
             name="Team A",
-            logo_url="http://example.com/logo_a.png",
+            logo_url_32="http://example.com/logo_a.png",
             country="Country A",
             coach="Coach A",
             market_value=1.0,
@@ -121,7 +121,7 @@ class TeamsListAPITest(APITestCase):
         )
         self.team_b = Team.objects.create(
             name="Team B",
-            logo_url="http://example.com/logo_b.png",
+            logo_url_32="http://example.com/logo_b.png",
             country="Country B",
             coach="Coach B",
             market_value=1.1,
