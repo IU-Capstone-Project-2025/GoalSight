@@ -45,6 +45,11 @@ export const TeamItem: React.FC<TeamItemProps> = ({
                 <div className="flex-1" onClick={handleTeamClick}>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
+                            <img
+                                src={team.logoUrl}
+                                alt={team.name}
+                                className="w-7 h-7 rounded mr-2 bg-white object-contain border border-gray-300"
+                            />
                             <span className="font-semibold text-lg">{team.name}</span>
                             <span className="ml-2 text-gray-400 text-sm">{team.country}</span>
                         </div>
