@@ -10,7 +10,7 @@ function TournamentPage() {
   const { teams, loadingTeams } = useTeams();
 
   const [selectedTeams, setSelectedTeams] = useState<number[]>([]);
-  const [expandedTeam, setExpandedTeam] = useState<number | null>(null);
+  const [expandedTeams, setExpandedTeams] = useState<number[]>([]);
 
   const handleTeamSelection = (teamId: number, isSelected: boolean) => {
     if (isSelected) {
@@ -23,7 +23,11 @@ function TournamentPage() {
   };
 
   const handleTeamExpansion = (teamId: number) => {
-    setExpandedTeam(expandedTeam === teamId ? null : teamId);
+    setExpandedTeams((prev) =>
+      prev.includes(teamId)
+        ? prev.filter((id) => id !== teamId)
+        : [...prev, teamId]
+    );
   };
 
   const canSelectTeam = (teamId: number) => {
@@ -99,7 +103,7 @@ function TournamentPage() {
                 <TeamItem
                   key={team.id}
                   team={team}
-                  isExpanded={expandedTeam === team.id}
+                  isExpanded={expandedTeams.includes(team.id)}
                   onToggleExpansion={handleTeamExpansion}
                   isSelected={selectedTeams.includes(team.id)}
                   onSelectionChange={handleTeamSelection}
