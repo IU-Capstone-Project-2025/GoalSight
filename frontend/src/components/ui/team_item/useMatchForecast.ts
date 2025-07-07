@@ -18,24 +18,14 @@ export function useMatchPrediction(homeTeam: string | null, awayTeam: string | n
         const data = await fetchMatchPrediction(homeTeam!, awayTeam!);
         if (!isMounted) return;
 
-        const conf = data.confidence * 100;
         let result: MatchPrediction | null = null;
 
-        if (data.prediction === homeTeam) {
-          result = {
-            name1: homeTeam!,
-            confidence1: parseFloat(conf.toFixed(1)),
-            name2: awayTeam!,
-            confidence2: parseFloat((100 - conf).toFixed(1)),
-          };
-        } else {
-          result = {
-            name1: homeTeam!,
-            confidence1: parseFloat((100 - conf).toFixed(1)),
-            name2: awayTeam!,
-            confidence2: parseFloat(conf.toFixed(1)),
-          };
-        }
+        result = {
+          name1: homeTeam!,
+          confidence1: parseFloat((data.home_win * 100).toFixed(1)),
+          name2: awayTeam!,
+          confidence2: parseFloat((data.away_win * 100).toFixed(1)),
+        };
 
         setPrediction(result);
       } catch (e) {

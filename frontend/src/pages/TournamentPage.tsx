@@ -2,15 +2,15 @@ import { useState } from 'react';
 import NavigationBar from '../components/navigation/NavigationBar';
 import { TeamItem } from '../components/ui/team_item/TeamItem';
 import MatchForecastPanel from '../components/ui/match_forecast/MatchForecastPanel';
-import { useAllTeamInfo } from '../components/ui/team_item/useAllTeamInfo';
+import { useTeams } from '../components/ui/team_item/useTeams';
 import { useMatchPrediction } from '../components/ui/team_item/useMatchForecast';
 import InstructionPanel from '../components/ui/tournament/InstructionPanel';
 
 function TournamentPage() {
-  const { teams, loadingTeams } = useAllTeamInfo();
+  const { teams, loadingTeams } = useTeams();
 
   const [selectedTeams, setSelectedTeams] = useState<number[]>([]);
-  const [expandedTeam, setExpandedTeam] = useState<number | null>(null);
+  const [expandedTeams, setExpandedTeams] = useState<number[]>([]);
 
   const handleTeamSelection = (teamId: number, isSelected: boolean) => {
     if (isSelected) {
@@ -23,7 +23,11 @@ function TournamentPage() {
   };
 
   const handleTeamExpansion = (teamId: number) => {
-    setExpandedTeam(expandedTeam === teamId ? null : teamId);
+    setExpandedTeams((prev) =>
+      prev.includes(teamId)
+        ? prev.filter((id) => id !== teamId)
+        : [...prev, teamId]
+    );
   };
 
   const canSelectTeam = (teamId: number) => {
@@ -99,7 +103,7 @@ function TournamentPage() {
                 <TeamItem
                   key={team.id}
                   team={team}
-                  isExpanded={expandedTeam === team.id}
+                  isExpanded={expandedTeams.includes(team.id)}
                   onToggleExpansion={handleTeamExpansion}
                   isSelected={selectedTeams.includes(team.id)}
                   onSelectionChange={handleTeamSelection}

@@ -47,15 +47,8 @@ class PredictionService:
             probabilities = self.model.predict_proba(features_scaled)[0]
             prediction_label = self.reverse_mapping[prediction]
             return {
-                'prediction': prediction_label,
-                'probabilities': {
-                    'home_win': float(probabilities[0]),
-                    'away_win': float(probabilities[1]),
-                    'draw': float(probabilities[2])
-                },
-                'confidence': float(np.max(probabilities)),
-                'model_type': 'logistic_regression',
-                'model_accuracy': 0.48
+                'home_win': float(probabilities[0]),
+                'away_win': float(probabilities[1])
             }
         except Exception as e:
             return {"error": f"Prediction error: {str(e)}"}
