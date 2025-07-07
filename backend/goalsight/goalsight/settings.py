@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
-    'drf_spectacular',  # Swagger
+    'drf_yasg',
 
     'matches',
     'teams',
@@ -114,6 +114,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -121,13 +122,34 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'GoalSight API',
-    'DESCRIPTION': 'Football API with matches, teams and tournaments',
-    'VERSION': '1.0.0',
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'USE_SESSION_AUTH': False,
+    'JSON_EDITOR': True,
+    'SUPPORTED_SUBMIT_METHODS': [
+        'get',
+        'post',
+        'put',
+        'delete',
+        'patch'
+    ],
+    'OPERATIONS_SORTER': 'alpha',
+    'TAGS_SORTER': 'alpha',
+    'DOC_EXPANSION': 'list',
+    'DEEP_LINKING': True,
+    'DISPLAY_OPERATION_ID': False,
+    'DEFAULT_MODEL_RENDERING': 'example',
+    'DEFAULT_INFO': 'GoalSight API',
+    'DEFAULT_API_URL': 'http://localhost:8000',
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
