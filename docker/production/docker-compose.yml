@@ -30,7 +30,7 @@ services:
       - ../../backend:/app
       - .env:/app/.env
     environment:
-      - DEBUG=1
+      - DEBUG=0
       - DJANGO_SETTINGS_MODULE=goalsight.settings
       - DATABASE_HOST=db  
       - DATABASE_PORT=5432
