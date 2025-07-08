@@ -10,18 +10,25 @@ export function useTeamStats(name: string) {
         let isMounted = true;
         const loadStats = async () => {
             try {
-                const statsResponse: TeamStatsApiResponse = await fetchTeamStats(name);
+                const stats: TeamStatsApiResponse = await fetchTeamStats(name);
+                const parsedWDL = typeof stats.last_5_matches_wdl === 'string'
+                    ? JSON.parse(stats.last_5_matches_wdl)
+                    : stats.last_5_matches_wdl;
                 if (isMounted) {
                     setStats({
-                        country: statsResponse.country,
-                        coach: statsResponse.coach,
-                        market_value: statsResponse.market_value,
-                        avg_age: statsResponse.avg_age,
-                        last_5_matches_wdl: statsResponse.last_5_matches_wdl,
-                        xG: statsResponse.xG,
-                        ball_possession: statsResponse.ball_possession,
-                        shots_on_target: statsResponse.shots_on_target,
-                        big_chances_created: statsResponse.big_chances_created,
+                        country: stats.country,
+                        coach: stats.coach,
+                        market_value: stats.market_value,
+                        avg_age: stats.avg_age,
+                        last_5_matches_wdl: {
+                            wins: parsedWDL.wins,
+                            draws: parsedWDL.draws,
+                            losses: parsedWDL.losses,
+                        },
+                        xG: stats.xG,
+                        ball_possession: stats.ball_possession,
+                        shots_on_target: stats.shots_on_target,
+                        big_chances_created: stats.big_chances_created,
                     });
                 }
             } catch (error) {

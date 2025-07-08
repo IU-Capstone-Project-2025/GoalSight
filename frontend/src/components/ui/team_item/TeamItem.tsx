@@ -48,7 +48,7 @@ export const TeamItem: React.FC<TeamItemProps> = ({
                             <img
                                 src={team.logoUrl}
                                 alt={team.name}
-                                className="w-7 h-7 rounded mr-2 bg-white object-contain border border-gray-300"
+                                className="w-7 h-7 rounded mr-2 bg-transparent object-contain"
                             />
                             <span className="font-semibold text-lg">{team.name}</span>
                             <span className="ml-2 text-gray-400 text-sm">{team.country}</span>
