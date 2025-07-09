@@ -11,9 +11,9 @@ export const UpcomingMatches: React.FC<Props> = ({ matches }) => {
   }
 
   return (
-    <div className='bg-gray-800 rounded-lg p-6'>
-      <h2 className='text-2xl font-bold mb-6 text-red-400'>UPCOMING MATCHES</h2>
-      <div className='space-y-4'>
+    <div className='bg-gray-800 rounded-lg p-3 md:p-6'>
+      <h2 className='text-lg md:text-2xl font-bold mb-3 md:mb-6 text-red-400'>UPCOMING MATCHES</h2>
+      <div className='space-y-2 md:space-y-4'>
         {matches.map((match, index) => (
           <MatchCard key={index} match={match} />
         ))}
