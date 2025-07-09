@@ -1,33 +1,33 @@
-team,
-Palmeiras,
-Porto,
-Al Ahly,
-Inter Miami CF,
-Paris Saint-Germain,
-Atlético Madrid,
-Botafogo,
-Seattle Sounders FC,
-Bayern Munich,
-Auckland City,
-Boca Juniors,
-Benfica,
-Flamengo,
-Espérance de Tunis,
-Chelsea,
-Los Angeles FC,
-River Plate,
-Urawa Red Diamonds,
-Monterrey,
-Inter Milan,
-Fluminense,
-Borussia Dortmund,
-Ulsan Hyundai,
-Mamelodi Sundowns,
-Manchester City,
-Wydad AC,
-Al Ain,
-Juventus,
-Real Madrid,
-Al-Hilal,
-Pachuca,
-Red Bull Salzburg,
+team,avg_age,country,market_value,league_strength
+Palmeiras,25.7,Brazil,253.60,79.4
+Porto,25.2,Portugal,324.90,79.8
+Al Ahly,26.5,Egypt,43.58,70.0
+Inter Miami CF,26.5,USA,66.18,78.5
+Paris Saint-Germain,25.1,France,1120.00,85.5
+Atlético Madrid,28.3,Spain,562.00,87.0
+Botafogo,25.8,Brazil,175.40,79.4
+Seattle Sounders FC,27.0,USA,51.75,78.5
+Bayern Munich,25.4,Germany,892.00,86.3
+Auckland City,27.3,New Zealand,4.58,70.0
+Boca Juniors,28.2,Argentina,88.13,78.6
+Benfica,24.6,Portugal,355.00,79.8
+Flamengo,27.2,Brazil,200.55,79.4
+Espérance de Tunis,25.0,Tunisia,23.15,70.0
+Chelsea,23.3,England,1270.00,92.6
+Los Angeles FC,26.5,USA,42.68,78.5
+River Plate,28.6,Argentina,119.50,
+Urawa Red Diamonds,26.6,Japan,19.68,77.9
+Monterrey,28.4,Mexico,77.75,78.5
+Inter Milan,27.1,Italy,759.80,87.0
+Fluminense,28.1,Brazil,86.15,79.4
+Borussia Dortmund,26.2,Germany,409.10,86.3
+Ulsan Hyundai,28.0,South Korea,15.35,70.0
+Mamelodi Sundowns,27.8,South Africa,37.20,70.0
+Manchester City,26.1,England,1340.00,92.6
+Wydad AC,27.2,Morocco,17.51,70.0
+Al Ain,25.9,UAE,37.19,70.0
+Juventus,26.0,Italy,650.70,87.0
+Real Madrid,26.2,Spain,1340.00,87.0
+Al-Hilal,26.3,Saudi Arabia,161.28,75.1
+Pachuca,26.1,Mexico,57.80,78.5
+Red Bull Salzburg,22.4,Austria,180.90,76.1
