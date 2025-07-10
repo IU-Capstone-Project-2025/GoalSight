@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { UpcomingMatches } from '../../src/components/ui/upcomingMatches/UpcomingMatches';
-import { Match } from '../../src/components/ui/upcomingMatches/types';
+import { Match } from '../../src/components/ui/upcomingMatches/Matches.types';
 
 // Mock data for testing
 const mockMatches: Match[] = [

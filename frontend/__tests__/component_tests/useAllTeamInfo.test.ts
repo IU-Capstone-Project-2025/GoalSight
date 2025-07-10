@@ -7,7 +7,7 @@ jest.mock('../../src/components/ui/team_item/tournamentApi', () => ({
     fetchTeamStats: jest.fn()
 }));
 
-import { fetchTeams, fetchTeamStats } from '../../src/components/ui/team_item/tournamentApi';
+import { fetchTeams, fetchTeamStats } from '../../src/components/ui/team_item/teamApi';
 const mockFetchTeams = fetchTeams as jest.MockedFunction<typeof fetchTeams>;
 const mockFetchTeamStats = fetchTeamStats as jest.MockedFunction<typeof fetchTeamStats>;
 

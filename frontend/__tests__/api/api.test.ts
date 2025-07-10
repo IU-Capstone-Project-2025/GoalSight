@@ -1,4 +1,4 @@
-import { fetchUpcomingMatches } from '../../src/components/ui/upcomingMatches/api';
+import { fetchUpcomingMatches } from '../../src/components/ui/upcomingMatches/matchesApi';
 import { server } from '../mocks/server';
 import { http, HttpResponse } from 'msw';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TeamListItem } from './Team.types';
-import TeamStatsPanel from './TeamStatsPanel';
+import TeamStatsPanel from '../team_stats/TeamStatsPanel';
 
 interface TeamItemProps {
     team: TeamListItem;

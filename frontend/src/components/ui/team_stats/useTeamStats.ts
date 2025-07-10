@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { fetchTeamStats } from './tournamentApi';
-import { TeamStats, TeamStatsApiResponse } from './Team.types';
+import { fetchTeamStats } from './statsApi';
+import { TeamStats, TeamStatsApiResponse } from './TeamStats.type';
 
 export function useTeamStats(name: string) {
     const [stats, setStats] = useState<TeamStats | null>(null);

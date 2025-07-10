@@ -1,4 +1,4 @@
-import { Match } from './types';
+import { Match } from './Matches.types';
 
 type Props = {
   match: Match;

@@ -1,4 +1,3 @@
-import React from 'react';
 import NavigationBar from '../components/navigation/NavigationBar';
 import { NextMatchCard } from '../components/ui/nextMatch/NextMatchCard';
 import { UpcomingMatches } from '../components/ui/upcomingMatches/UpcomingMatches';
