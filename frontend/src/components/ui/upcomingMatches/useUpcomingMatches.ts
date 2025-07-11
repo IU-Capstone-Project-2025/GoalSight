@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { MatchApiResponse } from './Matches.types';
-import { fetchUpcomingMatches } from './matchesApi';
+import { MatchApiResponse } from './types';
+import { fetchUpcomingMatches } from './api';
 
 export function useMatchesSeparated() {
   const [nextMatch, setNextMatch] = useState<MatchApiResponse | null>(null);

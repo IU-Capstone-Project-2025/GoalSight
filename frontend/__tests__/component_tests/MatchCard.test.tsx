@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MatchCard } from '../../src/components/ui/upcomingMatches/MatchCard';
-import { Match } from '../../src/components/ui/upcomingMatches/Matches.types';
+import { Match } from '../../src/components/ui/upcomingMatches/types';
 import type { } from '@jest/globals';
 
 // Mock data for testing

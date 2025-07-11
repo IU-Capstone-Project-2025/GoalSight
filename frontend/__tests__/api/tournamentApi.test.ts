@@ -1,6 +1,4 @@
-import { fetchTeams } from '../../src/components/ui/team_item/teamApi';
-import { fetchTeamStats } from '@/components/ui/team_stats/statsApi';
-import { fetchMatchPrediction } from '@/components/ui/match_forecast/forecastApi';
+import { fetchTeams, fetchTeamStats, fetchMatchPrediction } from '../../src/components/ui/team_item/tournamentApi';
 import { server } from '../mocks/server';
 import { http, HttpResponse } from 'msw';
 

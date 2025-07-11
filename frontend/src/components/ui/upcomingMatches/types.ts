@@ -8,6 +8,6 @@ export type MatchApiResponse = {
 export type Match = {
   teamA: string;
   teamB: string;
-  date: string;
-  time: string;
+  date: string; // '2025-01-15'
+  time: string; // '20:00'
 };
