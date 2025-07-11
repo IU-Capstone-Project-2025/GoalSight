@@ -3,8 +3,8 @@ import NavigationBar from '../components/navigation/NavigationBar';
 import { TeamItem } from '../components/ui/team_item/TeamItem';
 import MatchForecastPanel from '../components/ui/match_forecast/MatchForecastPanel';
 import { useTeams } from '../components/ui/team_item/useTeams';
-import { useMatchPrediction } from '../components/ui/team_item/useMatchForecast';
-import InstructionPanel from '../components/ui/tournament/InstructionPanel';
+import { useMatchPrediction } from '../components/ui/match_forecast/useMatchForecast';
+import InstructionPanel from '../components/ui/match_forecast/InstructionPanel';
 
 function TournamentPage() {
   const { teams, loadingTeams } = useTeams();

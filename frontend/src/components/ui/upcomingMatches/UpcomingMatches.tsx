@@ -1,4 +1,4 @@
-import { Match } from './types';
+import { Match } from './Matches.types';
 import { MatchCard } from './MatchCard';
 
 type Props = {

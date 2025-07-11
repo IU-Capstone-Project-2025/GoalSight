@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchTeams } from './tournamentApi';
+import { fetchTeams } from './teamApi';
 import { TeamListItem, TeamsApiResponse } from './Team.types';
 
 const TOURNAMENT_TITLE = 'FIFA Club World Cup';
