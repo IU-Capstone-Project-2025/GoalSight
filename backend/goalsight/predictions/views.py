@@ -101,7 +101,7 @@ def predict_match(request):
         for k, v in features.items():
             if v is None or (isinstance(v, float) and (v != v)):
                 features[k] = 0.0
-        result = prediction_service.predict(features)
+        result = prediction_service.predict(features, home_team.logo_url_64, away_team.logo_url_64)
         response_data = MatchPredictionSerializer(result).data
         return Response(response_data)
     except json.JSONDecodeError:

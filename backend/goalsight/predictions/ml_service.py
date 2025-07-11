@@ -31,7 +31,7 @@ class PredictionService:
         except Exception as e:
             print(f"Error of model loading: {e}")
             self.model = None
-    def predict(self, features_dict):
+    def predict(self, features_dict, url_64_home, url_64_away):
         if self.model is None:
             return {"error": "The model has not been loaded"}
         try:
@@ -48,7 +48,9 @@ class PredictionService:
             prediction_label = self.reverse_mapping[prediction]
             return {
                 'home_win': float(probabilities[0]),
-                'away_win': float(probabilities[1])
+                'away_win': float(probabilities[1]),
+                'logo_url_64_home': url_64_home,
+                'logo_url_64_away': url_64_away
             }
         except Exception as e:
             return {"error": f"Prediction error: {str(e)}"}
