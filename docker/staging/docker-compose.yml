@@ -70,7 +70,7 @@ services:
       context: ../..
       dockerfile: docker/production/Dockerfile.nginx
     ports:
-      - "8080:80"
+      - "80:80"
     depends_on:
       - backend
       - frontend
