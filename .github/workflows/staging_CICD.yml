@@ -11,6 +11,16 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_USER: ${{ secrets.DATABASE_USER }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+      API_URL: ${{ secrets.API_URL }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -33,15 +43,36 @@ jobs:
           sudo systemctl enable docker
           docker compose version || echo "docker compose not found"
 
+      - name: Debug Docker installation
+        run: |
+          docker --version
+          docker compose version
+          which docker
+          ls -l /usr/libexec/docker/cli-plugins/
+        continue-on-error: true
+
+      - name: Debug environment variables
+        run: |
+          echo "DATABASE_USER=$DATABASE_USER"
+          echo "DATABASE_NAME=$DATABASE_NAME"
+          echo "DATABASE_PASSWORD=${DATABASE_PASSWORD:0:3}..."
+          echo "DATABASE_HOST=$DATABASE_HOST"
+          echo "DATABASE_PORT=$DATABASE_PORT"
+        continue-on-error: true
+
       - name: Create external Docker network
         run: docker network create goalsight-network || true
 
       - name: Pull latest images
-        run: docker compose -f docker/local/docker-compose.yml pull
+        run: docker compose -f docker/staging/docker-compose.yml pull
         continue-on-error: true
 
       - name: Build and start backend and db containers
-        run: docker compose -f docker/local/docker-compose.yml up -d --build db backend
+        run: docker compose -f docker/staging/docker-compose.yml up -d --build db backend
+        continue-on-error: true
+
+      - name: Check container status
+        run: docker ps -a
         continue-on-error: true
 
       - name: Clean database volume
@@ -50,33 +81,46 @@ jobs:
 
       - name: Reset test database
         run: |
-          docker compose -f docker/local/docker-compose.yml exec -T backend python manage.py reset_db --noinput
-          docker compose -f docker/local/docker-compose.yml exec -T backend python manage.py migrate
+          docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py reset_db --noinput
+          docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py migrate
+
+      - name: Show DB container logs (for debugging)
+        run: docker compose -f docker/staging/docker-compose.yml logs db
+        continue-on-error: true
 
       - name: Wait for PostgreSQL to be ready
         run: |
-          timeout 180 bash -c 'until docker compose -f docker/local/docker-compose.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do echo "Waiting for DB..."; sleep 5; done'
+          timeout 180 bash -c 'until docker compose -f docker/staging/docker-compose.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do echo "Waiting for DB..."; sleep 5; done'
         env:
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
         continue-on-error: true
 
       - name: Run migrations
-        run: docker compose -f docker/local/docker-compose.yml exec -T backend python manage.py migrate
+        run: docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py migrate
         continue-on-error: false
 
       - name: Run backend tests
         env:
-          DJANGO_SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        run: docker compose -f docker/local/docker-compose.yml exec -T backend python manage.py test
+          DJANGO_SECRET_KEY: ${{ secrets.SECRET_KEY }}  # Добавляем ключ
+        run: docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py test
         continue-on-error: false
 
       - name: Stop containers
         if: always()
-        run: docker compose -f docker/local/docker-compose.yml down --volumes
+        run: docker compose -f docker/staging/docker-compose.yml down --volumes
 
   frontend:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_USER: ${{ secrets.DATABASE_USER }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+      API_URL: ${{ secrets.API_URL }}
     defaults:
       run:
         working-directory: frontend
