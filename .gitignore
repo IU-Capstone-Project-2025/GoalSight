@@ -1,5 +1,12 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Let's Encrypt сертификаты (не пушим)
+nginx/certbot/conf/
+nginx/certbot/www/
+
+# Nginx временные файлы (если не являются частью конфига)
+nginx/conf.d/default.conf~
+
 # Dependencies
 node_modules/
 .pnp/
