@@ -67,9 +67,6 @@ services:
   nginx:
     container_name: goalsight-nginx
     image: nginx:alpine
-    build:
-      context: ../..
-      dockerfile: docker/production/Dockerfile.nginx
     ports:
       - "80:80"
       - "443:443"
