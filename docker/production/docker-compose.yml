@@ -56,9 +56,7 @@ services:
       - ../../frontend:/app
       - /app/node_modules
     environment:
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
-      - REACT_APP_API_URL=http://${API_URL}:8000
+      - REACT_APP_API_URL=https://goalsight.ru/api
     depends_on:
       - backend
     networks:
