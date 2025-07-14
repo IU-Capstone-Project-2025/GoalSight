@@ -70,15 +70,11 @@ jobs:
         run: docker network create goalsight-network
 
       - name: Pull latest images
-        run: docker compose -f docker/staging/docker-compose.yml pull
+        run: docker compose -f docker/local/docker-compose.yml pull
         continue-on-error: true
 
       - name: Start full stack (local docker-compose)
         run: docker compose -f docker/local/docker-compose.yml up -d --build
-
-      - name: Check container status
-        run: docker ps -a
-        continue-on-error: true
 
       - name: Clean database volume
         run: docker volume rm $(docker volume ls -q -f name=postgres_data) || true
@@ -86,15 +82,15 @@ jobs:
 
       - name: Reset test database
         run: |
-          docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py reset_db --noinput
-          docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py migrate
+          docker compose -f docker/local/docker-compose.yml exec -T backend python manage.py reset_db --noinput
+          docker compose -f docker/local/docker-compose.yml exec -T backend python manage.py migrate
 
       - name: Wait for PostgreSQL to be ready
         run: |
           timeout 180 bash -c 'until docker compose -f docker/local/docker-compose.yml exec -T db pg_isready -U $DATABASE_USER -d $DATABASE_NAME; do echo "Waiting for DB..."; sleep 5; done'
 
       - name: Run migrations
-        run: docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py migrate
+        run: docker compose -f docker/local/docker-compose.yml exec -T backend python manage.py migrate
 
       - name: Run backend tests
         run: docker compose -f docker/local/docker-compose.yml exec -T backend python manage.py test
