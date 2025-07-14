@@ -4,7 +4,7 @@ import { MatchPrediction } from '../match_forecast/MatchForecast.types';
 
 export function useMatchPrediction(homeTeam: string | null, awayTeam: string | null) {
     const [prediction, setPrediction] = useState<MatchPrediction | null>(null);
-    const [loadingPrediction, setLoadingPrediction] = useState(true);
+    const [loadingPrediction, setLoadingPrediction] = useState(true); 
 
     useEffect(() => {
         if (!homeTeam || !awayTeam) return;
