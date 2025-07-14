@@ -44,12 +44,12 @@ class PredictionService:
             # The model expects input data after PCA (10 components)
             prediction = self.model.predict(features_processed)[0]
             probabilities = self.model.predict_proba(features_processed)[0]
-            home_win_prob_index = np.where(self.model.classes_ == 1)[0][0]
-            away_win_prob_index = np.where(self.model.classes_ == 0)[0][0]
+            # home_win_prob_index = np.where(self.model.classes_ == 1)[0][0]
+            # away_win_prob_index = np.where(self.model.classes_ == 0)[0][0]
             prediction_label = self.reverse_mapping[prediction]
             return {
-                'home_win': float(probabilities[home_win_prob_index]),
-                'away_win': float(probabilities[away_win_prob_index]),
+                'home_win': float(probabilities[0]),
+                'away_win': float(probabilities[1]),
                 'logo_url_64_home': url_64_home,
                 'logo_url_64_away': url_64_away
             }
