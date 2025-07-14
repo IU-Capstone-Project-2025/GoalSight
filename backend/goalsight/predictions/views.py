@@ -93,6 +93,10 @@ def predict_match(request):
                 features['B365H'] = match.home
                 features['B365D'] = match.draw
                 features['B365A'] = match.away
+            else:
+                features['B365H'] = 1
+                features['B365D'] = 1
+                features['B365A'] = 1
         except Exception:
             features['B365H'] = 1
             features['B365D'] = 1
