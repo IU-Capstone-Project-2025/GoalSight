@@ -34,7 +34,7 @@ class PredictionService:
             self.model = None
             self.preprocessor = None
 
-    def predict(self, features_dict, url_64_home, url_64_away):
+    def predict(self, features_dict):
         if self.model is None or self.preprocessor is None:
             return {"error": "The model or preprocessor has not been loaded"}
         try:
@@ -50,8 +50,6 @@ class PredictionService:
             return {
                 'home_win': float(probabilities[0]),
                 'away_win': float(probabilities[1]),
-                'logo_url_64_home': url_64_home,
-                'logo_url_64_away': url_64_away
             }
         except Exception as e:
             return {"error": f"Prediction error: {str(e)}"}
