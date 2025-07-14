@@ -73,9 +73,8 @@ jobs:
         run: docker compose -f docker/staging/docker-compose.yml pull
         continue-on-error: true
 
-      - name: Build and start backend and db containers
-        run: docker compose -f docker/staging/docker-compose.yml up -d --build db backend
-        continue-on-error: true
+      - name: Start full stack (local docker-compose)
+        run: docker compose -f docker/local/docker-compose.yml up -d --build
 
       - name: Check container status
         run: docker ps -a
@@ -89,9 +88,6 @@ jobs:
         run: |
           docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py reset_db --noinput
           docker compose -f docker/staging/docker-compose.yml exec -T backend python manage.py migrate
-
-      - name: Start full stack (local docker-compose)
-        run: docker compose -f docker/local/docker-compose.yml up -d --build
 
       - name: Wait for PostgreSQL to be ready
         run: |
