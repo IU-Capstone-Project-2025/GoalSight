@@ -5,7 +5,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 export async function fetchUpcomingMatches(date: string): Promise<MatchApiResponse[]> {
   try {
-    const response = await axios.get<MatchApiResponse[]>(`${API_BASE_URL}/api/matches/`, {
+    const response = await axios.get<MatchApiResponse[]>(`${API_BASE_URL}/matches/`, {
       params: { date },
     });
     console.log("✅ Matches response:", response.data);

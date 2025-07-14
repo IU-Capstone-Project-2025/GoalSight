@@ -5,7 +5,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 export async function fetchTeams(tournament_title: string, year: number): Promise<TeamsApiResponse[]> {
     try {
-        const response = await axios.get<TeamsApiResponse[]>(`${API_BASE_URL}/api/tournaments/`, {
+        const response = await axios.get<TeamsApiResponse[]>(`${API_BASE_URL}/tournaments/`, {
             params: {
                 tournament_title,
                 year,
