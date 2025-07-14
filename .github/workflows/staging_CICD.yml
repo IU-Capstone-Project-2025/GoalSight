@@ -40,6 +40,9 @@ jobs:
         run: npm ci
         working-directory: frontend
 
+      - name: Install pytest
+        run: pip install pytest
+
       - name: Install Docker
         run: |
           sudo apt-get update
