@@ -12,17 +12,25 @@ django.setup()
 from predictions.ml_service import prediction_service
 
 test_features = {
-    'stage': 1,
-    'season_encoded': 2024,
     'home_buildUpPlaySpeed': 50,
+    'home_buildUpPlayPassing': 50,
+    'home_chanceCreationPassing': 70,
+    'home_chanceCreationCrossing': 50,
+    'home_chanceCreationShooting': 50,
+    'home_defencePressure': 60,
+    'home_defenceAggression': 50,
+    'home_defenceTeamWidth': 50,
     'away_buildUpPlaySpeed': 45,
+    'away_buildUpPlayPassing': 50,
+    'away_chanceCreationPassing': 65,
+    'away_chanceCreationCrossing': 50,
+    'away_chanceCreationShooting': 50,
+    'away_defencePressure': 55,
+    'away_defenceAggression': 50,
+    'away_defenceTeamWidth': 50,
     'B365H': 2.5,
     'B365D': 3.2,
-    'B365A': 2.8,
-    'home_defencePressure': 60,
-    'away_defencePressure': 55,
-    'home_chanceCreationPassing': 70,
-    'away_chanceCreationPassing': 65
+    'B365A': 2.8
 }
 
 @pytest.fixture(scope="module")
@@ -36,9 +44,11 @@ def test_model_loading(model_service):
     assert len(model_service.features) > 0, "Features list is empty"
 
 def test_prediction_success(model_service):
-    result = model_service.predict(test_features)
+    dummy_url_home = "data:image/png;base64,home_logo"
+    dummy_url_away = "data:image/png;base64,away_logo"
+    result = model_service.predict(test_features, dummy_url_home, dummy_url_away)
     assert 'error' not in result, f"Unexpected error: {result.get('error')}"
-    expected_keys = {'home_win', 'away_win'}
+    expected_keys = {'home_win', 'away_win', 'logo_url_64_home', 'logo_url_64_away'}
     assert set(result.keys()) >= expected_keys, \
         f"Result keys {set(result.keys())} != expected {expected_keys}"
     home_p = result['home_win']
@@ -48,7 +58,8 @@ def test_prediction_success(model_service):
         "Probabilities do not sum to 1"
     assert 0.0 <= home_p <= 1.0
     assert 0.0 <= away_p <= 1.0
-
+    assert result['logo_url_64_home'] == dummy_url_home
+    assert result['logo_url_64_away'] == dummy_url_away
 
 # ------- Input checks ------
 # @pytest.mark.parametrize("bad_input", [
