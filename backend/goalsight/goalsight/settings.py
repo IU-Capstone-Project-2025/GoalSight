@@ -7,14 +7,45 @@ load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
+
+DJANGO_ENV = os.getenv("DJANGO_ENV", "development")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 
-allowed_hosts = os.getenv('DJANGO_ALLOWED_HOSTS', '')
-ALLOWED_HOSTS = ['*']
+allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = allowed_hosts_env.split(",") if allowed_hosts_env else ['*']
 
+ASGI_APPLICATION = "goalsight.asgi.application"
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
-# Application definition
+if DJANGO_ENV == "production":
+    DEBUG = False
+    CORS_ALLOWED_ORIGINS = [
+        "https://goalsight.ru",
+        "https://www.goalsight.ru",
+    ]
+    CORS_ALLOW_CREDENTIALS = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+
+elif DJANGO_ENV == "staging":
+    DEBUG = True
+    CORS_ALLOWED_ORIGINS = [
+        "http://staging.goalsight.ru",
+        "http://www.staging.goalsight.ru",
+    ]
+    CORS_ALLOW_CREDENTIALS = True
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+
+else:
+
+    DEBUG = True
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOW_CREDENTIALS = True
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -152,17 +183,3 @@ SWAGGER_SETTINGS = {
     'DEFAULT_INFO': 'GoalSight API',
     'DEFAULT_API_URL': 'http://localhost:8000',
 }
-
-CORS_ALLOWED_ORIGINS = [
-    "https://goalsight.ru",
-    "https://www.goalsight.ru",
-]
-
-CORS_ALLOW_CREDENTIALS = True
-
-ASGI_APPLICATION = "goalsight.asgi.application"
-
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-USE_X_FORWARDED_HOST = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
