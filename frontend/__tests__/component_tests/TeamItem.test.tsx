@@ -122,8 +122,9 @@ describe('TeamItem Component', () => {
         });
         render(<TeamItem {...defaultProps} isExpanded={true} />);
         await waitFor(() => expect(screen.queryByText('Loading statistics...')).not.toBeInTheDocument());
-        expect(screen.getByText('Market value')).toBeInTheDocument();
-        expect(screen.getByText('Average age')).toBeInTheDocument();
+        fireEvent.click(screen.getByRole('button', { name: 'Finances' }));
+        expect(screen.getByText('Market Value')).toBeInTheDocument();
+        expect(screen.getByText('Average Age')).toBeInTheDocument();
     });
 
     it('does not render TeamStatsPanel when not expanded', () => {
