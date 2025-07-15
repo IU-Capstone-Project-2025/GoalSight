@@ -65,7 +65,6 @@ jobs:
           DATABASE_PORT=${DATABASE_PORT}
           DATABASE_PASSWORD=${DATABASE_PASSWORD}
           SECRET_KEY=${SECRET_KEY}
-          DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
           API_URL=${API_URL}
           EOF
 
@@ -123,9 +122,6 @@ jobs:
         run: npm run test:api
         working-directory: frontend
         continue-on-error: true
-
-      - name: Check Docker containers status
-        run: docker ps
 
       - name: Run end-to-end tests
         run: npm run test:e2e
