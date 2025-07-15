@@ -1,9 +1,13 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MatchCard } from '../../src/components/ui/upcomingMatches/MatchCard';
-import { Match } from '../../src/components/ui/upcomingMatches/types';
+import { Match } from '../../src/components/ui/upcomingMatches/Matches.types';
 import type { } from '@jest/globals';
+
+jest.mock('../../src/components/ui/match_forecast/useMatchForecast', () => ({
+    useMatchPrediction: jest.fn()
+}));
+import { useMatchPrediction } from '../../src/components/ui/match_forecast/useMatchForecast';
 
 // Mock data for testing
 const mockMatch: Match = {
@@ -14,17 +18,18 @@ const mockMatch: Match = {
 };
 
 describe('MatchCard Component', () => {
+    beforeEach(() => {
+        (useMatchPrediction as jest.Mock).mockReturnValue({
+            prediction: null,
+            loadingPrediction: false
+        });
+    });
+
     it('renders match information correctly', () => {
         render(<MatchCard match={mockMatch} />);
-
-        // Check if team names are displayed
         expect(screen.getByText('Manchester United')).toBeInTheDocument();
         expect(screen.getByText('Liverpool')).toBeInTheDocument();
-
-        // Check if VS is displayed
         expect(screen.getByText('VS')).toBeInTheDocument();
-
-        // Check if date and time are displayed
         expect(screen.getByText('2025-01-15')).toBeInTheDocument();
         expect(screen.getByText('20:00')).toBeInTheDocument();
     });
@@ -36,9 +41,7 @@ describe('MatchCard Component', () => {
             date: '2025-01-20',
             time: '15:30'
         };
-
         render(<MatchCard match={differentMatch} />);
-
         expect(screen.getByText('Arsenal')).toBeInTheDocument();
         expect(screen.getByText('Chelsea')).toBeInTheDocument();
         expect(screen.getByText('2025-01-20')).toBeInTheDocument();
@@ -47,30 +50,38 @@ describe('MatchCard Component', () => {
 
     it('has correct CSS classes for styling', () => {
         const { container } = render(<MatchCard match={mockMatch} />);
-
-        // Check if the main container has the expected classes
         const mainDiv = container.firstChild as HTMLElement;
-        expect(mainDiv).toHaveClass('flex', 'items-center', 'justify-between', 'bg-gray-700', 'rounded-lg', 'p-4');
+        expect(mainDiv).toHaveClass('flex', 'flex-col', 'bg-gray-700', 'rounded-lg');
+        expect(mainDiv.className).toMatch(/p-2/);
+        expect(mainDiv.className).toMatch(/md:p-4/);
+        expect(mainDiv.className).toMatch(/mb-2/);
     });
 
     it('displays VS text with correct styling', () => {
         render(<MatchCard match={mockMatch} />);
-
         const vsElement = screen.getByText('VS');
         expect(vsElement).toHaveClass('text-red-400', 'font-bold');
     });
 
     it('displays time with correct styling', () => {
         render(<MatchCard match={mockMatch} />);
-
         const timeElement = screen.getByText('20:00');
-        expect(timeElement).toHaveClass('text-lg', 'font-bold', 'text-red-400');
+        expect(timeElement.className).toMatch(/text-base|md:text-lg/);
+        expect(timeElement).toHaveClass('font-bold', 'text-red-400');
     });
 
     it('displays date with correct styling', () => {
         render(<MatchCard match={mockMatch} />);
-
         const dateElement = screen.getByText('2025-01-15');
-        expect(dateElement).toHaveClass('text-sm', 'text-gray-300');
+        expect(dateElement.className).toMatch(/text-xs|md:text-sm/);
+        expect(dateElement).toHaveClass('text-gray-300');
+    });
+
+    it('renders nothing for prediction if prediction is null and loadingPrediction is false', () => {
+        render(<MatchCard match={mockMatch} />);
+        const button = screen.getByRole('button');
+        button.click();
+        expect(screen.queryByText(/%/)).not.toBeInTheDocument();
+        expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
 }); 
