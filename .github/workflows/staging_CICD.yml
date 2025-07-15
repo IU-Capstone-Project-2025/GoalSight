@@ -124,6 +124,9 @@ jobs:
         working-directory: frontend
         continue-on-error: true
 
+      - name: Check Docker containers status
+        run: docker ps
+
       - name: Run end-to-end tests
         run: npm run test:e2e
         working-directory: frontend
