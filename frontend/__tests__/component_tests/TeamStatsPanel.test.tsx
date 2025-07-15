@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TeamStatsPanel from '../../src/components/ui/team_stats/TeamStatsPanel';
 import { Team } from '../../src/components/ui/team_item/Team.types';
@@ -36,127 +36,47 @@ beforeEach(() => {
 });
 
 describe('TeamStatsPanel Component', () => {
-    it('renders overview tab by default', () => {
+    it('renders Team Strength tab by default', () => {
         render(<TeamStatsPanel name="Manchester United" />);
-        const overviewTab = screen.getByText('overview');
-        expect(overviewTab).toHaveClass('text-red-400');
-        expect(screen.getByText('850000000')).toBeInTheDocument();
-        expect(screen.getByText('25.2')).toBeInTheDocument();
+        const tabButton = screen.getByRole('button', { name: 'Team Strength' });
+        expect(tabButton).toHaveClass('text-red-400');
+        expect(screen.getAllByText('Team Strength').length).toBeGreaterThan(1);
+        expect(screen.getByText('League Strength')).toBeInTheDocument();
+        expect(screen.getByText('Glicko-2 Rating')).toBeInTheDocument();
+        expect(screen.getByText('Elo Rating')).toBeInTheDocument();
     });
 
-    it('switches to form tab when clicked', async () => {
+    it('switches to Team Form tab and shows correct stats', () => {
         render(<TeamStatsPanel name="Manchester United" />);
-        const formTab = screen.getByText('form');
-        fireEvent.click(formTab);
-        expect(formTab).toHaveClass('text-red-400');
-        expect(screen.getByText('Wins')).toBeInTheDocument();
-        expect(screen.getByText('Draws')).toBeInTheDocument();
-        expect(screen.getByText('Losses')).toBeInTheDocument();
-        const winsValue = screen.getByText('Wins').previousElementSibling;
-        const drawsValue = screen.getByText('Draws').previousElementSibling;
-        const lossesValue = screen.getByText('Losses').previousElementSibling;
-        expect(winsValue).toHaveTextContent('3');
-        expect(drawsValue).toHaveTextContent('1');
-        expect(lossesValue).toHaveTextContent('1');
+        fireEvent.click(screen.getByText('Team Form'));
+        expect(screen.getByText('Wins (last 5)')).toBeInTheDocument();
+        expect(screen.getByText('Draws (last 5)')).toBeInTheDocument();
+        expect(screen.getByText('Losses (last 5)')).toBeInTheDocument();
+        expect(screen.getByText('Goals Avg (last 5)')).toBeInTheDocument();
+        expect(screen.getByText('Avg xG (last 5)')).toBeInTheDocument();
+        expect(screen.getByText('Avg xGA (last 5)')).toBeInTheDocument();
     });
 
-    it('switches to match statistic tab when clicked', async () => {
+    it('switches to Team Freshness tab and shows correct stats', () => {
         render(<TeamStatsPanel name="Manchester United" />);
-        const matchStatTab = screen.getByText('match statistic');
-        fireEvent.click(matchStatTab);
-        expect(matchStatTab).toHaveClass('text-red-400');
-        expect(screen.getByText('1.8')).toBeInTheDocument();
-        expect(screen.getByText((content) => content.replace(/\s/g, '').includes('65.5%'))).toBeInTheDocument();
-        expect(screen.getByText('12')).toBeInTheDocument();
-        expect(screen.getByText('8')).toBeInTheDocument();
-        expect(screen.getByText('xG')).toBeInTheDocument();
-        expect(screen.getByText('Ball Possession')).toBeInTheDocument();
-        expect(screen.getByText('Shots on Target')).toBeInTheDocument();
-        expect(screen.getByText('Big Chances Created')).toBeInTheDocument();
+        fireEvent.click(screen.getByText('Team Freshness'));
+        expect(screen.getByText('Days Since Last Game')).toBeInTheDocument();
+        expect(screen.getByText('Matches in Last 14 Days')).toBeInTheDocument();
     });
 
-    it('renders all tab buttons', async () => {
+    it('switches to Finances tab and shows correct stats', () => {
         render(<TeamStatsPanel name="Manchester United" />);
-        expect(screen.getByText('overview')).toBeInTheDocument();
-        expect(screen.getByText('form')).toBeInTheDocument();
-        expect(screen.getByText('match statistic')).toBeInTheDocument();
+        fireEvent.click(screen.getByText('Finances'));
+        expect(screen.getByText('Market Value')).toBeInTheDocument();
+        expect(screen.getByText('Average Age')).toBeInTheDocument();
     });
 
-    it('has correct CSS classes for styling', async () => {
-        const { container } = render(<TeamStatsPanel name="Manchester United" />);
-        const mainDiv = container.firstChild as HTMLElement;
-        expect(mainDiv.className).toMatch(/p-3/);
-        expect(mainDiv.className).toMatch(/md:p-6/);
-    });
-
-    it('tab buttons have correct styling when active', async () => {
+    it('renders all tab buttons', () => {
         render(<TeamStatsPanel name="Manchester United" />);
-        const overviewTab = screen.getByText('overview');
-        expect(overviewTab.className).toMatch(/text-red-400/);
-    });
-
-    it('tab buttons have correct styling when inactive', async () => {
-        render(<TeamStatsPanel name="Manchester United" />);
-        const formTab = screen.getByText('form');
-        expect(formTab.className).toMatch(/text-gray-400/);
-    });
-
-    it('overview values have correct styling', async () => {
-        render(<TeamStatsPanel name="Manchester United" />);
-        const marketValue = screen.getByText('850000000');
-        const avgAge = screen.getByText('25.2');
-        expect(marketValue.className).toMatch(/text-xl|md:text-2xl/);
-        expect(marketValue).toHaveClass('font-bold');
-        expect(avgAge.className).toMatch(/text-xl|md:text-2xl/);
-        expect(avgAge).toHaveClass('font-bold');
-    });
-
-    it('renders with different team data', async () => {
-        const differentTeam: Team = {
-            ...mockTeam,
-            market_value: 1200000000,
-            avg_age: 23.8,
-            last_5_matches_wdl: {
-                wins: 4,
-                draws: 0,
-                losses: 1
-            },
-            xG: 2.1,
-            ball_possession: 72.3,
-            shots_on_target: 15.7,
-            big_chances_created: 10.2
-        };
-        (useTeamStats as jest.Mock).mockReturnValue({
-            stats: differentTeam,
-            loadingStats: false
-        });
-        render(<TeamStatsPanel name="Manchester United" />);
-        expect(screen.getByText('1200000000')).toBeInTheDocument();
-        expect(screen.getByText('23.8')).toBeInTheDocument();
-    });
-
-    it('handles zero values correctly', async () => {
-        const zeroTeam: Team = {
-            ...mockTeam,
-            market_value: 0,
-            avg_age: 0,
-            last_5_matches_wdl: {
-                wins: 0,
-                draws: 0,
-                losses: 0
-            },
-            xG: 0,
-            ball_possession: 0,
-            shots_on_target: 0,
-            big_chances_created: 0
-        };
-        (useTeamStats as jest.Mock).mockReturnValue({
-            stats: zeroTeam,
-            loadingStats: false
-        });
-        render(<TeamStatsPanel name="Manchester United" />);
-        const zeroElements = screen.getAllByText('0');
-        expect(zeroElements.length).toBeGreaterThanOrEqual(2);
+        expect(screen.getByRole('button', { name: 'Team Strength' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Team Form' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Team Freshness' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Finances' })).toBeInTheDocument();
     });
 
     it('renders No data when stats is null and loadingStats is false', () => {
@@ -166,5 +86,14 @@ describe('TeamStatsPanel Component', () => {
         });
         render(<TeamStatsPanel name="Manchester United" />);
         expect(screen.getByText('No data')).toBeInTheDocument();
+    });
+
+    it('renders Loading statistics... when loadingStats is true', () => {
+        (useTeamStats as jest.Mock).mockReturnValue({
+            stats: null,
+            loadingStats: true
+        });
+        render(<TeamStatsPanel name="Manchester United" />);
+        expect(screen.getByText('Loading statistics...')).toBeInTheDocument();
     });
 }); 

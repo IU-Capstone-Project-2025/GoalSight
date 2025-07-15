@@ -74,6 +74,8 @@ function TournamentPage() {
                   team2={prediction.name2}
                   team1Chance={prediction.confidence1}
                   team2Chance={prediction.confidence2}
+                  logoUrl1={prediction.logoUrl1}
+                  logoUrl2={prediction.logoUrl2}
                 />
               </div>
             )}
