@@ -1,12 +1,4 @@
-import os
-import sys
 import pytest
-import django
-
-proj_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-sys.path.append(proj_root)
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'goalsight.settings')
-django.setup()
 
 # import class for loading and prediction (GoalSight/backend/goalsight/predictions/ml_service.py)
 from predictions.ml_service import prediction_service

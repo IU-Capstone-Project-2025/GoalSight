@@ -49,7 +49,7 @@ function TournamentPage() {
         <div className="max-w-7xl mx-auto px-2 md:px-4 py-4 md:py-8">
           <div className="bg-gradient-to-r from-red-900 to-black rounded-lg p-4 md:p-8 mb-2 md:mb-4 text-center">
             <h1 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">
-              2025 CLUB TOURNAMENT
+              FIFA CLUB WORLD CUP 2025
             </h1>
             <p className='text-base md:text-xl text-gray-300'>
               The ultimate football championship featuring the world's best clubs
@@ -74,6 +74,8 @@ function TournamentPage() {
                   team2={prediction.name2}
                   team1Chance={prediction.confidence1}
                   team2Chance={prediction.confidence2}
+                  logoUrl1={prediction.logoUrl1}
+                  logoUrl2={prediction.logoUrl2}
                 />
               </div>
             )}

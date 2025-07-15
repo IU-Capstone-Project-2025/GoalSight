@@ -20,17 +20,22 @@ describe('useMatchPrediction hook', () => {
     });
 
     it('should fetch and set prediction', async () => {
-        mockFetchMatchPrediction.mockResolvedValue({ home_win: 0.7, away_win: 0.3 });
+        mockFetchMatchPrediction.mockResolvedValue({
+            home_win: 0.7,
+            away_win: 0.3,
+            logo_url_64_home: 'https://example.com/logo.png',
+            logo_url_64_away: 'https://example.com/logo.png'
+        });
         const { result } = renderHook(() => useMatchPrediction('Team A', 'Team B'));
         await waitFor(() => {
             expect(result.current.loadingPrediction).toBe(false);
         });
-        expect(result.current.prediction).toEqual({
+        expect(result.current.prediction).toEqual(expect.objectContaining({
             name1: 'Team A',
             confidence1: 70.0,
             name2: 'Team B',
             confidence2: 30.0
-        });
+        }));
     });
 
     it('should handle API error gracefully', async () => {

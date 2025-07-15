@@ -3,7 +3,7 @@ describe('User journey: Home → Tournament → Prediction', () => {
     cy.visit('/');
 
     // Проверка домашней страницы
-    cy.contains('2025 CLUB TOURNAMENT');
+    cy.contains('FIFA CLUB WORLD CUP 2025');
     cy.contains('NEXT MATCH');
     cy.contains('vs');
 

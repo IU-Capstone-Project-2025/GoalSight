@@ -124,4 +124,47 @@ describe('NextMatchCard Component', () => {
         render(<NextMatchCard {...specialCharProps} />);
         expect(screen.getByText('Atlético Madrid vs Bayern München')).toBeInTheDocument();
     });
+
+    it('renders prediction percentages if provided', () => {
+        render(
+            <NextMatchCard
+                teamA="Manchester United"
+                teamB="Liverpool"
+                date="2025-01-15"
+                time="20:00"
+                teamAChance={65}
+                teamBChance={35}
+            />
+        );
+        expect(screen.getByText('65%')).toBeInTheDocument();
+        expect(screen.getByText('35%')).toBeInTheDocument();
+        expect(screen.getByText('—')).toBeInTheDocument();
+    });
+
+    it('does not render prediction percentages if not provided', () => {
+        render(<NextMatchCard teamA="MU" teamB="LIV" date="2025-01-15" time="20:00" />);
+        expect(screen.queryByText('65%')).not.toBeInTheDocument();
+        expect(screen.queryByText('35%')).not.toBeInTheDocument();
+    });
+
+    it('percentages have correct styling', () => {
+        render(
+            <NextMatchCard
+                teamA="MU"
+                teamB="LIV"
+                date="2025-01-15"
+                time="20:00"
+                teamAChance={65}
+                teamBChance={35}
+            />
+        );
+        const percent1 = screen.getByText('65%');
+        const percent2 = screen.getByText('35%');
+        expect(percent1.className).toMatch(/text-lg/);
+        expect(percent1.className).toMatch(/text-green-400/);
+        expect(percent1.className).toMatch(/font-bold/);
+        expect(percent2.className).toMatch(/text-lg/);
+        expect(percent2.className).toMatch(/text-green-400/);
+        expect(percent2.className).toMatch(/font-bold/);
+    });
 }); 
