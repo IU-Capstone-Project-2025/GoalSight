@@ -19,8 +19,10 @@ module.exports = {
   coverageDirectory: 'coverage/api',
   coverageReporters: ['text', 'lcov'],
   collectCoverageFrom: [
-    'src/components/ui/upcomingMatches/api.ts',
-    'src/components/ui/team_item/tournamentApi.ts',
+    'src/components/ui/match_forecast/forecastApi.ts',
+    'src/components/ui/team_item/teamApi.ts',
+    'src/components/ui/team_stats/statsApi.ts',
+    'src/components/ui/upcomingMatches/matchesApi.ts',
     '!src/**/*.d.ts',
     '!src/index.tsx',
     '!src/react-app-env.d.ts',

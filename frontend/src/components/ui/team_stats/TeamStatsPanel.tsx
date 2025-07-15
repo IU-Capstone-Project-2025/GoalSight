@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTeamStats } from './useTeamStats';
+import StatsTab from './StatsTab';
 
 type TeamStatsPanelProps = {
     name: string;
@@ -11,6 +12,62 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
 
     if (loadingStats) return <div className="p-3 md:p-6">Loading statistics...</div>;
     if (!stats) return <div className="p-3 md:p-6">No data</div>;
+
+    const overviewStats = [
+        {
+            value: stats.market_value,
+            label: 'Market value',
+            description: 'The total market value of all players in the team squad, calculated based on current transfer market valuations.'
+        },
+        {
+            value: stats.avg_age,
+            label: 'Average age',
+            description: 'The average age of all players in the team squad, calculated by summing all player ages and dividing by the number of players.'
+        }
+    ];
+    const formStats = [
+        {
+            value: stats.last_5_matches_wdl.wins,
+            label: 'Wins',
+            description: "Number of matches won in the last 5 games. Shows the team's recent winning performance."
+        },
+        {
+            value: stats.last_5_matches_wdl.draws,
+            label: 'Draws',
+            description: 'Number of matches drawn in the last 5 games. Shows how often the team has tied recently.'
+        },
+        {
+            value: stats.last_5_matches_wdl.losses,
+            label: 'Losses',
+            description: 'Number of matches lost in the last 5 games. Indicates recent poor performance or difficult opponents.'
+        }
+    ];
+    const matchStats = [
+        {
+            value: stats.xG,
+            label: 'xG',
+            description: 'Expected Goals (xG) is a statistical measure that quantifies the quality of goal-scoring chances. Higher xG indicates better attacking opportunities created.'
+        },
+        {
+            value: `${stats.ball_possession}%`,
+            label: 'Ball Possession',
+            description: 'The percentage of time the team controls the ball during matches. Higher possession often indicates better ball control and attacking style.'
+        },
+        {
+            value: Math.floor(stats.shots_on_target),
+            label: 'Shots on Target',
+            description: 'The average number of shots that hit the target (goal frame) per match. Indicates attacking efficiency and accuracy.'
+        },
+        {
+            value: Math.floor(stats.big_chances_created),
+            label: 'Big Chances Created',
+            description: "The average number of high-quality scoring opportunities created per match. Shows the team's ability to create clear goal-scoring chances."
+        }
+    ];
+
+    let currentStats: { value: string | number; label: string; description: string }[] = overviewStats;
+    if (activeTab === 'form') currentStats = formStats;
+    if (activeTab === 'match statistic') currentStats = matchStats;
 
     return (
         <div className="bg-gray-750 p-3 md:p-6">
@@ -28,62 +85,8 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
                     </button>
                 ))}
             </div>
-
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-                {activeTab === 'overview' && (
-                    <>
-                        <div className="text-center">
-                            <div className="text-xl md:text-2xl font-bold text-green-400">{stats.market_value}</div>
-                            <div className="text-xs md:text-sm text-gray-400">Market value</div>
-                        </div>
-                        <div className="text-center">
-                            <div className="text-xl md:text-2xl font-bold text-yellow-400">{stats.avg_age}</div>
-                            <div className="text-xs md:text-sm text-gray-400">Average age</div>
-                        </div>
-                    </>
-                )}
-                {activeTab === 'form' && (
-                    <>
-                        <div className="text-center">
-                            <div className="text-xl md:text-2xl font-bold text-green-400">{stats.last_5_matches_wdl.wins}</div>
-                            <div className="text-xs md:text-sm text-gray-400">Wins</div>
-                        </div>
-                        <div className="text-center">
-                            <div className="text-xl md:text-2xl font-bold text-yellow-400">{stats.last_5_matches_wdl.draws}</div>
-                            <div className="text-xs md:text-sm text-gray-400">Draws</div>
-                        </div>
-                        <div className="text-center">
-                            <div className="text-xl md:text-2xl font-bold text-red-400">{stats.last_5_matches_wdl.losses}</div>
-                            <div className="text-xs md:text-sm text-gray-400">Losses</div>
-                        </div>
-                    </>
-                )}
-                {activeTab === 'match statistic' && (
-                    <>
-                        <div className="text-center">
-                            <div className="text-xl md:text-2xl font-bold text-red-400">{stats.xG}</div>
-                            <div className="text-xs md:text-sm text-gray-400">xG</div>
-                        </div>
-                        <div className="text-center">
-                            <div className="text-xl md:text-2xl font-bold text-green-400">
-                                {stats.ball_possession}
-                            </div>
-                            <div className="text-xs md:text-sm text-gray-400">Ball Possession</div>
-                        </div>
-                        <div className="text-center">
-                            <div className="text-xl md:text-2xl font-bold text-blue-400">
-                                {Math.floor(stats.shots_on_target)}
-                            </div>
-                            <div className="text-xs md:text-sm text-gray-400">Shots on Target</div>
-                        </div>
-                        <div className="text-center">
-                            <div className="text-xl md:text-2xl font-bold text-purple-400">
-                                {Math.floor(stats.big_chances_created)}
-                            </div>
-                            <div className="text-xs md:text-sm text-gray-400">Big Chances created</div>
-                        </div>
-                    </>
-                )}
+                <StatsTab stats={currentStats} />
             </div>
         </div>
     );

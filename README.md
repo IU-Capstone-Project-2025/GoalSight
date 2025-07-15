@@ -71,22 +71,33 @@ GoalSight/
 │   │   ├── api/            # API integration tests for frontend (Jest)
 │   │   ├── component_tests/# Component unit tests for frontend (Jest)
 │   │   ├── cypress/        # End-to-end (E2E) tests (Cypress)
+│   │   │   ├── e2e/        # E2E test specifications
+│   │   │   └── support/    # Cypress support files
 │   │   └── mocks/          # Mock server and test utilities
 │   ├── src/                # Source files
 │   │   ├── pages/          # Application pages
 │   │   ├── components/     # Reusable components
-│   │   ├── api/            # API clients and requests
+│   │   │   ├── navigation/ # Navigation components
+│   │   │   └── ui/         # UI components
+│   │   │       ├── match_forecast/    # Match forecast components
+│   │   │       ├── nextMatch/         # Next match components
+│   │   │       ├── team_item/         # Team item components
+│   │   │       ├── team_stats/        # Team statistics components
+│   │   │       └── upcomingMatches/   # Upcoming matches components
 │   │   ├── styles/         # Global styles and themes
-│   │   ├── utils/          # Helper functions
-│   │   ├── types/          # TypeScript types and interfaces
-│   │   ├── constants/      # Constants and configurations
-│   │   ├── assets/         # Static resources (images, icons)
-│   │   └── index.tsx       # Application entry point
+│   │   ├── index.tsx       # Application entry point
+│   │   ├── setupTests.ts   # Test setup configuration
+│   │   └── react-app-env.d.ts # React app type definitions
 │   ├── public/             # Static files
 │   ├── package.json        # Node.js dependencies
+│   ├── package-lock.json   # Locked Node.js dependencies
 │   ├── tsconfig.json       # TypeScript configuration
 │   ├── tailwind.config.js  # Tailwind CSS configuration
-│   └── postcss.config.js   # PostCSS configuration
+│   ├── postcss.config.js   # PostCSS configuration
+│   ├── jest.setup.ts       # Jest test setup configuration
+│   ├── jest.config.components.js # Jest configuration for component tests
+│   ├── jest.config.api.js  # Jest configuration for API integration tests
+│   └── cypress.config.ts   # Cypress E2E testing configuration
 │
 ├── docker/                 # Docker configurations for different environments
 │   ├── local/

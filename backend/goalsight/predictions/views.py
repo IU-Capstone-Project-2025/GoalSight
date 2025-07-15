@@ -93,6 +93,10 @@ def predict_match(request):
                 features['B365H'] = match.home
                 features['B365D'] = match.draw
                 features['B365A'] = match.away
+            else:
+                features['B365H'] = 1
+                features['B365D'] = 1
+                features['B365A'] = 1
         except Exception:
             features['B365H'] = 1
             features['B365D'] = 1
@@ -101,7 +105,9 @@ def predict_match(request):
         for k, v in features.items():
             if v is None or (isinstance(v, float) and (v != v)):
                 features[k] = 0.0
-        result = prediction_service.predict(features, home_team.logo_url_64, away_team.logo_url_64)
+        result = prediction_service.predict(features)
+        result['logo_url_64_home'] = home_team.logo_url_64
+        result['logo_url_64_away'] = away_team.logo_url_64
         response_data = MatchPredictionSerializer(result).data
         return Response(response_data)
     except json.JSONDecodeError:
