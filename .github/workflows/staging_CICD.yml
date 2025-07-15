@@ -98,9 +98,11 @@ jobs:
         run: docker compose -f docker/local/docker-compose.yml exec -T backend python manage.py test
 
       - name: Run ML tests
+        working-directory: backend/goalsight
+        env:
+          DJANGO_SETTINGS_MODULE: goalsight.goalsight.settings
         run: |
-          cd backend/goalsight/predictions
-          pytest ./tests/
+          pytest predictions/tests
         continue-on-error: false
         
       - name: Wait for frontend to be ready
