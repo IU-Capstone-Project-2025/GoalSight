@@ -3,18 +3,13 @@ import json
 import pytest
 from django.conf import settings
 
-import os
-
-CURRENT_FILE = os.path.abspath(__file__)
-BASE_DIR = os.path.dirname(os.path.dirname(CURRENT_FILE))
-
 # thresholds
 MIN_CV_ACCURACY = 0.65
 MIN_F1_MACRO   = 0.65
 
 @pytest.fixture(scope="module")
 def metrics():
-    metrics_path = os.path.join(BASE_DIR, 'ml_models', 'metrics.json')
+    metrics_path = os.path.join(settings.BASE_DIR, 'ml_models', 'metrics.json')
     assert os.path.exists(metrics_path), f"metrics.json not found in {metrics_path}"
     with open(metrics_path, 'r') as f:
         return json.load(f)
