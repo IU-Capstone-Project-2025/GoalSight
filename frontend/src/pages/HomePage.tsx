@@ -14,7 +14,7 @@ function HomePage() {
           <div className="space-y-4 md:space-y-8">
             <div className="bg-gradient-to-r from-red-900 to-black rounded-lg p-4 md:p-8 text-center">
               <h1 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">
-                2025 CLUB TOURNAMENT
+                FIFA CLUB WORLD CUP 2025
               </h1>
               <p className="text-base md:text-xl text-gray-300 mb-3 md:mb-6">
                 The ultimate football championship featuring the world's best clubs

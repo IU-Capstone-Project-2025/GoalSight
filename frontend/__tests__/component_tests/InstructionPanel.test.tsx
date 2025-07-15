@@ -6,7 +6,7 @@ import InstructionPanel from '../../src/components/ui/match_forecast/Instruction
 describe('InstructionPanel Component', () => {
     it('renders title and instructions', () => {
         render(<InstructionPanel selectedCount={0} />);
-        expect(screen.getByText('How does it work?')).toBeInTheDocument();
+        expect(screen.getByText('How does the predictor work?')).toBeInTheDocument();
         const listItems = screen.getAllByRole('listitem');
         expect(listItems[0]).toHaveTextContent(/select.*two teams.*from the list below/i);
         expect(listItems[1]).toHaveTextContent(/get a match prediction powered by ai/i);
@@ -38,7 +38,7 @@ describe('InstructionPanel Component', () => {
 
     it('title has correct styling', () => {
         render(<InstructionPanel selectedCount={0} />);
-        const title = screen.getByText('How does it work?');
+        const title = screen.getByText('How does the predictor work?');
         expect(title).toHaveClass('text-lg', 'md:text-2xl', 'font-semibold', 'mb-1', 'md:mb-2', 'text-red-400');
     });
 
