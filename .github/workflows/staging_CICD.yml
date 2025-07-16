@@ -41,14 +41,19 @@ jobs:
         working-directory: frontend
 
       - name: Install dependencies (ml)
-        run: pip install "pytest>=7.3.1" \
+        run: pip install \
+            "pytest>=7.3.1" \
             "pytest-django>=4.5.2" \
             "pytest-cov>=4.0.0" \
             "pytest-mock>=3.14.1" \
             "pytest-xdist>=3.3.2" \
             "pytest-timeout>=2.2.0" \
             "python-dotenv" \
-            "drf-yasg"
+            "drf-yasg" \
+            "django-extensions" \
+            "djangorestframework" \
+            "django-cors-headers" \
+            "channels"
 
       - name: Install Docker
         run: |
