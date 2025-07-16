@@ -50,7 +50,7 @@ export const TeamItem: React.FC<TeamItemProps> = ({
                                 alt={team.name}
                                 className="w-5 h-5 md:w-7 md:h-7 rounded mr-1 md:mr-2 bg-transparent object-contain"
                             />
-                            <span className="font-semibold text-base md:text-lg">{team.name}</span>
+                            <span className="font-semibold text-base md:text-lg" translate='no'>{team.name}</span>
                             <span className="ml-1 md:ml-2 text-gray-400 text-xs md:text-sm">{team.country}</span>
                         </div>
                     </div>

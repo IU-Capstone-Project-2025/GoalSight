@@ -26,7 +26,7 @@ function NavigationBar() {
                                     }`
                                 }
                             >
-                                HOME
+                                <span translate="no">HOME</span>
                             </NavLink>
                         </li>
                         <li className="flex-shrink-0">
@@ -41,7 +41,7 @@ function NavigationBar() {
                                     }`
                                 }
                             >
-                                TOURNAMENT
+                                <span translate="no">TOURNAMENT</span>
                             </NavLink>
                         </li>
                     </ul>
