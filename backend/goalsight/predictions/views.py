@@ -54,6 +54,11 @@ from rest_framework.response import Response
 )
 @api_view(['POST'])
 def predict_match(request):
+    """
+    Predict the outcome of a match between two teams using the ML model.
+    Expects JSON with 'home_team' and 'away_team'.
+    Returns prediction probabilities and team logos.
+    """
     try:
         data = json.loads(request.body)
         home_team_name = data.get('home_team')
@@ -130,6 +135,10 @@ def predict_match(request):
 )
 @api_view(['GET'])
 def health_check(request):
+    """
+    Health check endpoint for the ML prediction service.
+    Returns status and whether the model is loaded.
+    """
     return Response({
         'status': 'ok',
         'model_loaded': prediction_service.model is not None

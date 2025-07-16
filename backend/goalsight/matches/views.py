@@ -34,6 +34,10 @@ from drf_yasg import openapi
 )
 @api_view(['GET'])
 def matches_list(request):
+    """
+    Returns a list of upcoming matches, starting from the specified date (or current date if not provided).
+    Query parameter: date (ISO format)
+    """
     #date_str = request.query_params.get('date', "2025-06-09T18:00:00Z")
     date_str = "2025-06-30T10:00:00Z"
     if date_str:
