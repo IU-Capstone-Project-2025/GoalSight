@@ -2,9 +2,15 @@ import NavigationBar from '../components/navigation/NavigationBar';
 import { NextMatchCard } from '../components/ui/nextMatch/NextMatchCard';
 import { UpcomingMatches } from '../components/ui/upcomingMatches/UpcomingMatches';
 import { useMatchesSeparated } from '../components/ui/upcomingMatches/useUpcomingMatches';
+import { useMatchPrediction } from '../components/ui/match_forecast/useMatchForecast';
 
 function HomePage() {
   const { nextMatch, upcomingMatches, loading } = useMatchesSeparated();
+
+  const { prediction, loadingPrediction } = useMatchPrediction(
+    nextMatch?.home_team ?? null,
+    nextMatch?.away_team ?? null
+  );
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -14,7 +20,7 @@ function HomePage() {
           <div className="space-y-4 md:space-y-8">
             <div className="bg-gradient-to-r from-red-900 to-black rounded-lg p-4 md:p-8 text-center">
               <h1 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">
-                2025 CLUB TOURNAMENT
+                FIFA CLUB WORLD CUP 2025
               </h1>
               <p className="text-base md:text-xl text-gray-300 mb-3 md:mb-6">
                 The ultimate football championship featuring the world's best clubs
@@ -23,12 +29,16 @@ function HomePage() {
               {loading ? (
                 <div className="mx-auto w-40 md:w-64 h-4 md:h-6 bg-gray-600 rounded animate-pulse" />
               ) : nextMatch ? (
-                <NextMatchCard
-                  teamA={nextMatch.home_team}
-                  teamB={nextMatch.away_team}
-                  date={new Date(nextMatch.date).toISOString().split('T')[0]}
-                  time={new Date(nextMatch.date).toTimeString().slice(0, 5)}
-                />
+                <>
+                  <NextMatchCard
+                    teamA={nextMatch.home_team}
+                    teamB={nextMatch.away_team}
+                    date={new Date(nextMatch.date).toISOString().split('T')[0]}
+                    time={new Date(nextMatch.date).toTimeString().slice(0, 5)}
+                    teamAChance={prediction && !loadingPrediction ? prediction.confidence1 : undefined}
+                    teamBChance={prediction && !loadingPrediction ? prediction.confidence2 : undefined}
+                  />
+                </>
               ) : (
                 <p className="text-gray-400 text-sm md:text-base">No next match found</p>
               )}

@@ -30,6 +30,10 @@ from drf_yasg import openapi
 )
 @api_view(['GET'])
 def teams_list(request):
+    """
+    Returns statistics for a team by name, or the first team if no name is provided.
+    Query parameter: name (team name)
+    """
     name = request.query_params.get('name')
     if name:
         try:

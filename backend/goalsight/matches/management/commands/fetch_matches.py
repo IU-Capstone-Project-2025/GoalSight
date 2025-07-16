@@ -11,6 +11,10 @@ class Command(BaseCommand):
     help = "Import matches by API"
 
     def handle(self, *args, **kwargs):
+        """
+        Fetches match data from an external API and imports or updates Match objects in the database.
+        Matches are linked to existing Team objects. Odds are also imported if available.
+        """
         headers = {"apikey": API_KEY}
 
         try:
@@ -30,7 +34,7 @@ class Command(BaseCommand):
                 home_team = Team.objects.get(name=home_name)
                 away_team = Team.objects.get(name=away_name)
             except Team.DoesNotExist as e:
-                #self.stderr.write(f"Team not found: {e}")
+                # Team not found, skip this match
                 continue
 
             match_date = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
@@ -38,6 +42,7 @@ class Command(BaseCommand):
             odds_data = item.get("odds", [])
             home_odds = away_odds = draw_odds = None
 
+            # Parse odds if available
             if odds_data and odds_data[0].get("odds"):
                 for odd in odds_data[0]["odds"]:
                     if odd["name"] == "Home":
@@ -64,4 +69,4 @@ class Command(BaseCommand):
                 match.draw = draw_odds
                 match.save()
 
-            self.stdout.write(f"{'Create' if created else 'Already exists'} match: {home_team} vs {away_team} ({match_date})")
+            self.stdout.write(f"{'Created' if created else 'Already exists'} match: {home_team} vs {away_team} ({match_date})")

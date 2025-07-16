@@ -5,6 +5,9 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 
 class TeamModelTest(TestCase):
+    """
+    Test case for the Team model.
+    """
     def setUp(self):
         self.team_data = {
             "name": "Test Team",
@@ -29,6 +32,9 @@ class TeamModelTest(TestCase):
         }
 
     def test_create_team(self):
+        """
+        Test creating a Team instance.
+        """
         team = Team.objects.create(**self.team_data)
         self.assertEqual(team.name, self.team_data["name"])
         self.assertEqual(team.logo_url_64, self.team_data["logo_url_64"])
@@ -51,10 +57,16 @@ class TeamModelTest(TestCase):
         self.assertEqual(team.defenceTeamWidth, self.team_data["defenceTeamWidth"])
 
     def test_str_method(self):
+        """
+        Test the string representation of the Team model.
+        """
         team = Team.objects.create(**self.team_data)
         self.assertEqual(str(team), self.team_data["name"])
 
 class TeamStatsSerializerTest(TestCase):
+    """
+    Test case for the TeamStatsSerializer.
+    """
     def setUp(self):
         self.team = Team.objects.create(
             name="Test Team",
@@ -79,6 +91,9 @@ class TeamStatsSerializerTest(TestCase):
         )
 
     def test_serialization(self):
+        """
+        Test that serializer returns expected fields and values.
+        """
         serializer = TeamStatsSerializer(self.team)
         data = serializer.data
 
@@ -97,6 +112,9 @@ class TeamStatsSerializerTest(TestCase):
         self.assertEqual(data['last_5_matches_wdl'], self.team.last_5_matches_wdl)
 
 class TeamsListAPITest(APITestCase):
+    """
+    Test case for the teams_list API endpoint.
+    """
     def setUp(self):
         self.team_a = Team.objects.create(
             name="Team A",
@@ -143,17 +161,26 @@ class TeamsListAPITest(APITestCase):
         self.url = reverse('teams-list') 
 
     def test_get_team_by_name(self):
+        """
+        Test API response for getting a team by name.
+        """
         response = self.client.get(self.url, {'name': 'Team A'})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['country'], self.team_a.country)
         self.assertEqual(response.data['coach'], self.team_a.coach)
 
     def test_get_first_team_if_no_name(self):
+        """
+        Test API response for getting the first team if no name is provided.
+        """
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['country'], self.team_a.country)
 
     def test_team_not_found(self):
+        """
+        Test API response when the team is not found.
+        """
         response = self.client.get(self.url, {'name': 'Nonexistent Team'})
         self.assertEqual(response.status_code, 404)
         self.assertIn('error', response.data)
