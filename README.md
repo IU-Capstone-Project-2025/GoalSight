@@ -55,7 +55,7 @@ The project includes tests for the backend (Django), ML (separately via pytest),
 - All tests are located in `tests.py` files and `tests/` subfolders inside each app.
 - Run all tests:
   ```bash
-  python goalsight/manage.py test
+  python backend/goalsight/manage.py test
   ```
 
 ### ML tests (pytest)
@@ -74,11 +74,12 @@ The project includes tests for the backend (Django), ML (separately via pytest),
 
 - Run unit and integration tests:
   ```bash
-  npm test
+  npm run test:components
+  npm run test:api
   ```
 - Run e2e tests (Cypress):
   ```bash
-  npx cypress run
+  npm run test:e2e
   ```
 
 ---
@@ -134,14 +135,14 @@ GoalSight/
 ---
 
 ## Documentation
-- Swagger: `/swagger/`  (when backend is running)
-- ML notebooks: `notebooks/`
+- Swagger: `http://localhost:8000/swagger/`  (when backend is running)
+- ML notebooks: `notebooks/` (folder)
 
 ---
 
 ## Branches
 - `main` — stable version
-- `stage` — development branch
+- `staging` — development branch
 
 ## License
 
