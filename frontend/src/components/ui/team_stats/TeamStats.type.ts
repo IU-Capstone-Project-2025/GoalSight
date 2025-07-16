@@ -1,3 +1,4 @@
+// Represents processed team statistics for use in the UI
 export type TeamStats = {
     country: string;
     coach: string;
@@ -14,6 +15,7 @@ export type TeamStats = {
     big_chances_created: number;
 }
 
+// Represents the raw API response for team statistics
 export type TeamStatsApiResponse = {
     logoUrl: string;
     country: string;

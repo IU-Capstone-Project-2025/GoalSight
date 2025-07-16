@@ -1,9 +1,11 @@
 import React from 'react';
 
 interface InstructionPanelProps {
+    // Number of teams currently selected by the user
     selectedCount: number;
 }
 
+// Renders instructional text and dynamic prompts based on selection state
 const InstructionPanel: React.FC<InstructionPanelProps> = ({ selectedCount }) => {
     return (
         <div className="bg-gray-800 text-white rounded-lg p-3 md:p-6 shadow-lg flex flex-1 flex-col items-center justify-center border border-red-600 w-full h-full">
@@ -12,6 +14,7 @@ const InstructionPanel: React.FC<InstructionPanelProps> = ({ selectedCount }) =>
                 <li>Select <span className="font-bold text-red-400">two teams</span> from the list below</li>
                 <li>Get a match prediction powered by AI</li>
             </ol>
+            {/* Show prompt depending on how many teams are selected */}
             {selectedCount === 0 && (
                 <p className="text-sm md:text-base text-gray-300 mt-1 md:mt-2">Start by selecting the first team!</p>
             )}

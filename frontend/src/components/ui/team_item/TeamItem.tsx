@@ -3,14 +3,21 @@ import { TeamListItem } from './Team.types';
 import TeamStatsPanel from '../team_stats/TeamStatsPanel';
 
 interface TeamItemProps {
+    // Team data to display
     team: TeamListItem;
+    // Whether this team is expanded to show stats
     isExpanded: boolean;
+    // Callback to toggle expansion
     onToggleExpansion: (teamId: number) => void;
+    // Whether this team is selected (checkbox)
     isSelected: boolean;
+    // Callback for selection change
     onSelectionChange: (teamId: number, isSelected: boolean) => void;
+    // Whether the team can be selected (checkbox enabled)
     canSelect: boolean;
 }
 
+// Renders a team row with selection and expansion logic
 export const TeamItem: React.FC<TeamItemProps> = ({
     team,
     isExpanded,
@@ -19,10 +26,12 @@ export const TeamItem: React.FC<TeamItemProps> = ({
     onSelectionChange,
     canSelect
 }) => {
+    // Handle checkbox toggle
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onSelectionChange(team.id, !isSelected);
     };
 
+    // Handle click to expand/collapse stats
     const handleTeamClick = () => {
         onToggleExpansion(team.id);
     };
@@ -32,6 +41,7 @@ export const TeamItem: React.FC<TeamItemProps> = ({
             <div className="flex items-center p-2 md:p-4 border-b border-gray-700 hover:bg-gray-750 cursor-pointer"
             >
                 <div className="flex items-center">
+                    {/* Team selection checkbox */}
                     <input
                         id={`checkbox-${team.id}`}
                         data-cy={`team-checkbox-${team.id}`}
@@ -42,6 +52,7 @@ export const TeamItem: React.FC<TeamItemProps> = ({
                         disabled={!canSelect && !isSelected}
                     />
                 </div>
+                {/* Team info and expand/collapse arrow */}
                 <div className="flex-1" onClick={handleTeamClick}>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
@@ -56,6 +67,7 @@ export const TeamItem: React.FC<TeamItemProps> = ({
                     </div>
                 </div>
                 <div className="ml-2 md:ml-4" onClick={handleTeamClick}>
+                    {/* Arrow icon for expand/collapse */}
                     <svg
                         className={`w-4 h-4 md:w-5 md:h-5 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                         fill="none"
@@ -72,6 +84,7 @@ export const TeamItem: React.FC<TeamItemProps> = ({
                 </div>
             </div>
 
+            {/* Show stats panel if expanded */}
             {isExpanded && (
                 <TeamStatsPanel name={team.name} />
             )}

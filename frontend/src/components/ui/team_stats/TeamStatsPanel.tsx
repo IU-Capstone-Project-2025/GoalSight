@@ -3,17 +3,20 @@ import { useTeamStats } from './useTeamStats';
 import StatsTab from './StatsTab';
 
 type TeamStatsPanelProps = {
+    // Name of the team to fetch and display stats for
     name: string;
 };
 
+// Renders a tabbed stats panel for the given team
 const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
     const { stats, loadingStats } = useTeamStats(name);
     const [activeTab, setActiveTab] = useState('team strength');
 
+    // Show loading or no data messages
     if (loadingStats) return <div className="p-3 md:p-6">Loading statistics...</div>;
     if (!stats) return <div className="p-3 md:p-6">No data</div>;
 
-    // Remove this
+    // Example static values for demonstration (replace with real data as needed)
     const teamStrength = 87;
     const leagueStrength = 82;
     const glicko2Rating = 1750;
@@ -24,6 +27,7 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
     const daysSinceLastGame = 5;
     const matches14Days = 3;
 
+    // Stats for each tab
     const teamStrengthStats = [
         {
             value: teamStrength,
@@ -106,11 +110,13 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
         }
     ];
 
+    // Determine which stats to show based on the active tab
     let currentStats = teamStrengthStats;
     if (activeTab === 'team form') currentStats = formStats;
     if (activeTab === 'team freshness') currentStats = freshnessStats;
     if (activeTab === 'finances') currentStats = financeStats;
 
+    // Tab definitions
     const tabs = [
         { key: 'team strength', label: 'Team Strength' },
         { key: 'team form', label: 'Team Form' },
@@ -120,6 +126,7 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
 
     return (
         <div className="bg-gray-750 p-3 md:p-6">
+            {/* Tab buttons */}
             <div className="flex space-x-2 md:space-x-4 mb-3 md:mb-6 border-b border-gray-600">
                 {tabs.map((tab) => (
                     <button
@@ -134,6 +141,7 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
                     </button>
                 ))}
             </div>
+            {/* Stats for the active tab */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
                 <StatsTab stats={currentStats} />
             </div>

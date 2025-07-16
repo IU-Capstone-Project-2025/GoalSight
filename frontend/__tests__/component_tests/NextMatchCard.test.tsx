@@ -2,7 +2,10 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { NextMatchCard } from '../../src/components/ui/nextMatch/NextMatchCard';
 
+// Main test suite for NextMatchCard
+// Covers rendering of team names, date/time, prediction percentages, and CSS classes
 describe('NextMatchCard Component', () => {
+    // Default props for most tests
     const defaultProps = {
         teamA: 'Manchester United',
         teamB: 'Liverpool',
@@ -11,11 +14,13 @@ describe('NextMatchCard Component', () => {
     };
 
     it('renders title correctly', () => {
+        // Checks that the "NEXT MATCH" title is present
         render(<NextMatchCard {...defaultProps} />);
         expect(screen.getByText('NEXT MATCH')).toBeInTheDocument();
     });
 
     it('renders team names correctly', () => {
+        // Ensures both team names and the "vs" separator are rendered
         render(<NextMatchCard {...defaultProps} />);
         expect(screen.getByText('Manchester United')).toBeInTheDocument();
         expect(screen.getByText('vs')).toBeInTheDocument();
@@ -25,11 +30,13 @@ describe('NextMatchCard Component', () => {
     });
 
     it('renders date and time correctly', () => {
+        // Checks that the date and time are displayed in the correct format
         render(<NextMatchCard {...defaultProps} />);
         expect(screen.getByText('2025-01-15 - 20:00')).toBeInTheDocument();
     });
 
     it('renders with different team names', () => {
+        // Verifies rendering with alternative team names and date/time
         const differentProps = {
             teamA: 'Arsenal',
             teamB: 'Chelsea',
@@ -46,6 +53,7 @@ describe('NextMatchCard Component', () => {
     });
 
     it('renders with different date format', () => {
+        // Checks support for alternative date formats
         const differentDateProps = {
             teamA: 'Barcelona',
             teamB: 'Real Madrid',
@@ -62,6 +70,7 @@ describe('NextMatchCard Component', () => {
     });
 
     it('renders with 12-hour time format', () => {
+        // Ensures 12-hour time format is displayed correctly
         const time12HourProps = {
             teamA: 'Team A',
             teamB: 'Team B',
@@ -78,6 +87,7 @@ describe('NextMatchCard Component', () => {
     });
 
     it('has correct CSS classes for styling', () => {
+        // Checks main container for expected background and padding classes
         const { container } = render(<NextMatchCard {...defaultProps} />);
         const mainDiv = container.firstChild as HTMLElement;
         expect(mainDiv).toHaveClass('bg-black/50', 'rounded-lg', 'inline-block');
@@ -86,6 +96,7 @@ describe('NextMatchCard Component', () => {
     });
 
     it('title has correct styling', () => {
+        // Ensures the title uses the correct font and color classes
         render(<NextMatchCard {...defaultProps} />);
         const titleElement = screen.getByText('NEXT MATCH');
         expect(titleElement.className).toMatch(/text-lg|text-2xl/);
@@ -94,6 +105,7 @@ describe('NextMatchCard Component', () => {
     });
 
     it('team names have correct styling', () => {
+        // Checks that the team names are bold and large
         render(<NextMatchCard {...defaultProps} />);
         const container = screen.getByText('Manchester United').parentElement;
         expect(container).toHaveClass('text-xl');
@@ -101,6 +113,7 @@ describe('NextMatchCard Component', () => {
     });
 
     it('date and time have correct styling', () => {
+        // Ensures the date/time text uses the correct color and size
         render(<NextMatchCard {...defaultProps} />);
         const dateTimeElement = screen.getByText('2025-01-15 - 20:00');
         expect(dateTimeElement.className).toMatch(/text-sm|md:text-lg/);
@@ -109,6 +122,7 @@ describe('NextMatchCard Component', () => {
     });
 
     it('renders with single word team names', () => {
+        // Checks rendering for teams with single-word names
         const singleWordProps = {
             teamA: 'Arsenal',
             teamB: 'Chelsea',
@@ -124,6 +138,7 @@ describe('NextMatchCard Component', () => {
     });
 
     it('renders with multi-word team names', () => {
+        // Checks rendering for teams with multi-word names
         const multiWordProps = {
             teamA: 'Manchester City',
             teamB: 'Tottenham Hotspur',
@@ -139,6 +154,7 @@ describe('NextMatchCard Component', () => {
     });
 
     it('renders with special characters in team names', () => {
+        // Ensures support for team names with special characters
         const specialCharProps = {
             teamA: 'Atlético Madrid',
             teamB: 'Bayern München',
@@ -154,6 +170,7 @@ describe('NextMatchCard Component', () => {
     });
 
     it('renders prediction percentages if provided', () => {
+        // Checks that prediction percentages are displayed when given
         render(
             <NextMatchCard
                 teamA="Manchester United"
@@ -170,12 +187,14 @@ describe('NextMatchCard Component', () => {
     });
 
     it('does not render prediction percentages if not provided', () => {
+        // Ensures percentages are not shown if not passed as props
         render(<NextMatchCard teamA="MU" teamB="LIV" date="2025-01-15" time="20:00" />);
         expect(screen.queryByText('65%')).not.toBeInTheDocument();
         expect(screen.queryByText('35%')).not.toBeInTheDocument();
     });
 
     it('percentages have correct styling', () => {
+        // Checks that prediction percentages use the correct color and font classes
         render(
             <NextMatchCard
                 teamA="MU"
