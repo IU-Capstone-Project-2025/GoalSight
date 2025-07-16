@@ -18,9 +18,9 @@ export const MatchCard: React.FC<Props> = ({ match }) => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0">
         <div className="flex flex-col flex-1 min-w-0">
           <div className="flex items-center min-w-0 justify-center md:justify-start">
-            <span className="text-base md:text-lg font-semibold truncate">{match.teamA}</span>
-            <span className="text-red-400 font-bold text-xs md:text-base px-2">VS</span>
-            <span className="text-base md:text-lg font-semibold truncate">{match.teamB}</span>
+            <span className="text-base md:text-lg font-semibold truncate" translate="no">{match.teamA}</span>
+            <span className="text-red-400 font-bold text-xs md:text-base px-2" translate="no">VS</span>
+            <span className="text-base md:text-lg font-semibold truncate" translate="no">{match.teamB}</span>
           </div>
 
           {showPrediction && (
@@ -53,15 +53,15 @@ export const MatchCard: React.FC<Props> = ({ match }) => {
           >
             {showPrediction ? (
               <>
-                <span className="hidden md:block">Hide</span>
-                <span className="hidden md:block">prediction</span>
-                <span className="md:hidden">Hide prediction</span>
+                <span className="hidden md:block" translate="no">Hide</span>
+                <span className="hidden md:block" translate="no">prediction</span>
+                <span className="md:hidden" translate="no">Hide prediction</span>
               </>
             ) : (
               <>
-                <span className="hidden md:block">Predict</span>
-                <span className="hidden md:block">result</span>
-                <span className="md:hidden">Predict result</span>
+                <span className="hidden md:block" translate="no">Predict</span>
+                <span className="hidden md:block" translate="no">result</span>
+                <span className="md:hidden" translate="no">Predict result</span>
               </>
             )}
           </button>

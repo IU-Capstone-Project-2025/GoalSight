@@ -14,7 +14,7 @@ export const NextMatchCard: React.FC<NextMatchCardProps> = ({ teamA, teamB, date
         NEXT MATCH
       </h2>
       <div className='text-xl md:text-3xl font-bold'>
-        {teamA} vs {teamB}
+        <span translate="no">{teamA}</span> <span translate="no">vs</span> <span translate="no">{teamB}</span>
       </div>
       <div className='text-sm md:text-lg text-gray-300 mt-1 md:mt-2'>
         {date} - {time}
