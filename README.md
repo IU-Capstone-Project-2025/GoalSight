@@ -1,244 +1,149 @@
 # GoalSight
 
-A web page with an AI tool that aggregates and structures advanced football statistics from various sources, provides convenient visualizations and summaries of teams and tournaments, and allows you to quickly and intuitively find the information you need. The platform will become a central hub for all football analytics and will greatly simplify the work of coaches, journalists and fans.
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/) [![Django](https://img.shields.io/badge/Django-5.0-green)](https://www.djangoproject.com/) [![React](https://img.shields.io/badge/React-18-blue)](https://react.dev/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[Link to our deploy](http://goalsight.ru)
+> ⚽️ **GoalSight** — сервис для анализа и прогнозирования футбольных матчей с помощью машинного обучения. Удобная платформа для тренеров, журналистов и болельщиков!
 
-## Project Structure
-```
-GoalSight/
-├── backend/                 # Django backend
-│   ├── goalsight/          # Django project
-│   │   ├── goalsight/      # Project settings
-│   │   │   ├── __init__.py
-│   │   │   ├── asgi.py     # ASGI configuration
-│   │   │   ├── settings.py # Project settings
-│   │   │   ├── urls.py     # Main URL configuration
-│   │   │   └── wsgi.py     # WSGI configuration
-│   │   ├── matches/        # Matches Django app
-│   │   │   ├── migrations/ # Database migrations
-│   │   │   ├── management/ # Custom management commands
-│   │   │   │   └── commands/
-│   │   │   │       ├── fetch_matches.py    # Import matches from external sources
-│   │   │   ├── __init__.py
-│   │   │   ├── admin.py    # Admin interface
-│   │   │   ├── apps.py     # App configuration
-│   │   │   ├── models.py   # Database models
-│   │   │   ├── tests.py    # Tests
-│   │   │   ├── urls.py     # URL routing
-│   │   │   └── views.py    # Views
-│   │   ├── teams/          # Teams Django app
-│   │   │   ├── migrations/ # Database migrations
-│   │   │   ├── management/ # Custom management commands
-│   │   │   │   └── commands/
-│   │   │   │       ├── import_teams.py     # Import teams from external sources
-│   │   │   ├── __init__.py
-│   │   │   ├── admin.py    # Admin interface
-│   │   │   ├── apps.py     # App configuration
-│   │   │   ├── models.py   # Database models
-│   │   │   ├── tests.py    # Tests
-│   │   │   ├── urls.py     # URL routing
-│   │   │   └── views.py    # Views
-│   │   ├── tournaments/    # Tournaments Django app
-│   │   │   ├── migrations/ # Database migrations
-│   │   │   ├── management/ # Custom management commands
-│   │   │   │   └── commands/
-│   │   │   │       ├── import_tournaments.py # Import tournaments from external sources
-│   │   │   ├── __init__.py
-│   │   │   ├── admin.py    # Admin interface
-│   │   │   ├── apps.py     # App configuration
-│   │   │   ├── models.py   # Database models
-│   │   │   ├── tests.py    # Tests
-│   │   │   ├── urls.py     # URL routing
-│   │   │   └── views.py    # Views
-│   │   ├── predictions/    # ML service integration
-│   │   ├── ml_models/      # ML models and artifacts
-│   │   │   ├── model.pkl              # Main ML model
-│   │   │   ├── best_logistic_model.pkl# Alternative/best model
-│   │   │   ├── scaler.pkl             # Feature scaler
-│   │   │   ├── features.json          # Feature list
-│   │   │   ├── class_mapping.json     # Class mapping
-│   │   │   └── metrics.json           # Model metrics
-│   │   ├── manage.py       # Django management script
-│   │   └── erd.png         # Entity Relationship Diagram
-│   ├── entrypoint.sh       # Docker entrypoint script
-│   └── requirements.txt    # Python dependencies
-│
-├── notebooks/              # Jupyter notebooks for ML/data analysis
-│   └── ML_part_data.ipynb
-├── frontend/               # React frontend
-│   ├── __tests__/          # Frontend tests
-│   │   ├── api/            # API integration tests for frontend (Jest)
-│   │   ├── component_tests/# Component unit tests for frontend (Jest)
-│   │   ├── cypress/        # End-to-end (E2E) tests (Cypress)
-│   │   │   ├── e2e/        # E2E test specifications
-│   │   │   └── support/    # Cypress support files
-│   │   └── mocks/          # Mock server and test utilities
-│   ├── src/                # Source files
-│   │   ├── pages/          # Application pages
-│   │   ├── components/     # Reusable components
-│   │   │   ├── navigation/ # Navigation components
-│   │   │   └── ui/         # UI components
-│   │   │       ├── match_forecast/    # Match forecast components
-│   │   │       ├── nextMatch/         # Next match components
-│   │   │       ├── team_item/         # Team item components
-│   │   │       ├── team_stats/        # Team statistics components
-│   │   │       └── upcomingMatches/   # Upcoming matches components
-│   │   ├── styles/         # Global styles and themes
-│   │   ├── index.tsx       # Application entry point
-│   │   ├── setupTests.ts   # Test setup configuration
-│   │   └── react-app-env.d.ts # React app type definitions
-│   ├── public/             # Static files
-│   ├── package.json        # Node.js dependencies
-│   ├── package-lock.json   # Locked Node.js dependencies
-│   ├── tsconfig.json       # TypeScript configuration
-│   ├── tailwind.config.js  # Tailwind CSS configuration
-│   ├── postcss.config.js   # PostCSS configuration
-│   ├── jest.setup.ts       # Jest test setup configuration
-│   ├── jest.config.components.js # Jest configuration for component tests
-│   ├── jest.config.api.js  # Jest configuration for API integration tests
-│   └── cypress.config.ts   # Cypress E2E testing configuration
-│
-├── docker/                 # Docker configurations for different environments
-│   ├── local/
-│   │   ├── Dockerfile.backend
-│   │   ├── Dockerfile.frontend
-│   │   ├── docker-compose.yml
-│   │   └── .env.gpg
-│   ├── production/
-│   │   ├── Dockerfile.backend
-│   │   ├── Dockerfile.frontend
-│   │   ├── Dockerfile.nginx
-│   │   ├── docker-compose.yml
-│   │   └── nginx/
-│   │       └── nginx.conf
-│   └── staging/
-│       ├── Dockerfile.backend
-│       ├── Dockerfile.frontend
-│       ├── Dockerfile.nginx
-│       ├── docker-compose.yml
-│       └── nginx/
-│           └── nginx.conf
-│
-├── .github/                # GitHub workflows and issue templates
-│   └── ...
-├── openapi.yaml            # OpenAPI specification
-└── README.md               # Project documentation
-```
+---
 
-## Backend Setup & Usage
+## Демо
 
-### Requirements
-- Python 3.11+
-- Django 5.0.2
-- Django REST framework
+Продакшн-сервер: [https://goalsight.ru](https://goalsight.ru)
 
-### Local Development (without Docker)
+---
 
-```bash
-cd backend/goalsight
-python -m venv venv
-source venv/bin/activate
-pip install -r ../requirements.txt
-```
+## О проекте
 
-#### Apply migrations and load initial data
-```bash
-python manage.py migrate
-python manage.py import_teams
-python manage.py import_tournaments
-python manage.py fetch_matches
-```
+GoalSight — это современная платформа для сбора, визуализации и анализа футбольной статистики, а также прогнозирования исходов матчей с помощью ML. Проект включает:
+- Django-бэкенд с REST API и интеграцией ML-моделей
+- Фронтенд на React/TypeScript
+- Импорт данных из CSV и внешних API
+- Документацию и автоматизацию через Docker
 
-#### Run development server
-```bash
-python manage.py runserver
-```
+---
 
-### Running Backend Tests
-```bash
-python manage.py test
-```
+## Быстрый старт
 
-### ML Models
-The `ml_models/` directory contains serialized ML models, scalers, and class mappings used for match outcome predictions.
+### Через Docker
 
-### Jupyter Notebooks
-The `notebooks/` directory contains Jupyter notebooks for data analysis and building ML models (e.g., `ML_part_data.ipynb`).
-
-## Frontend testing
-
-Running tests for the frontend parts: react components tests(unit tests), integration tests for API endpoints, and end-to-end tests
-
-```bash
-cd frontend
-npm run test:components
-npm run test:api
-npm run test:e2e
-```
-Gettins code coverage report for component and API integration tests
-
-```bash
-npm run test:coverage:components
-npm run test:coverage:api
-```
-
-## Setup Instructions
-
-1. Clone the repository
-2. Install Docker and Docker Compose
-3. Go to docker/local
-4. Run the application:
+1. Клонируйте репозиторий:
+   ```bash
+   git clone https://github.com/IU-Capstone-Project-2025/GoalSight.git
+   cd GoalSight
+   ```
+2. Расшифруйте файл переменных окружения:
+   ```bash
+   cd docker/local
+   gpg --decrypt .env.gpg > .env
+   ```
+   > Для расшифровки нужен пароль. Если у вас его нет — обратитесь к [тим лиду](https://github.com/Arino4kaMyr).
+3. Запустите сервисы:
    ```bash
    docker-compose up --build
    ```
-5. Access the application:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
+- Бэкенд: http://localhost:8000/
+- Фронтенд: http://localhost:3000/
+---
 
-## Development
+## Тестирование
 
-### Backend
+В проекте реализованы тесты для бэкенда (Django), ML (отдельно через pytest) и фронтенда (React):
+
+### Бэкенд (Django)
+- **Юнит- и интеграционные тесты** для моделей, сериализаторов, API и management-команд.
+- Все тесты лежат в файлах `tests.py` и подпапках `tests/` внутри приложений.
+- Запуск всех тестов:
+  ```bash
+  python goalsight/manage.py test
+  ```
+
+### ML-тесты (pytest)
+- **Тесты ML-сервисов и моделей** лежат в `backend/goalsight/predictions/tests/`
+- Запуск ML-тестов осуществляется отдельно через pytest:
+  ```bash
+  cd backend/goalsight/predictions
+  pytest tests/
+  ```
+
+### Фронтенд (React)
+- **Юнит-тесты** компонентов (Jest)
+- **Интеграционные тесты** API (Jest)
+- **E2E-тесты** пользовательских сценариев (Cypress)
+- Тесты лежат в папке `frontend/__tests__/`
+
+- Запуск юнит- и интеграционных тестов:
+  ```bash
+  npm test
+  ```
+- Запуск e2e-тестов (Cypress):
+  ```bash
+  npx cypress run
+  ```
+---
+
+## Разработка
+
+### Требования
 - Python 3.11+
-- Django 5.0.2
-- Django REST framework
+- Node.js 18+
+- Docker (для быстрой сборки)
 
-### Frontend
-- Node.js 18
-- React 18
-- TypeScript
-- Tailwind CSS
-- Axios for API calls
+### Окружение
+- Все переменные окружения для локального запуска хранятся в `docker/local/.env.gpg`
+- ML-модели и артефакты: `backend/goalsight/ml_models/`
+- Jupyter-ноутбуки: `notebooks/`
 
-## API Endpoints
+---
 
-### Django Endpoints
-- `GET /api/`: Returns API data
+## Структура файлов
+```
+GoalSight/
+├── backend/                  # Бэкенд на Django
+│   ├── goalsight/            # Django-проект и приложения
+│   │   ├── goalsight/        # Настройки Django (settings, urls, wsgi, asgi)
+│   │   ├── matches/          # Приложение матчей (модели, сериализаторы, views, management-команды)
+│   │   ├── teams/            # Приложение команд (модели, сериализаторы, views, management-команды)
+│   │   ├── tournaments/      # Приложение турниров (модели, сериализаторы, views, management-команды)
+│   │   ├── predictions/      # ML-сервис, API для предсказаний, ML-тесты
+│   │   ├── ml_models/        # Файлы обученных ML-моделей и препроцессоров
+│   │   ├── staticfiles/      # Статические файлы Django
+│   │   └── manage.py         # Управляющий скрипт Django
+│   ├── requirements.txt      # Зависимости Python
+│   └── entrypoint.sh         # Скрипт для Docker
+├── frontend/                 # Фронтенд на React/TypeScript
+│   ├── src/                  # Исходный код приложения
+│   │   ├── components/       # UI-компоненты
+│   │   ├── pages/            # Страницы приложения
+│   │   ├── styles/           # Стили
+│   │   └── ...
+│   ├── __tests__/            # Тесты фронтенда (Jest, Cypress)
+│   ├── public/               # Статические файлы (index.html и др.)
+│   ├── package.json          # Зависимости Node.js
+│   └── ...
+├── docker/                   # Docker-конфиги для разных окружений
+│   ├── local/                # Локальная разработка
+│   ├── production/           # Продакшн
+│   └── staging/              # Staging
+├── notebooks/                # Jupyter-ноутбуки для ML и анализа данных
+├── openapi.yaml              # OpenAPI-схема для документации API
+└── README.md                 # Документация проекта
+```
 
-## Docker Configuration
-- Backend runs on port 8000
-- Frontend runs on port 3000
-- Both services are connected through a Docker network
+---
 
-## 📘 API Documentation
+## Документация
+- Swagger: `/swagger/`  (при запущенном бэкенде)
+- ML-ноутбуки: `notebooks/`
 
-▶️ [View API Docs via Swagger UI](https://editor.swagger.io/?url=https://raw.githubusercontent.com/IU-Capstone-Project-2025/GoalSight/refs/heads/main/openapi.yaml)
+---
 
-## Decrypting .env.gpg
+## Ветки
+- `main` — стабильная версия
+- `stage` — ветка для разработки
 
-Some environments (e.g., docker/local) use an encrypted environment file `.env.gpg` to store sensitive configuration variables (API keys, secrets, etc.).
+## Лицензия
 
-To decrypt `.env.gpg` and obtain the `.env` file, you need access to the GPG private key used for encryption.
+Проект распространяется под лицензией MIT. Подробнее см. файл [LICENSE](LICENSE).
 
-### Steps to decrypt:
 
-1. **Obtain the private key** (ask @arino4ka_myr).
-2. **Go to docker/local**
-   ```bash
-   cd docker/local
-   ```
-3. **Decrypt the file**:
-   ```bash
-   gpg --decrypt .env.gpg > .env
-   ```
-> **Note:** Never commit decrypted `.env` files to version control!
+
