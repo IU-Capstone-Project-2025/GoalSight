@@ -2,11 +2,15 @@ import React from 'react';
 import Tooltip from './Tooltip';
 
 type StatItemProps = {
+    // Value of the statistic (number or string)
     value: string | number;
+    // Label for the statistic
     label: string;
+    // Description for the tooltip
     description: string;
 };
 
+// Renders a stat value, label, and tooltip
 const StatItem: React.FC<StatItemProps> = ({ value, label, description }) => {
     return (
         <div className="text-center">

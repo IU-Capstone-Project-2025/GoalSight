@@ -4,12 +4,13 @@ import { MatchCard } from '../../src/components/ui/upcomingMatches/MatchCard';
 import { Match } from '../../src/components/ui/upcomingMatches/Matches.types';
 import type { } from '@jest/globals';
 
+// Mock the useMatchPrediction hook to control prediction state
 jest.mock('../../src/components/ui/match_forecast/useMatchForecast', () => ({
     useMatchPrediction: jest.fn()
 }));
 import { useMatchPrediction } from '../../src/components/ui/match_forecast/useMatchForecast';
 
-// Mock data for testing
+// Mock data for testing different match scenarios
 const mockMatch: Match = {
     teamA: 'Manchester United',
     teamB: 'Liverpool',
@@ -19,6 +20,7 @@ const mockMatch: Match = {
 
 describe('MatchCard Component', () => {
     beforeEach(() => {
+        // Set up default mock return value for prediction
         (useMatchPrediction as jest.Mock).mockReturnValue({
             prediction: null,
             loadingPrediction: false
@@ -26,6 +28,7 @@ describe('MatchCard Component', () => {
     });
 
     it('renders match information correctly', () => {
+        // Checks that all match info is displayed
         render(<MatchCard match={mockMatch} />);
         expect(screen.getByText('Manchester United')).toBeInTheDocument();
         expect(screen.getByText('Liverpool')).toBeInTheDocument();
@@ -35,6 +38,7 @@ describe('MatchCard Component', () => {
     });
 
     it('renders with different team names', () => {
+        // Ensures rendering works for different teams and times
         const differentMatch: Match = {
             teamA: 'Arsenal',
             teamB: 'Chelsea',
@@ -49,6 +53,7 @@ describe('MatchCard Component', () => {
     });
 
     it('has correct CSS classes for styling', () => {
+        // Checks that the main container uses the expected background and padding classes
         const { container } = render(<MatchCard match={mockMatch} />);
         const mainDiv = container.firstChild as HTMLElement;
         expect(mainDiv).toHaveClass('flex', 'flex-col', 'bg-gray-700', 'rounded-lg');
@@ -58,12 +63,14 @@ describe('MatchCard Component', () => {
     });
 
     it('displays VS text with correct styling', () => {
+        // Ensures the VS text uses the correct color and font classes
         render(<MatchCard match={mockMatch} />);
         const vsElement = screen.getByText('VS');
         expect(vsElement).toHaveClass('text-red-400', 'font-bold');
     });
 
     it('displays time with correct styling', () => {
+        // Checks that the time uses the correct font and color classes
         render(<MatchCard match={mockMatch} />);
         const timeElement = screen.getByText('20:00');
         expect(timeElement.className).toMatch(/text-base|md:text-lg/);
@@ -71,6 +78,7 @@ describe('MatchCard Component', () => {
     });
 
     it('displays date with correct styling', () => {
+        // Checks that the date uses the correct color and size classes
         render(<MatchCard match={mockMatch} />);
         const dateElement = screen.getByText('2025-01-15');
         expect(dateElement.className).toMatch(/text-xs|md:text-sm/);
@@ -78,6 +86,7 @@ describe('MatchCard Component', () => {
     });
 
     it('renders nothing for prediction if prediction is null and loadingPrediction is false', () => {
+        // Ensures no prediction or loading text is shown if prediction is null
         render(<MatchCard match={mockMatch} />);
         const button = screen.getByRole('button');
         button.click();

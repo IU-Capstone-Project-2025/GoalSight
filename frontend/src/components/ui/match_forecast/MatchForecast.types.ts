@@ -1,3 +1,4 @@
+// Represents the processed prediction for a match, used in the UI
 export type MatchPrediction = {
     name1: string;
     confidence1: number;
@@ -7,6 +8,7 @@ export type MatchPrediction = {
     logoUrl2: string;
 };
 
+// Represents the raw API response for a match prediction
 export type MatchPredictionApiResponse = {
     home_win: number;
     away_win: number;

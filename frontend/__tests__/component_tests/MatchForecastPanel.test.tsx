@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import MatchForecastPanel from '../../src/components/ui/match_forecast/MatchForecastPanel';
 
 describe('MatchForecastPanel Component', () => {
+    // Default props for most tests
     const defaultProps = {
         team1: 'Manchester United',
         team2: 'Liverpool',
@@ -13,11 +14,13 @@ describe('MatchForecastPanel Component', () => {
     };
 
     it('renders title (case-insensitive, partial match)', () => {
+        // Checks that the title is rendered (case-insensitive)
         render(<MatchForecastPanel {...defaultProps} />);
         expect(screen.getByText(/match forecast/i)).toBeInTheDocument();
     });
 
     it('renders team names and chances correctly', () => {
+        // Ensures both team names and their chances are displayed
         render(<MatchForecastPanel {...defaultProps} />);
         expect(screen.getByText('Manchester United')).toBeInTheDocument();
         expect(screen.getByText('Liverpool')).toBeInTheDocument();
@@ -26,11 +29,13 @@ describe('MatchForecastPanel Component', () => {
     });
 
     it('renders VS text', () => {
+        // Checks that the VS text is present
         render(<MatchForecastPanel {...defaultProps} />);
         expect(screen.getByText('VS')).toBeInTheDocument();
     });
 
     it('renders logo images with correct src and alt', () => {
+        // Ensures both team logos are rendered with correct src and alt attributes
         render(<MatchForecastPanel {...defaultProps} />);
         const logo1 = screen.getByAltText('Manchester United');
         const logo2 = screen.getByAltText('Liverpool');
@@ -39,24 +44,28 @@ describe('MatchForecastPanel Component', () => {
     });
 
     it('renders with decimal chances', () => {
+        // Checks that decimal chance values are displayed correctly
         render(<MatchForecastPanel {...defaultProps} team1Chance={67.5} team2Chance={32.5} />);
         expect(screen.getByText('67.5%')).toBeInTheDocument();
         expect(screen.getByText('32.5%')).toBeInTheDocument();
     });
 
     it('renders with zero and 100 chances', () => {
+        // Ensures 0% and 100% are displayed correctly
         render(<MatchForecastPanel {...defaultProps} team1Chance={0} team2Chance={100} />);
         expect(screen.getByText('0%')).toBeInTheDocument();
         expect(screen.getByText('100%')).toBeInTheDocument();
     });
 
     it('renders with equal chances', () => {
+        // Checks that equal chances are displayed for both teams
         render(<MatchForecastPanel {...defaultProps} team1Chance={50} team2Chance={50} />);
         const fiftyPercentElements = screen.getAllByText('50%');
         expect(fiftyPercentElements.length).toBeGreaterThanOrEqual(2);
     });
 
     it('shows modal with ML info on ? click and closes on X', () => {
+        // Simulates opening and closing the ML info modal
         render(<MatchForecastPanel {...defaultProps} />);
         const questionBtn = screen.getByRole('button', { name: /show prediction info/i });
         fireEvent.click(questionBtn);
@@ -68,6 +77,7 @@ describe('MatchForecastPanel Component', () => {
     });
 
     it('modal contains all key ML info sections', () => {
+        // Ensures all key ML info sections are present in the modal
         render(<MatchForecastPanel {...defaultProps} />);
         fireEvent.click(screen.getByRole('button', { name: /show prediction info/i }));
         expect(screen.getByText(/Key Features and Inputs/i)).toBeInTheDocument();
@@ -78,6 +88,7 @@ describe('MatchForecastPanel Component', () => {
     });
 
     it('team names and chances have correct classes', () => {
+        // Checks that team names and chances use the correct font size classes
         render(<MatchForecastPanel {...defaultProps} />);
         const team1Name = screen.getByText('Manchester United');
         const team2Name = screen.getByText('Liverpool');
@@ -90,6 +101,7 @@ describe('MatchForecastPanel Component', () => {
     });
 
     it('VS text has correct styling', () => {
+        // Ensures the VS text uses the correct color class
         render(<MatchForecastPanel {...defaultProps} />);
         const vsElement = screen.getByText('VS');
         expect(vsElement.className).toMatch(/text-gray-400/);
