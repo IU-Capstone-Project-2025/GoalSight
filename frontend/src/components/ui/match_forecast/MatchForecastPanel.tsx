@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 
 type MatchForecastPanelProps = {
+    // Name of the first (home) team
     team1: string;
+    // Name of the second (away) team
     team2: string;
+    // Win probability for team1 (in percent)
     team1Chance: number;
+    // Win probability for team2 (in percent)
     team2Chance: number;
+    // Logo URL for team1
     logoUrl1: string;
+    // Logo URL for team2
     logoUrl2: string;
 };
 
+// Renders the forecast panel with team info, chances, and ML info modal
 const MatchForecastPanel: React.FC<MatchForecastPanelProps> = ({
     team1,
     team2,
@@ -17,6 +24,7 @@ const MatchForecastPanel: React.FC<MatchForecastPanelProps> = ({
     logoUrl1,
     logoUrl2,
 }) => {
+    // State for showing/hiding the ML info modal
     const [showModal, setShowModal] = useState(false);
 
     return (
@@ -24,6 +32,7 @@ const MatchForecastPanel: React.FC<MatchForecastPanelProps> = ({
             <div className="flex items-center mb-2 md:mb-4">
                 <h3 className="text-lg md:text-2xl font-semibold text-red-400 transition-opacity duration-300 mr-1 md:mr-2">Match forecast</h3>
                 <div className="relative group">
+                    {/* Button to open ML info modal */}
                     <button
                         type="button"
                         className="w-5 md:w-6 h-5 md:h-6 flex items-center justify-center rounded-full bg-gray-700 text-white text-base md:text-lg font-bold cursor-pointer focus:outline-none"
@@ -35,6 +44,7 @@ const MatchForecastPanel: React.FC<MatchForecastPanelProps> = ({
                     </button>
                 </div>
             </div>
+            {/* ML info modal, shown when showModal is true */}
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 px-2 md:px-0" onClick={() => setShowModal(false)}>
                     <div
@@ -85,6 +95,7 @@ const MatchForecastPanel: React.FC<MatchForecastPanelProps> = ({
                     </div>
                 </div>
             )}
+            {/* Main forecast display: team names, logos, and chances */}
             <div className="flex items-center justify-center w-full gap-8 md:gap-16">
                 <div className="flex flex-col items-center min-w-[120px] md:min-w-[160px]">
                     <div className="flex items-center justify-center w-full mb-1 md:mb-2">

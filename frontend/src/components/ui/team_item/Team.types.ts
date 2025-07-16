@@ -1,3 +1,4 @@
+// Represents a full team with all details (used in stats and details views)
 export type Team = {
     id: number;
     name: string;
@@ -17,6 +18,7 @@ export type Team = {
     big_chances_created: number;
 }
 
+// Represents a team in a list (summary info)
 export type TeamListItem = {
     id: number;
     name: string;
@@ -24,6 +26,7 @@ export type TeamListItem = {
     logoUrl: string;
 }
 
+// Represents the API response for a team (raw format)
 export type TeamsApiResponse = {
     name: string;
     country: string;

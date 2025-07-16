@@ -1,18 +1,22 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { useTeams } from '../../src/components/ui/team_item/useTeams';
 
+// Mock the team API to control team responses
 jest.mock('../../src/components/ui/team_item/teamApi', () => ({
     fetchTeams: jest.fn()
 }));
 import { fetchTeams } from '../../src/components/ui/team_item/teamApi';
 const mockFetchTeams = fetchTeams as jest.MockedFunction<typeof fetchTeams>;
 
+// Main test suite for useTeams
+// Covers loading state, team fetching, error handling, and empty array handling
 describe('useTeams hook', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
     it('should initialize with loading state', async () => {
+        // Ensures the hook starts in loading state and updates after fetch
         mockFetchTeams.mockResolvedValue([]);
         const { result } = renderHook(() => useTeams());
         expect(result.current.loadingTeams).toBe(true);
@@ -23,6 +27,7 @@ describe('useTeams hook', () => {
     });
 
     it('should fetch and set teams', async () => {
+        // Simulates a successful API call and checks that teams are set
         const mockTeams = [
             { name: 'Team A', country: 'Country A', logo_url_32: 'logoA.png' },
             { name: 'Team B', country: 'Country B', logo_url_32: 'logoB.png' }
@@ -38,6 +43,7 @@ describe('useTeams hook', () => {
     });
 
     it('should handle API error gracefully', async () => {
+        // Simulates an API error and checks that teams is an empty array
         mockFetchTeams.mockRejectedValue(new Error('API Error'));
         const { result } = renderHook(() => useTeams());
         await waitFor(() => {
@@ -47,6 +53,7 @@ describe('useTeams hook', () => {
     });
 
     it('should handle empty array', async () => {
+        // Ensures the hook handles an empty array response correctly
         mockFetchTeams.mockResolvedValue([]);
         const { result } = renderHook(() => useTeams());
         await waitFor(() => {

@@ -4,7 +4,7 @@ import TeamStatsPanel from '../../src/components/ui/team_stats/TeamStatsPanel';
 import { Team } from '../../src/components/ui/team_item/Team.types';
 import { useTeamStats } from '../../src/components/ui/team_stats/useTeamStats';
 
-// Mock data for testing
+// Mock team data for use in tests
 const mockTeam: Team = {
     id: 1,
     name: 'Manchester United',
@@ -24,10 +24,12 @@ const mockTeam: Team = {
     big_chances_created: 8.7
 };
 
+// Mock the useTeamStats hook to control stats and loading state
 jest.mock('../../src/components/ui/team_stats/useTeamStats', () => ({
     useTeamStats: jest.fn()
 }));
 
+// Set up default mock return value before each test
 beforeEach(() => {
     (useTeamStats as jest.Mock).mockReturnValue({
         stats: mockTeam,
@@ -35,8 +37,11 @@ beforeEach(() => {
     });
 });
 
+// Main test suite for TeamStatsPanel
+// Covers tab switching, data rendering, loading, and no data states
 describe('TeamStatsPanel Component', () => {
     it('renders Team Strength tab by default', () => {
+        // Checks that the Team Strength tab and its stats are shown by default
         render(<TeamStatsPanel name="Manchester United" />);
         const tabButton = screen.getByRole('button', { name: 'Team Strength' });
         expect(tabButton).toHaveClass('text-red-400');
@@ -47,6 +52,7 @@ describe('TeamStatsPanel Component', () => {
     });
 
     it('switches to Team Form tab and shows correct stats', () => {
+        // Simulates clicking the Team Form tab and checks for form stats
         render(<TeamStatsPanel name="Manchester United" />);
         fireEvent.click(screen.getByText('Team Form'));
         expect(screen.getByText('Wins (last 5)')).toBeInTheDocument();
@@ -58,6 +64,7 @@ describe('TeamStatsPanel Component', () => {
     });
 
     it('switches to Team Freshness tab and shows correct stats', () => {
+        // Simulates clicking the Team Freshness tab and checks for freshness stats
         render(<TeamStatsPanel name="Manchester United" />);
         fireEvent.click(screen.getByText('Team Freshness'));
         expect(screen.getByText('Days Since Last Game')).toBeInTheDocument();
@@ -65,6 +72,7 @@ describe('TeamStatsPanel Component', () => {
     });
 
     it('switches to Finances tab and shows correct stats', () => {
+        // Simulates clicking the Finances tab and checks for financial stats
         render(<TeamStatsPanel name="Manchester United" />);
         fireEvent.click(screen.getByText('Finances'));
         expect(screen.getByText('Market Value')).toBeInTheDocument();
@@ -72,6 +80,7 @@ describe('TeamStatsPanel Component', () => {
     });
 
     it('renders all tab buttons', () => {
+        // Ensures all tab buttons are present
         render(<TeamStatsPanel name="Manchester United" />);
         expect(screen.getByRole('button', { name: 'Team Strength' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Team Form' })).toBeInTheDocument();
@@ -80,6 +89,7 @@ describe('TeamStatsPanel Component', () => {
     });
 
     it('renders No data when stats is null and loadingStats is false', () => {
+        // Simulates no data returned and checks for "No data" message
         (useTeamStats as jest.Mock).mockReturnValue({
             stats: null,
             loadingStats: false
@@ -89,6 +99,7 @@ describe('TeamStatsPanel Component', () => {
     });
 
     it('renders Loading statistics... when loadingStats is true', () => {
+        // Simulates loading state and checks for loading message
         (useTeamStats as jest.Mock).mockReturnValue({
             stats: null,
             loadingStats: true
