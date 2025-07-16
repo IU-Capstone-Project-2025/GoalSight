@@ -2,6 +2,9 @@ from rest_framework import serializers
 from .models import Team
 
 class TeamStatsSerializer(serializers.ModelSerializer):
+    """
+    Serializer for team statistics. Provides key attributes for API responses.
+    """
     class Meta:
         model = Team
         fields = [

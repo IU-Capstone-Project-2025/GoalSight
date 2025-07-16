@@ -7,7 +7,13 @@ from matches.models import Match
 from unittest.mock import patch
 
 class PredictionSerializerTest(TestCase):
+    """
+    Test case for the MatchPredictionSerializer.
+    """
     def test_valid_prediction(self):
+        """
+        Test serializer with valid prediction data.
+        """
         data = {
             "prediction": "home_win",
             "confidence": 0.85,
@@ -24,6 +30,9 @@ class PredictionSerializerTest(TestCase):
         self.assertEqual(serializer.validated_data["prediction"], "home_win")
 
 class PredictMatchAPITest(APITestCase):
+    """
+    Test case for the predict_match API endpoint.
+    """
     def setUp(self):
         self.team_a = Team.objects.create(
             name="Team A",
@@ -77,6 +86,9 @@ class PredictMatchAPITest(APITestCase):
 
     @patch('goalsight.predictions.views.prediction_service.predict')
     def test_predict_match_success(self, mock_predict):
+        """
+        Test successful prediction API response.
+        """
         mock_predict.return_value = {'win_prob': 0.7, 'draw_prob': 0.2, 'lose_prob': 0.1}
 
         data = {
@@ -90,6 +102,9 @@ class PredictMatchAPITest(APITestCase):
         self.assertIn('lose_prob', response.json())
 
     def test_missing_fields(self):
+        """
+        Test API response for missing required fields.
+        """
         data = {
             "home_team": "Team A"
         }
@@ -99,12 +114,18 @@ class PredictMatchAPITest(APITestCase):
         self.assertEqual(response.json()['error'], 'Both home_team and away_team are required.')
 
     def test_invalid_json(self):
+        """
+        Test API response for invalid JSON body.
+        """
         response = self.client.post(self.url, data="not a json", content_type='application/json')
         self.assertEqual(response.status_code, 400)
         self.assertIn('error', response.json())
         self.assertEqual(response.json()['error'], 'Bad JSON')
 
     def test_team_not_found(self):
+        """
+        Test API response when a team is not found.
+        """
         data = {
             "home_team": "Nonexistent Team",
             "away_team": "Team B"
@@ -116,6 +137,9 @@ class PredictMatchAPITest(APITestCase):
 
     @patch('goalsight.predictions.views.prediction_service.predict')
     def test_prediction_service_exception(self, mock_predict):
+        """
+        Test API response when the prediction service raises an exception.
+        """
         mock_predict.side_effect = Exception("Model failure")
         data = {
             "home_team": "Team A",

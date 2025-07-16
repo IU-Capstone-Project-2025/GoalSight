@@ -6,6 +6,9 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 
 class TournamentModelTest(TestCase):
+    """
+    Test case for the Tournament model.
+    """
     def setUp(self):
         self.team1 = Team.objects.create(
             name="Team One",
@@ -51,6 +54,9 @@ class TournamentModelTest(TestCase):
         )
 
     def test_create_tournament_and_add_teams(self):
+        """
+        Test creating a Tournament and adding teams to it.
+        """
         tournament = Tournament.objects.create(name="Champions League", year=2025)
         tournament.teams.add(self.team1, self.team2)
         tournament.save()
@@ -62,11 +68,20 @@ class TournamentModelTest(TestCase):
         self.assertIn(self.team2, tournament.teams.all())
 
     def test_str_method(self):
+        """
+        Test the string representation of the Tournament model.
+        """
         tournament = Tournament.objects.create(name="Europa League", year=2024)
         self.assertEqual(str(tournament), "Europa League (2024)")
 
 class TournamentTeamSerializerTest(TestCase):
+    """
+    Test case for the TournamentTeamSerializer.
+    """
     def test_valid_data(self):
+        """
+        Test serializer with valid team data.
+        """
         data = {
             'name': 'Team A',
             'country': 'Country A',
@@ -78,6 +93,9 @@ class TournamentTeamSerializerTest(TestCase):
         self.assertEqual(serializer.validated_data['logo_url_32'], data['logo_url_32'])
 
     def test_missing_name(self):
+        """
+        Test serializer validation for missing team name.
+        """
         data = {
             'country': 'Country A',
             'logo_url_32': 'http://example.com/logo.png'
@@ -87,6 +105,9 @@ class TournamentTeamSerializerTest(TestCase):
         self.assertIn('name', serializer.errors)
 
     def test_invalid_logo_url(self):
+        """
+        Test serializer validation for invalid logo URL.
+        """
         data = {
             'name': 'Team A',
             'country': 'Country A',
@@ -97,6 +118,9 @@ class TournamentTeamSerializerTest(TestCase):
         self.assertIn('logo_url_32', serializer.errors)
 
 class TournamentsListAPITest(APITestCase):
+    """
+    Test case for the tournaments_list API endpoint.
+    """
     def setUp(self):
         self.team1 = Team.objects.create(
             name="Team One",
@@ -146,18 +170,27 @@ class TournamentsListAPITest(APITestCase):
         self.url = reverse('tournaments-list') 
 
     def test_missing_parameters(self):
+        """
+        Test API response for missing required parameters.
+        """
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 400)
         self.assertIn('error', response.data)
         self.assertEqual(response.data['error'], 'tournament_title and year are required')
 
     def test_tournament_not_found(self):
+        """
+        Test API response when the tournament is not found.
+        """
         response = self.client.get(self.url, {'tournament_title': 'Nonexistent', 'year': '2025'})
         self.assertEqual(response.status_code, 404)
         self.assertIn('error', response.data)
         self.assertEqual(response.data['error'], 'Tournament not found')
 
     def test_successful_response(self):
+        """
+        Test API response for a successful request.
+        """
         response = self.client.get(self.url, {'tournament_title': 'Champions League', 'year': '2025'})
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.data, list)

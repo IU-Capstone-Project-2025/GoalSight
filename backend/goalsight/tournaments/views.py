@@ -3,12 +3,9 @@ from rest_framework.response import Response
 from .models import Tournament
 from teams.models import Team
 from .serializers import TournamentTeamSerializer
-from tournaments.models import Tournament
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-# This decorator adds OpenAPI/Swagger documentation for the tournaments_list endpoint.
-# It describes the expected query parameters and the response schema for API documentation tools.
 @swagger_auto_schema(
     method='get',
     manual_parameters=[
@@ -36,10 +33,13 @@ from drf_yasg import openapi
     },
     operation_description="Get a list of tournament teams by name and year"
 )
-# This function handles GET requests to retrieve a list of teams for a specific tournament and year.
-# It returns a 400 error if required parameters are missing, 404 if the tournament is not found, or a list of teams otherwise.
 @api_view(['GET'])
 def tournaments_list(request):
+    """
+    Returns a list of teams for a specific tournament and year.
+    Query parameters: tournament_title (name), year (year).
+    Returns 400 if parameters are missing, 404 if tournament not found.
+    """
     tournament_title = request.query_params.get('tournament_title')
     year = request.query_params.get('year')
     if not tournament_title or not year:

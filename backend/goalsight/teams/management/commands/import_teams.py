@@ -12,6 +12,10 @@ class Command(BaseCommand):
     help = 'Import teams from a hardcoded CSV file'
 
     def handle(self, *args, **kwargs):
+        """
+        Imports team data from a CSV file and creates or updates Team objects in the database.
+        The CSV file must contain all required fields for the Team model.
+        """
         filepath = os.path.join(os.path.dirname(__file__), '../../data/initial_data.csv')
         filepath = os.path.abspath(filepath)
 
@@ -42,11 +46,6 @@ class Command(BaseCommand):
                         'defenceTeamWidth': int(row['defenceTeamWidth']) if row['defenceTeamWidth'] else 0,
                     }
                 )
-                # filename = sanitize_name(row['name'].lower()) + ".png"
-                # logo_url_32 = BASE_URL + "/" + row['country'].lower() + "/" +"32x32/" +filename
-                # logo_url_64 = BASE_URL + "/" + row['country'].lower() + "/" +"64x64/" +filename
-                # team.logo_url_32 = logo_url_32
-                # team.logo_url_64 = logo_url_64
-                # team.save()
+                # Optionally, update logo URLs from a remote source if needed
                 action = 'Created' if created else 'Updated'
                 self.stdout.write(f'{action} team: {team.name}')
