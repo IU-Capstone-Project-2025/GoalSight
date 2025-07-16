@@ -1,6 +1,9 @@
 from django.db import models
 
 class Team(models.Model):
+    """
+    Model representing a football team with statistics and attributes used for predictions.
+    """
     name = models.CharField(max_length=255)
     logo_url_32 = models.URLField(blank=True, null=True)
     logo_url_64 = models.URLField(blank=True, null=True)
@@ -16,7 +19,7 @@ class Team(models.Model):
     shots_on_target = models.IntegerField()
     big_chances_created = models.IntegerField()
 
-    #model
+    # Model features for ML predictions
     buildUpPlaySpeed = models.IntegerField(null=True, blank=True)
     buildUpPlayPassing = models.IntegerField(null=True, blank=True)
     chanceCreationPassing = models.IntegerField(null=True, blank=True)
