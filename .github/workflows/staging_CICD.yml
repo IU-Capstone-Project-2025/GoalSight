@@ -110,10 +110,8 @@ jobs:
         run: docker compose -f docker/local/docker-compose.yml exec -T backend python manage.py test
 
       - name: Run ML tests
-        run: |
-          cd backend/goalsight/predictions
-          pytest ./tests/
-        continue-on-error: true
+        run: docker compose -f docker/local/docker-compose.yml exec -T backend sh -c "cd goalsight/predictions && pytest tests/"
+        continue-on-error: false
         
       - name: Wait for frontend to be ready
         run: |
