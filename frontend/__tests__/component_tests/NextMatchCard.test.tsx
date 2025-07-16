@@ -17,7 +17,11 @@ describe('NextMatchCard Component', () => {
 
     it('renders team names correctly', () => {
         render(<NextMatchCard {...defaultProps} />);
-        expect(screen.getByText('Manchester United vs Liverpool')).toBeInTheDocument();
+        expect(screen.getByText('Manchester United')).toBeInTheDocument();
+        expect(screen.getByText('vs')).toBeInTheDocument();
+        expect(screen.getByText('Liverpool')).toBeInTheDocument();
+        const container = screen.getByText('Manchester United').parentElement;
+        expect(container).toHaveTextContent(/Manchester United\s*vs\s*Liverpool/);
     });
 
     it('renders date and time correctly', () => {
@@ -33,7 +37,11 @@ describe('NextMatchCard Component', () => {
             time: '15:30'
         };
         render(<NextMatchCard {...differentProps} />);
-        expect(screen.getByText('Arsenal vs Chelsea')).toBeInTheDocument();
+        expect(screen.getByText('Arsenal')).toBeInTheDocument();
+        expect(screen.getByText('vs')).toBeInTheDocument();
+        expect(screen.getByText('Chelsea')).toBeInTheDocument();
+        const container = screen.getByText('Arsenal').parentElement;
+        expect(container).toHaveTextContent(/Arsenal\s*vs\s*Chelsea/);
         expect(screen.getByText('2025-01-20 - 15:30')).toBeInTheDocument();
     });
 
@@ -45,7 +53,11 @@ describe('NextMatchCard Component', () => {
             time: '21:00'
         };
         render(<NextMatchCard {...differentDateProps} />);
-        expect(screen.getByText('Barcelona vs Real Madrid')).toBeInTheDocument();
+        expect(screen.getByText('Barcelona')).toBeInTheDocument();
+        expect(screen.getByText('vs')).toBeInTheDocument();
+        expect(screen.getByText('Real Madrid')).toBeInTheDocument();
+        const container = screen.getByText('Barcelona').parentElement;
+        expect(container).toHaveTextContent(/Barcelona\s*vs\s*Real Madrid/);
         expect(screen.getByText('15/01/2025 - 21:00')).toBeInTheDocument();
     });
 
@@ -57,7 +69,11 @@ describe('NextMatchCard Component', () => {
             time: '8:30 PM'
         };
         render(<NextMatchCard {...time12HourProps} />);
-        expect(screen.getByText('Team A vs Team B')).toBeInTheDocument();
+        expect(screen.getByText('Team A')).toBeInTheDocument();
+        expect(screen.getByText('vs')).toBeInTheDocument();
+        expect(screen.getByText('Team B')).toBeInTheDocument();
+        const container = screen.getByText('Team A').parentElement;
+        expect(container).toHaveTextContent(/Team A\s*vs\s*Team B/);
         expect(screen.getByText('2025-01-25 - 8:30 PM')).toBeInTheDocument();
     });
 
@@ -79,9 +95,9 @@ describe('NextMatchCard Component', () => {
 
     it('team names have correct styling', () => {
         render(<NextMatchCard {...defaultProps} />);
-        const teamNamesElement = screen.getByText('Manchester United vs Liverpool');
-        expect(teamNamesElement.className).toMatch(/text-xl|md:text-3xl/);
-        expect(teamNamesElement).toHaveClass('font-bold');
+        const container = screen.getByText('Manchester United').parentElement;
+        expect(container).toHaveClass('text-xl');
+        expect(container).toHaveClass('font-bold');
     });
 
     it('date and time have correct styling', () => {
@@ -100,7 +116,11 @@ describe('NextMatchCard Component', () => {
             time: '19:45'
         };
         render(<NextMatchCard {...singleWordProps} />);
-        expect(screen.getByText('Arsenal vs Chelsea')).toBeInTheDocument();
+        expect(screen.getByText('Arsenal')).toBeInTheDocument();
+        expect(screen.getByText('vs')).toBeInTheDocument();
+        expect(screen.getByText('Chelsea')).toBeInTheDocument();
+        const container = screen.getByText('Arsenal').parentElement;
+        expect(container).toHaveTextContent(/Arsenal\s*vs\s*Chelsea/);
     });
 
     it('renders with multi-word team names', () => {
@@ -111,7 +131,11 @@ describe('NextMatchCard Component', () => {
             time: '16:00'
         };
         render(<NextMatchCard {...multiWordProps} />);
-        expect(screen.getByText('Manchester City vs Tottenham Hotspur')).toBeInTheDocument();
+        expect(screen.getByText('Manchester City')).toBeInTheDocument();
+        expect(screen.getByText('vs')).toBeInTheDocument();
+        expect(screen.getByText('Tottenham Hotspur')).toBeInTheDocument();
+        const container = screen.getByText('Manchester City').parentElement;
+        expect(container).toHaveTextContent(/Manchester City\s*vs\s*Tottenham Hotspur/);
     });
 
     it('renders with special characters in team names', () => {
@@ -122,7 +146,11 @@ describe('NextMatchCard Component', () => {
             time: '20:30'
         };
         render(<NextMatchCard {...specialCharProps} />);
-        expect(screen.getByText('Atlético Madrid vs Bayern München')).toBeInTheDocument();
+        expect(screen.getByText('Atlético Madrid')).toBeInTheDocument();
+        expect(screen.getByText('vs')).toBeInTheDocument();
+        expect(screen.getByText('Bayern München')).toBeInTheDocument();
+        const container = screen.getByText('Atlético Madrid').parentElement;
+        expect(container).toHaveTextContent(/Atlético Madrid\s*vs\s*Bayern München/);
     });
 
     it('renders prediction percentages if provided', () => {
