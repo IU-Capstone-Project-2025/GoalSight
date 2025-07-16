@@ -2,148 +2,150 @@
 
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/) [![Django](https://img.shields.io/badge/Django-5.0-green)](https://www.djangoproject.com/) [![React](https://img.shields.io/badge/React-18-blue)](https://react.dev/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> ⚽️ **GoalSight** — сервис для анализа и прогнозирования футбольных матчей с помощью машинного обучения. Удобная платформа для тренеров, журналистов и болельщиков!
+> ⚽️ **GoalSight** — a platform for football match analytics and prediction powered by machine learning. A convenient tool for coaches, journalists, and fans!
 
 ---
 
-## Демо
+## Demo
 
-Продакшн-сервер: [https://goalsight.ru](https://goalsight.ru)
-
----
-
-## О проекте
-
-GoalSight — это современная платформа для сбора, визуализации и анализа футбольной статистики, а также прогнозирования исходов матчей с помощью ML. Проект включает:
-- Django-бэкенд с REST API и интеграцией ML-моделей
-- Фронтенд на React/TypeScript
-- Импорт данных из CSV и внешних API
-- Документацию и автоматизацию через Docker
+[Link to our website](https://goalsight.ru)
 
 ---
 
-## Быстрый старт
+## About the Project
 
-### Через Docker
+GoalSight is a modern platform for collecting, visualizing, and analyzing football statistics, as well as predicting match outcomes using ML. The project includes:
+- Django backend with REST API and ML model integration
+- React/TypeScript frontend
+- Data import from CSV and external APIs
+- Documentation and automation via Docker
 
-1. Клонируйте репозиторий:
+---
+
+## Quick Start
+
+### Using Docker
+
+1. Clone the repository:
    ```bash
    git clone https://github.com/IU-Capstone-Project-2025/GoalSight.git
    cd GoalSight
    ```
-2. Расшифруйте файл переменных окружения:
+2. Decrypt the environment variables file:
    ```bash
    cd docker/local
    gpg --decrypt .env.gpg > .env
    ```
-   > Для расшифровки нужен пароль. Если у вас его нет — обратитесь к [тим лиду](https://github.com/Arino4kaMyr).
-3. Запустите сервисы:
+   > You will need a password to decrypt. If you don't have it, contact the [team lead](https://github.com/Arino4kaMyr).
+3. Start the services:
    ```bash
    docker-compose up --build
    ```
-- Бэкенд: http://localhost:8000/
-- Фронтенд: http://localhost:3000/
+- Backend: http://localhost:8000/
+- Frontend: http://localhost:3000/
+
 ---
 
-## Тестирование
+## Testing
 
-В проекте реализованы тесты для бэкенда (Django), ML (отдельно через pytest) и фронтенда (React):
+The project includes tests for the backend (Django), ML (separately via pytest), and frontend (React):
 
-### Бэкенд (Django)
-- **Юнит- и интеграционные тесты** для моделей, сериализаторов, API и management-команд.
-- Все тесты лежат в файлах `tests.py` и подпапках `tests/` внутри приложений.
-- Запуск всех тестов:
+### Backend (Django)
+- **Unit and integration tests** for models, serializers, API, and management commands.
+- All tests are located in `tests.py` files and `tests/` subfolders inside each app.
+- Run all tests:
   ```bash
   python goalsight/manage.py test
   ```
 
-### ML-тесты (pytest)
-- **Тесты ML-сервисов и моделей** лежат в `backend/goalsight/predictions/tests/`
-- Запуск ML-тестов осуществляется отдельно через pytest:
+### ML tests (pytest)
+- **ML service and model tests** are located in `backend/goalsight/predictions/tests/`
+- Run ML tests separately using pytest:
   ```bash
   cd backend/goalsight/predictions
   pytest tests/
   ```
 
-### Фронтенд (React)
-- **Юнит-тесты** компонентов (Jest)
-- **Интеграционные тесты** API (Jest)
-- **E2E-тесты** пользовательских сценариев (Cypress)
-- Тесты лежат в папке `frontend/__tests__/`
+### Frontend (React)
+- **Unit tests** for components (Jest)
+- **Integration tests** for API (Jest)
+- **E2E tests** for user scenarios (Cypress)
+- Tests are located in `frontend/__tests__/`
 
-- Запуск юнит- и интеграционных тестов:
+- Run unit and integration tests:
   ```bash
   npm test
   ```
-- Запуск e2e-тестов (Cypress):
+- Run e2e tests (Cypress):
   ```bash
   npx cypress run
   ```
+
 ---
 
-## Разработка
+## Development
 
-### Требования
+### Requirements
 - Python 3.11+
 - Node.js 18+
-- Docker (для быстрой сборки)
+- Docker (for quick setup)
 
-### Окружение
-- Все переменные окружения для локального запуска хранятся в `docker/local/.env.gpg`
-- ML-модели и артефакты: `backend/goalsight/ml_models/`
-- Jupyter-ноутбуки: `notebooks/`
+### Environment
+- All environment variables for local development are stored in `docker/local/.env.gpg`
+- ML models and artifacts: `backend/goalsight/ml_models/`
+- Jupyter notebooks: `notebooks/`
 
 ---
 
-## Структура файлов
+## File Structure
 ```
 GoalSight/
-├── backend/                  # Бэкенд на Django
-│   ├── goalsight/            # Django-проект и приложения
-│   │   ├── goalsight/        # Настройки Django (settings, urls, wsgi, asgi)
-│   │   ├── matches/          # Приложение матчей (модели, сериализаторы, views, management-команды)
-│   │   ├── teams/            # Приложение команд (модели, сериализаторы, views, management-команды)
-│   │   ├── tournaments/      # Приложение турниров (модели, сериализаторы, views, management-команды)
-│   │   ├── predictions/      # ML-сервис, API для предсказаний, ML-тесты
-│   │   ├── ml_models/        # Файлы обученных ML-моделей и препроцессоров
-│   │   ├── staticfiles/      # Статические файлы Django
-│   │   └── manage.py         # Управляющий скрипт Django
-│   ├── requirements.txt      # Зависимости Python
-│   └── entrypoint.sh         # Скрипт для Docker
-├── frontend/                 # Фронтенд на React/TypeScript
-│   ├── src/                  # Исходный код приложения
-│   │   ├── components/       # UI-компоненты
-│   │   ├── pages/            # Страницы приложения
-│   │   ├── styles/           # Стили
+├── backend/                  # Django backend
+│   ├── goalsight/            # Django project and apps
+│   │   ├── goalsight/        # Django settings (settings, urls, wsgi, asgi)
+│   │   ├── matches/          # Matches app (models, serializers, views, management commands)
+│   │   ├── teams/            # Teams app (models, serializers, views, management commands)
+│   │   ├── tournaments/      # Tournaments app (models, serializers, views, management commands)
+│   │   ├── predictions/      # ML service, prediction API, ML tests
+│   │   ├── ml_models/        # Trained ML models and preprocessors
+│   │   ├── staticfiles/      # Django static files
+│   │   └── manage.py         # Django management script
+│   ├── requirements.txt      # Python dependencies
+│   └── entrypoint.sh         # Docker entrypoint script
+├── frontend/                 # React/TypeScript frontend
+│   ├── src/                  # Application source code
+│   │   ├── components/       # UI components
+│   │   ├── pages/            # Application pages
+│   │   ├── styles/           # Styles
 │   │   └── ...
-│   ├── __tests__/            # Тесты фронтенда (Jest, Cypress)
-│   ├── public/               # Статические файлы (index.html и др.)
-│   ├── package.json          # Зависимости Node.js
+│   ├── __tests__/            # Frontend tests (Jest, Cypress)
+│   ├── public/               # Static files (index.html, etc.)
+│   ├── package.json          # Node.js dependencies
 │   └── ...
-├── docker/                   # Docker-конфиги для разных окружений
-│   ├── local/                # Локальная разработка
-│   ├── production/           # Продакшн
+├── docker/                   # Docker configs for different environments
+│   ├── local/                # Local development
+│   ├── production/           # Production
 │   └── staging/              # Staging
-├── notebooks/                # Jupyter-ноутбуки для ML и анализа данных
-├── openapi.yaml              # OpenAPI-схема для документации API
-└── README.md                 # Документация проекта
+├── notebooks/                # Jupyter notebooks for ML and data analysis
+├── openapi.yaml              # OpenAPI schema for API documentation
+└── README.md                 # Project documentation
 ```
 
 ---
 
-## Документация
-- Swagger: `/swagger/`  (при запущенном бэкенде)
-- ML-ноутбуки: `notebooks/`
+## Documentation
+- Swagger: `/swagger/`  (when backend is running)
+- ML notebooks: `notebooks/`
 
 ---
 
-## Ветки
-- `main` — стабильная версия
-- `stage` — ветка для разработки
+## Branches
+- `main` — stable version
+- `stage` — development branch
 
-## Лицензия
+## License
 
-Проект распространяется под лицензией MIT. Подробнее см. файл [LICENSE](LICENSE).
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 
 
