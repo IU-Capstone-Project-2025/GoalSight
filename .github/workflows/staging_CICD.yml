@@ -40,21 +40,6 @@ jobs:
         run: npm ci
         working-directory: frontend
 
-      - name: Install dependencies (ml)
-        run: pip install \
-            "pytest>=7.3.1" \
-            "pytest-django>=4.5.2" \
-            "pytest-cov>=4.0.0" \
-            "pytest-mock>=3.14.1" \
-            "pytest-xdist>=3.3.2" \
-            "pytest-timeout>=2.2.0" \
-            "python-dotenv" \
-            "drf-yasg" \
-            "django-extensions" \
-            "djangorestframework" \
-            "django-cors-headers" \
-            "channels"
-
       - name: Install Docker
         run: |
           sudo apt-get update
@@ -110,7 +95,7 @@ jobs:
         run: docker compose -f docker/local/docker-compose.yml exec -T backend python manage.py test
 
       - name: Run ML tests
-        run: docker compose -f docker/local/docker-compose.yml exec -T backend sh -c "cd goalsight/predictions && pytest tests/"
+        run: docker compose -f docker/local/docker-compose.yml exec -T backend sh -c "cd /app/goalsight/predictions && pytest tests/"
         continue-on-error: false
         
       - name: Wait for frontend to be ready
