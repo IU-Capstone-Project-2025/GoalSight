@@ -70,14 +70,12 @@ jobs:
 
       - name: Pull latest images
         run: docker compose -f docker/local/docker-compose.yml pull
-        continue-on-error: true
 
       - name: Start full stack (local docker-compose)
         run: docker compose -f docker/local/docker-compose.yml up -d --build
 
       - name: Clean database volume
         run: docker volume rm $(docker volume ls -q -f name=postgres_data) || true
-        continue-on-error: true
 
       - name: Reset test database
         run: |
@@ -96,7 +94,6 @@ jobs:
 
       - name: Run ML tests
         run: docker compose -f docker/local/docker-compose.yml exec -T backend sh -c "cd /app/goalsight/predictions && pytest tests/"
-        continue-on-error: false
         
       - name: Wait for frontend to be ready
         run: |
@@ -111,12 +108,10 @@ jobs:
       - name: Run component tests
         run: npm run test:components
         working-directory: frontend
-        continue-on-error: true
 
       - name: Run API integration tests
         run: npm run test:api
         working-directory: frontend
-        continue-on-error: true
 
       - name: Run end-to-end tests
         run: npm run test:e2e
@@ -125,12 +120,10 @@ jobs:
       - name: Generate coverage for components
         run: npm run test:coverage:components
         working-directory: frontend
-        continue-on-error: true
 
       - name: Generate coverage for API integration
         run: npm run test:coverage:api
         working-directory: frontend
-        continue-on-error: true
 
       - name: Stop containers
         if: always()
