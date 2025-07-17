@@ -1,9 +1,6 @@
 name: CI/CD Staging
 
 on:
-  push:
-    branches:
-      - staging
   pull_request:
     branches:
       - staging
