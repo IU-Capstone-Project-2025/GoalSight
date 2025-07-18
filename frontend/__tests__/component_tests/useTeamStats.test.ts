@@ -19,15 +19,20 @@ describe('useTeamStats hook', () => {
         // Ensures the hook starts in loading state and updates after fetch
         mockFetchTeamStats.mockResolvedValue({
             country: 'Test Country',
-            coach: 'Test Coach',
             market_value: 100000000,
             avg_age: 25.5,
-            last_5_matches_wdl: { wins: 3, draws: 1, losses: 1 },
-            xG: 1.5,
-            ball_possession: 60,
-            shots_on_target: 5,
-            big_chances_created: 2,
-            logoUrl: 'https://example.com/logo.png'
+            team_strength: 90,
+            league_strength: 80,
+            glicko2_rating: 1700,
+            elo_rating: 1800,
+            wins_last_5: 3,
+            losses_last_5: 1,
+            drawns_last_5: 1,
+            goal_avg_last_5: 2.2,
+            avg_xG_last_5: 1.7,
+            avg_xGA_last_5: 1.1,
+            days_since_last_game: 4,
+            matches_14_days: 2
         });
         const { result } = renderHook(() => useTeamStats('Team A'));
         expect(result.current.loadingStats).toBe(true);
@@ -36,52 +41,31 @@ describe('useTeamStats hook', () => {
         });
     });
 
-    it('should fetch and set stats (object WDL)', async () => {
-        // Simulates a successful API call with WDL as an object
+    it('should fetch and set stats (all fields)', async () => {
+        // Simulates a successful API call as an object
         const stats = {
             country: 'Test Country',
-            coach: 'Test Coach',
             market_value: 100000000,
             avg_age: 25.5,
-            last_5_matches_wdl: { wins: 3, draws: 1, losses: 1 },
-            xG: 1.5,
-            ball_possession: 60,
-            shots_on_target: 5,
-            big_chances_created: 2,
-            logoUrl: 'https://example.com/logo.png'
+            team_strength: 90,
+            league_strength: 80,
+            glicko2_rating: 1700,
+            elo_rating: 1800,
+            wins_last_5: 3,
+            losses_last_5: 1,
+            drawns_last_5: 1,
+            goal_avg_last_5: 2.2,
+            avg_xG_last_5: 1.7,
+            avg_xGA_last_5: 1.1,
+            days_since_last_game: 4,
+            matches_14_days: 2
         };
         mockFetchTeamStats.mockResolvedValue(stats);
         const { result } = renderHook(() => useTeamStats('Team A'));
         await waitFor(() => {
             expect(result.current.loadingStats).toBe(false);
         });
-        expect(result.current.stats).toMatchObject({
-            country: 'Test Country',
-            coach: 'Test Coach',
-            last_5_matches_wdl: { wins: 3, draws: 1, losses: 1 }
-        });
-    });
-
-    it('should fetch and set stats (string WDL)', async () => {
-        // Simulates a successful API call with WDL as a stringified object
-        const stats = {
-            country: 'Test Country',
-            coach: 'Test Coach',
-            market_value: 100000000,
-            avg_age: 25.5,
-            last_5_matches_wdl: JSON.stringify({ wins: 2, draws: 2, losses: 1 }) as any,
-            xG: 1.5,
-            ball_possession: 60,
-            shots_on_target: 5,
-            big_chances_created: 2,
-            logoUrl: 'https://example.com/logo.png'
-        };
-        mockFetchTeamStats.mockResolvedValue(stats);
-        const { result } = renderHook(() => useTeamStats('Team B'));
-        await waitFor(() => {
-            expect(result.current.loadingStats).toBe(false);
-        });
-        expect(result.current.stats?.last_5_matches_wdl).toEqual({ wins: 2, draws: 2, losses: 1 });
+        expect(result.current.stats).toMatchObject(stats);
     });
 
     it('should handle API error gracefully', async () => {

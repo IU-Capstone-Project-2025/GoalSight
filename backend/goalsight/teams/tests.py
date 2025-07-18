@@ -13,14 +13,9 @@ class TeamModelTest(TestCase):
             "name": "Test Team",
             "logo_url_64": "http://example.com/logo.png",
             "country": "Testland",
-            "coach": "John Doe",
             "market_value": 123.45,
             "avg_age": 27.5,
-            "last_5_matches_wdl": ["W", "D", "L", "W", "W"],
             "xG": 1.23,
-            "ball_possession": 55.5,
-            "shots_on_target": 7,
-            "big_chances_created": 3,
             "buildUpPlaySpeed": 50,
             "buildUpPlayPassing": 60,
             "chanceCreationPassing": 70,
@@ -29,24 +24,28 @@ class TeamModelTest(TestCase):
             "defencePressure": 55,
             "defenceAggression": 60,
             "defenceTeamWidth": 45,
+            "team_strength": 90.0,
+            "league_strength": 85.0,
+            "glicko2_rating": 1700.0,
+            "elo_rating": 1750.0,
+            "wins_last_5": 3,
+            "losses_last_5": 1,
+            "drawns_last_5": 1,
+            "goal_avg_last_5": 1.8,
+            "avg_xG_last_5": 1.5,
+            "avg_xGA_last_5": 1.2,
+            "days_since_last_game": 5,
+            "matches_14_days": 3,
         }
 
     def test_create_team(self):
-        """
-        Test creating a Team instance.
-        """
         team = Team.objects.create(**self.team_data)
         self.assertEqual(team.name, self.team_data["name"])
         self.assertEqual(team.logo_url_64, self.team_data["logo_url_64"])
         self.assertEqual(team.country, self.team_data["country"])
-        self.assertEqual(team.coach, self.team_data["coach"])
         self.assertAlmostEqual(team.market_value, self.team_data["market_value"])
         self.assertAlmostEqual(team.avg_age, self.team_data["avg_age"])
-        self.assertEqual(team.last_5_matches_wdl, self.team_data["last_5_matches_wdl"])
         self.assertAlmostEqual(team.xG, self.team_data["xG"])
-        self.assertAlmostEqual(team.ball_possession, self.team_data["ball_possession"])
-        self.assertEqual(team.shots_on_target, self.team_data["shots_on_target"])
-        self.assertEqual(team.big_chances_created, self.team_data["big_chances_created"])
         self.assertEqual(team.buildUpPlaySpeed, self.team_data["buildUpPlaySpeed"])
         self.assertEqual(team.buildUpPlayPassing, self.team_data["buildUpPlayPassing"])
         self.assertEqual(team.chanceCreationPassing, self.team_data["chanceCreationPassing"])
@@ -55,31 +54,32 @@ class TeamModelTest(TestCase):
         self.assertEqual(team.defencePressure, self.team_data["defencePressure"])
         self.assertEqual(team.defenceAggression, self.team_data["defenceAggression"])
         self.assertEqual(team.defenceTeamWidth, self.team_data["defenceTeamWidth"])
+        self.assertEqual(team.team_strength, self.team_data["team_strength"])
+        self.assertEqual(team.league_strength, self.team_data["league_strength"])
+        self.assertEqual(team.glicko2_rating, self.team_data["glicko2_rating"])
+        self.assertEqual(team.elo_rating, self.team_data["elo_rating"])
+        self.assertEqual(team.wins_last_5, self.team_data["wins_last_5"])
+        self.assertEqual(team.losses_last_5, self.team_data["losses_last_5"])
+        self.assertEqual(team.drawns_last_5, self.team_data["drawns_last_5"])
+        self.assertEqual(team.goal_avg_last_5, self.team_data["goal_avg_last_5"])
+        self.assertEqual(team.avg_xG_last_5, self.team_data["avg_xG_last_5"])
+        self.assertEqual(team.avg_xGA_last_5, self.team_data["avg_xGA_last_5"])
+        self.assertEqual(team.days_since_last_game, self.team_data["days_since_last_game"])
+        self.assertEqual(team.matches_14_days, self.team_data["matches_14_days"])
 
     def test_str_method(self):
-        """
-        Test the string representation of the Team model.
-        """
         team = Team.objects.create(**self.team_data)
         self.assertEqual(str(team), self.team_data["name"])
 
 class TeamStatsSerializerTest(TestCase):
-    """
-    Test case for the TeamStatsSerializer.
-    """
     def setUp(self):
         self.team = Team.objects.create(
             name="Test Team",
             logo_url_64="http://example.com/logo.png",
             country="Testland",
-            coach="John Doe",
             market_value=123.45,
             avg_age=27.5,
-            last_5_matches_wdl=["W", "D", "L", "W", "W"],
             xG=1.23,
-            ball_possession=55.5,
-            shots_on_target=7,
-            big_chances_created=3,
             buildUpPlaySpeed=50,
             buildUpPlayPassing=60,
             chanceCreationPassing=70,
@@ -88,46 +88,55 @@ class TeamStatsSerializerTest(TestCase):
             defencePressure=55,
             defenceAggression=60,
             defenceTeamWidth=45,
+            team_strength=90.0,
+            league_strength=85.0,
+            glicko2_rating=1700.0,
+            elo_rating=1750.0,
+            wins_last_5=3,
+            losses_last_5=1,
+            drawns_last_5=1,
+            goal_avg_last_5=1.8,
+            avg_xG_last_5=1.5,
+            avg_xGA_last_5=1.2,
+            days_since_last_game=5,
+            matches_14_days=3,
         )
 
     def test_serialization(self):
-        """
-        Test that serializer returns expected fields and values.
-        """
         serializer = TeamStatsSerializer(self.team)
-        data = serializer.data
-
+        data = dict(serializer.data)
         expected_fields = [
-            'logo_url_64', 'country', 'coach', 'market_value', 'avg_age',
-            'xG', 'ball_possession', 'shots_on_target', 'big_chances_created',
-            'last_5_matches_wdl'
+            'country', 'market_value', 'avg_age',
+            'team_strength', 'league_strength', 'glicko2_rating', 'elo_rating',
+            'wins_last_5', 'losses_last_5', 'drawns_last_5', 'goal_avg_last_5',
+            'avg_xG_last_5', 'avg_xGA_last_5', 'days_since_last_game', 'matches_14_days'
         ]
-
         self.assertEqual(set(data.keys()), set(expected_fields))
-
-        self.assertEqual(data['logo_url_64'], self.team.logo_url_64)
         self.assertEqual(data['country'], self.team.country)
-        self.assertEqual(data['coach'], self.team.coach)
-        self.assertEqual(data['market_value'], self.team.market_value)
-        self.assertEqual(data['last_5_matches_wdl'], self.team.last_5_matches_wdl)
+        self.assertEqual(float(data['market_value']), self.team.market_value)
+        self.assertEqual(float(data['avg_age']), self.team.avg_age)
+        self.assertEqual(float(data['team_strength']), self.team.team_strength)
+        self.assertEqual(float(data['league_strength']), self.team.league_strength)
+        self.assertEqual(float(data['glicko2_rating']), self.team.glicko2_rating)
+        self.assertEqual(float(data['elo_rating']), self.team.elo_rating)
+        self.assertEqual(data['wins_last_5'], self.team.wins_last_5)
+        self.assertEqual(data['losses_last_5'], self.team.losses_last_5)
+        self.assertEqual(data['drawns_last_5'], self.team.drawns_last_5)
+        self.assertEqual(float(data['goal_avg_last_5']), self.team.goal_avg_last_5)
+        self.assertEqual(float(data['avg_xG_last_5']), self.team.avg_xG_last_5)
+        self.assertEqual(float(data['avg_xGA_last_5']), self.team.avg_xGA_last_5)
+        self.assertEqual(data['days_since_last_game'], self.team.days_since_last_game)
+        self.assertEqual(data['matches_14_days'], self.team.matches_14_days)
 
 class TeamsListAPITest(APITestCase):
-    """
-    Test case for the teams_list API endpoint.
-    """
     def setUp(self):
         self.team_a = Team.objects.create(
             name="Team A",
             logo_url_64="http://example.com/logo_a.png",
             country="Country A",
-            coach="Coach A",
             market_value=1.0,
             avg_age=25.0,
-            last_5_matches_wdl=["W","D","L","W","W"],
             xG=1.2,
-            ball_possession=55.0,
-            shots_on_target=5,
-            big_chances_created=3,
             buildUpPlaySpeed=50,
             buildUpPlayPassing=60,
             chanceCreationPassing=70,
@@ -135,20 +144,27 @@ class TeamsListAPITest(APITestCase):
             chanceCreationShooting=65,
             defencePressure=55,
             defenceAggression=60,
-            defenceTeamWidth=45
+            defenceTeamWidth=45,
+            team_strength=90.0,
+            league_strength=85.0,
+            glicko2_rating=1700.0,
+            elo_rating=1750.0,
+            wins_last_5=3,
+            losses_last_5=1,
+            drawns_last_5=1,
+            goal_avg_last_5=1.8,
+            avg_xG_last_5=1.5,
+            avg_xGA_last_5=1.2,
+            days_since_last_game=5,
+            matches_14_days=3,
         )
         self.team_b = Team.objects.create(
             name="Team B",
             logo_url_64="http://example.com/logo_b.png",
             country="Country B",
-            coach="Coach B",
             market_value=1.1,
             avg_age=26.0,
-            last_5_matches_wdl=["L","L","W","D","W"],
             xG=1.0,
-            ball_possession=50.0,
-            shots_on_target=4,
-            big_chances_created=2,
             buildUpPlaySpeed=48,
             buildUpPlayPassing=58,
             chanceCreationPassing=67,
@@ -156,31 +172,35 @@ class TeamsListAPITest(APITestCase):
             chanceCreationShooting=60,
             defencePressure=53,
             defenceAggression=62,
-            defenceTeamWidth=47
+            defenceTeamWidth=47,
+            team_strength=80.0,
+            league_strength=75.0,
+            glicko2_rating=1600.0,
+            elo_rating=1650.0,
+            wins_last_5=2,
+            losses_last_5=2,
+            drawns_last_5=1,
+            goal_avg_last_5=1.2,
+            avg_xG_last_5=1.1,
+            avg_xGA_last_5=1.3,
+            days_since_last_game=7,
+            matches_14_days=2,
         )
         self.url = reverse('teams-list') 
 
     def test_get_team_by_name(self):
-        """
-        Test API response for getting a team by name.
-        """
         response = self.client.get(self.url, {'name': 'Team A'})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['country'], self.team_a.country)
-        self.assertEqual(response.data['coach'], self.team_a.coach)
+        self.assertEqual(float(response.data['market_value']), self.team_a.market_value)
+        self.assertEqual(float(response.data['team_strength']), self.team_a.team_strength)
 
     def test_get_first_team_if_no_name(self):
-        """
-        Test API response for getting the first team if no name is provided.
-        """
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['country'], self.team_a.country)
 
     def test_team_not_found(self):
-        """
-        Test API response when the team is not found.
-        """
         response = self.client.get(self.url, {'name': 'Nonexistent Team'})
         self.assertEqual(response.status_code, 404)
         self.assertIn('error', response.data)

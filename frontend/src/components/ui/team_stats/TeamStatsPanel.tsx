@@ -16,36 +16,25 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
     if (loadingStats) return <div className="p-3 md:p-6">Loading statistics...</div>;
     if (!stats) return <div className="p-3 md:p-6">No data</div>;
 
-    // Example static values for demonstration (replace with real data as needed)
-    const teamStrength = 87;
-    const leagueStrength = 82;
-    const glicko2Rating = 1750;
-    const eloRating = 1850;
-    const goalAvgLast5 = 2.1;
-    const avgXGLast5 = 1.8;
-    const avgXGALast5 = 1.2;
-    const daysSinceLastGame = 5;
-    const matches14Days = 3;
-
     // Stats for each tab
     const teamStrengthStats = [
         {
-            value: teamStrength,
+            value: stats.team_strength,
             label: 'Team Strength',
             description: 'A key indicator of overall team power, calculated from a combination of advanced metrics and expert assessments.'
         },
         {
-            value: leagueStrength,
+            value: stats.league_strength,
             label: 'League Strength',
             description: 'Reflects the overall competitiveness of the league in which the team plays.'
         },
         {
-            value: glicko2Rating,
+            value: stats.glicko2_rating,
             label: 'Glicko-2 Rating',
             description: 'A rating system that measures team strength and reliability, accounting for both performance and uncertainty.'
         },
         {
-            value: eloRating,
+            value: stats.elo_rating,
             label: 'Elo Rating',
             description: 'A classic rating system used to rank teams based on match results and opponent strength.'
         }
@@ -53,32 +42,32 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
 
     const formStats = [
         {
-            value: stats.last_5_matches_wdl.wins,
+            value: stats.wins_last_5,
             label: 'Wins (last 5)',
             description: 'Number of matches won in the last 5 games.'
         },
         {
-            value: stats.last_5_matches_wdl.draws,
+            value: stats.drawns_last_5,
             label: 'Draws (last 5)',
             description: 'Number of matches drawn in the last 5 games.'
         },
         {
-            value: stats.last_5_matches_wdl.losses,
+            value: stats.losses_last_5,
             label: 'Losses (last 5)',
             description: 'Number of matches lost in the last 5 games.'
         },
         {
-            value: goalAvgLast5,
+            value: stats.goal_avg_last_5,
             label: 'Goals Avg (last 5)',
             description: 'Average number of goals scored per match in the last 5 games.'
         },
         {
-            value: avgXGLast5,
+            value: stats.avg_xG_last_5,
             label: 'Avg xG (last 5)',
             description: 'Expected goals per match in the last 5 games, showing attacking quality.'
         },
         {
-            value: avgXGALast5,
+            value: stats.avg_xGA_last_5,
             label: 'Avg xGA (last 5)',
             description: 'Expected goals against per match in the last 5 games, showing defensive quality.'
         }
@@ -86,12 +75,12 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
 
     const freshnessStats = [
         {
-            value: daysSinceLastGame,
+            value: stats.days_since_last_game,
             label: 'Days Since Last Game',
             description: 'Number of days since the team played their last match. Indicates freshness and rest.'
         },
         {
-            value: matches14Days,
+            value: stats.matches_14_days,
             label: 'Matches in Last 14 Days',
             description: 'Number of matches played in the last 2 weeks. Higher values may indicate fatigue.'
         }
