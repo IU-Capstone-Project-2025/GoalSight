@@ -16,6 +16,7 @@ describe('useTeamStats hook', () => {
     });
 
     it('should initialize with loading state', async () => {
+        // Ensures the hook starts in loading state and updates after fetch
         mockFetchTeamStats.mockResolvedValue({
             country: 'Test Country',
             market_value: 100000000,
@@ -41,6 +42,7 @@ describe('useTeamStats hook', () => {
     });
 
     it('should fetch and set stats (all fields)', async () => {
+        // Simulates a successful API call as an object
         const stats = {
             country: 'Test Country',
             market_value: 100000000,
@@ -67,6 +69,7 @@ describe('useTeamStats hook', () => {
     });
 
     it('should handle API error gracefully', async () => {
+        // Simulates an API error and checks that stats is null
         mockFetchTeamStats.mockRejectedValue(new Error('API Error'));
         const { result } = renderHook(() => useTeamStats('Team C'));
         await waitFor(() => {
