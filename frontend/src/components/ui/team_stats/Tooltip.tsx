@@ -1,15 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 type TooltipProps = {
+    // Description text to show in the tooltip
     description: string;
 };
 
+// Renders a tooltip with popover/modal logic for mobile and desktop
 const Tooltip: React.FC<TooltipProps> = ({ description }) => {
     const [show, setShow] = useState(false);
     const popoverRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!show) return;
+        // Close tooltip if clicking outside (mobile modal)
         const handleClick = (e: MouseEvent) => {
             if (
                 popoverRef.current &&
@@ -24,6 +27,7 @@ const Tooltip: React.FC<TooltipProps> = ({ description }) => {
 
     return (
         <div className="relative group inline-block">
+            {/* Button to show/hide tooltip */}
             <button
                 type="button"
                 className="w-4 md:w-5 h-4 md:h-5 flex items-center justify-center rounded-full bg-gray-600 text-white text-xs md:text-sm font-bold cursor-pointer focus:outline-none ml-1"
@@ -32,6 +36,7 @@ const Tooltip: React.FC<TooltipProps> = ({ description }) => {
             >
                 ?
             </button>
+            {/* Mobile modal tooltip */}
             {show && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center md:hidden" style={{ pointerEvents: 'auto' }}>
                     <div
@@ -47,6 +52,7 @@ const Tooltip: React.FC<TooltipProps> = ({ description }) => {
                     </div>
                 </div>
             )}
+            {/* Desktop popover tooltip */}
             <div
                 className={`
                     hidden md:block

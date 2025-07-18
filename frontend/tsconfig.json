@@ -1,25 +1,58 @@
 {
   "compilerOptions": {
+    // Target JavaScript version for output (ES5 for wide browser support)
     "target": "es5",
+
+    // Libraries to include during compilation (DOM APIs, latest JS features)
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
+
+    // Allow compiling JavaScript files alongside TypeScript
     "allowJs": true,
+
+    // Skip type checking of declaration files to speed up compilation
     "skipLibCheck": true,
+
+    // Enable compatibility with CommonJS modules using ESModule imports
     "esModuleInterop": true,
+
+    // Allow default imports from modules with no default export
     "allowSyntheticDefaultImports": true,
+
+    // Enable all strict type checking options
     "strict": true,
+
+    // Ensure file name casing is consistent across the project
     "forceConsistentCasingInFileNames": true,
+
+    // Disallow fallthrough cases in switch statements for safer control flow
     "noFallthroughCasesInSwitch": true,
+
+    // Use modern ES module syntax for output
     "module": "esnext",
+
+    // Resolve modules similarly to Node.js module resolution strategy
     "moduleResolution": "node",
+
+    // Allow importing JSON files as modules
     "resolveJsonModule": true,
+
+    // Ensure each file is treated as a separate module for transpilation
     "isolatedModules": true,
+
+    // Do not emit output files, only type-check (useful for IDEs)
     "noEmit": true,
+
+    // Use the new React JSX transform
     "jsx": "react-jsx",
+
+    // Base directory for non-relative module names
     "baseUrl": "src",
+
+    // Path aliases for cleaner and shorter imports
     "paths": {
       "@/*": [
         "*"
@@ -49,8 +82,12 @@
         "assets/*"
       ]
     },
+
+    // Include typings for Jest testing framework
     "types": ["jest"]
   },
+
+  // Files and folders included in compilation
   "include": [
     "src",
     "__tests__",

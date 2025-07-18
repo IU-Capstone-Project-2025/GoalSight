@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { fetchMatchPrediction } from './forecastApi';
 import { MatchPrediction } from '../match_forecast/MatchForecast.types';
 
+// Returns { prediction, loadingPrediction } for the given teams
 export function useMatchPrediction(homeTeam: string | null, awayTeam: string | null) {
     const [prediction, setPrediction] = useState<MatchPrediction | null>(null);
     const [loadingPrediction, setLoadingPrediction] = useState(true);
 
     useEffect(() => {
+        // Only fetch if both teams are provided
         if (!homeTeam || !awayTeam) return;
 
         let isMounted = true;
@@ -15,9 +17,11 @@ export function useMatchPrediction(homeTeam: string | null, awayTeam: string | n
             setLoadingPrediction(true);
 
             try {
+                // Fetch prediction from API
                 const data = await fetchMatchPrediction(homeTeam!, awayTeam!);
                 if (!isMounted) return;
 
+                // Transform API response to UI-friendly format
                 let result: MatchPrediction | null = null;
 
                 result = {
@@ -42,6 +46,7 @@ export function useMatchPrediction(homeTeam: string | null, awayTeam: string | n
 
         getPrediction();
 
+        // Cleanup: prevent state updates if component unmounts
         return () => {
             isMounted = false;
         };
