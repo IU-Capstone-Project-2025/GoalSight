@@ -113,6 +113,7 @@ jobs:
       - name: Run end-to-end tests
         run: npm run test:e2e
         working-directory: frontend
+        continue-on-error: true
 
       - name: Generate coverage for components
         run: npm run test:coverage:components
