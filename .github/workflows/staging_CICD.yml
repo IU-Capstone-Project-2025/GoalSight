@@ -102,26 +102,18 @@ jobs:
             sleep 5
           done
 
-      - name: Run component tests
-        run: npm run test:components
+      - name: Run component tests with coverage
+        run: npm run test:coverage:components
         working-directory: frontend
 
-      - name: Run API integration tests
-        run: npm run test:api
+      - name: Run API integration tests with coverage
+        run: npm run test:coverage:api
         working-directory: frontend
 
       - name: Run end-to-end tests
         run: npm run test:e2e
         working-directory: frontend
         continue-on-error: true
-
-      - name: Generate coverage for components
-        run: npm run test:coverage:components
-        working-directory: frontend
-
-      - name: Generate coverage for API integration
-        run: npm run test:coverage:api
-        working-directory: frontend
 
       - name: Stop containers
         if: always()
