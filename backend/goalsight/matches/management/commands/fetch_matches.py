@@ -16,9 +16,17 @@ class Command(BaseCommand):
         Matches are linked to existing Team objects. Odds are also imported if available.
         """
         headers = {"apikey": API_KEY}
+        params = {
+            "leagueid": 15,
+            "year": 2025,
+            "IncludeOdds": "true",
+            "limit": 150,
+            "order": 1,
+            "timezone": 3
+        }
 
         try:
-            response = requests.get(API_URL, headers=headers)
+            response = requests.get(API_URL, headers=headers, params=params)
             response.raise_for_status()
         except requests.RequestException as e:
             self.stderr.write(self.style.ERROR(f"Error: {e}"))
@@ -34,7 +42,6 @@ class Command(BaseCommand):
                 home_team = Team.objects.get(name=home_name)
                 away_team = Team.objects.get(name=away_name)
             except Team.DoesNotExist as e:
-                # Team not found, skip this match
                 continue
 
             match_date = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
@@ -49,8 +56,6 @@ class Command(BaseCommand):
                         home_odds = odd["value"]
                     elif odd["name"] == "Away":
                         away_odds = odd["value"]
-                    elif odd["name"] == "Draw":
-                        draw_odds = odd["value"]
 
             match, created = Match.objects.get_or_create(
                 home_team=home_team,
@@ -59,14 +64,12 @@ class Command(BaseCommand):
                 defaults={
                     "home": home_odds,
                     "away": away_odds,
-                    "draw": draw_odds,
                 }
             )
 
             if not created:
                 match.home = home_odds
                 match.away = away_odds
-                match.draw = draw_odds
                 match.save()
 
             self.stdout.write(f"{'Created' if created else 'Already exists'} match: {home_team} vs {away_team} ({match_date})")
