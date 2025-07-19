@@ -37,16 +37,34 @@ export const MatchCard: React.FC<Props> = ({ match }) => {
 
           {/* Conditional prediction display */}
           {showPrediction && (
-            <div className="flex items-center justify-center md:justify-start mt-1 text-xs md:text-sm text-green-400 font-semibold transition-opacity duration-300 opacity-100">
+            <div className="flex items-center justify-center md:justify-start mt-1 text-xs md:text-sm font-semibold transition-opacity duration-300 opacity-100">
               {loadingPrediction ? (
                 // Show loading indicator while prediction fetches
                 <span className="text-gray-300">Loading...</span>
               ) : prediction ? (
                 // Show confidence percentages for both teams
                 <>
-                  <span>{prediction.confidence1}%</span>
-                  <span className="mx-2 text-gray-400">|</span>
-                  <span>{prediction.confidence2}%</span>
+                  {(() => {
+                    const diff = Math.abs(prediction.confidence1 - prediction.confidence2);
+                    let color1 = 'text-yellow-400';
+                    let color2 = 'text-yellow-400';
+                    if (diff >= 20) {
+                      if (prediction.confidence1 > prediction.confidence2) {
+                        color1 = 'text-green-400';
+                        color2 = 'text-red-400';
+                      } else {
+                        color1 = 'text-red-400';
+                        color2 = 'text-green-400';
+                      }
+                    }
+                    return (
+                      <>
+                        <span className={color1}>{prediction.confidence1}%</span>
+                        <span className="mx-2 text-gray-400">|</span>
+                        <span className={color2}>{prediction.confidence2}%</span>
+                      </>
+                    );
+                  })()}
                 </>
               ) : null}
             </div>

@@ -19,24 +19,24 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
     // Stats for each tab
     const teamStrengthStats = [
         {
-            value: stats.team_strength,
+            value: stats.team_strength + '%',
             label: 'Team Strength',
-            description: 'A key indicator of overall team power, calculated from a combination of advanced metrics and expert assessments.'
+            description: 'The normalized score assigned to a team according to the Opta’s Power Rankings. A team\'s strength indicator consisting of several inputs.'
         },
         {
-            value: stats.league_strength,
+            value: stats.league_strength + '%',
             label: 'League Strength',
-            description: 'Reflects the overall competitiveness of the league in which the team plays.'
+            description: 'The normalized score assigned to the league in accordance with the Opta\'s Power Rankings. A league strength indicator consisting of several inputs, including the strength indicators of the teams in this league.'
         },
         {
             value: stats.glicko2_rating,
             label: 'Glicko-2 Rating',
-            description: 'A rating system that measures team strength and reliability, accounting for both performance and uncertainty.'
+            description: 'A rating that evaluates the strength of a team based on the results of past matches. It takes into account such indicators as: wins, losses, form stability and accuracy of rating fame.'
         },
         {
             value: stats.elo_rating,
             label: 'Elo Rating',
-            description: 'A classic rating system used to rank teams based on match results and opponent strength.'
+            description: 'A system for evaluating the strength of a team based on the results of matches. Defeating a strong opponent gives you more points than defeating a weak one. Defeat from the weak - reduces the rating more.'
         }
     ];
 
@@ -88,9 +88,9 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
 
     const financeStats = [
         {
-            value: stats.market_value,
+            value: '€' + stats.market_value + 'M',
             label: 'Market Value',
-            description: 'Total market value of the team, usually in million euros.'
+            description: 'Total market value of the team in million euros.'
         },
         {
             value: stats.avg_age,
