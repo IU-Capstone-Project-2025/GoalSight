@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import requests
 from .ml_service import prediction_service
 from .serializers import MatchPredictionSerializer
 from teams.models import Team
@@ -9,6 +10,10 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from datetime import datetime, timezone
+import logging
+logger = logging.getLogger(__name__)
+API_KEY = "75kwgw7361l0l1ir"
 
 @csrf_exempt
 @swagger_auto_schema(
@@ -74,45 +79,93 @@ def predict_match(request):
             return Response({'error': 'One or both teams not found.'}, status=404)
 
         features = {
-            'home_buildUpPlaySpeed': home_team.buildUpPlaySpeed,
-            'home_buildUpPlayPassing': home_team.buildUpPlayPassing,
-            'home_chanceCreationPassing': home_team.chanceCreationPassing,
-            'home_chanceCreationCrossing': home_team.chanceCreationCrossing,
-            'home_chanceCreationShooting': home_team.chanceCreationShooting,
-            'home_defencePressure': home_team.defencePressure,
-            'home_defenceAggression': home_team.defenceAggression,
-            'home_defenceTeamWidth': home_team.defenceTeamWidth,
-            'away_buildUpPlaySpeed': away_team.buildUpPlaySpeed,
-            'away_buildUpPlayPassing': away_team.buildUpPlayPassing,
-            'away_chanceCreationPassing': away_team.chanceCreationPassing,
-            'away_chanceCreationCrossing': away_team.chanceCreationCrossing,
-            'away_chanceCreationShooting': away_team.chanceCreationShooting,
-            'away_defencePressure': away_team.defencePressure,
-            'away_defenceAggression': away_team.defenceAggression,
-            'away_defenceTeamWidth': away_team.defenceTeamWidth,
+            'away_avg_age': away_team.avg_age,
+            'away_goal_avg_last_5': away_team.goal_avg_last_5,
+            'away_avg_shots_on_target_last_5': away_team.avg_shots_on_target_last_5,
+            'away_avg_xG_last_5': away_team.avg_xG_last_5,
+            'away_avg_xGA_last_5': away_team.avg_xGA_last_5,
+            'away_days_since_last_game': away_team.days_since_last_game,
+            'away_elo_rating': away_team.elo_rating,
+            'away_glicko2_rating': away_team.glicko2_rating,
+            'away_market_value': away_team.market_value,
+            'away_matches_14_days': away_team.matches_14_days,
+            'away_rd': away_team.rd,
+            'away_volatility': away_team.volatility,
+            'league_strength_away': away_team.league_strength,
+            'team_strength_away': away_team.team_strength,
+            'away_wins_last_5': away_team.wins_last_5,
+            'away_losses_last_5': away_team.losses_last_5,
+            'away_draws_last_5': away_team.draws_last_5,
+
+            'home_avg_age': home_team.avg_age,
+            'home_goal_avg_last_5': home_team.goal_avg_last_5,
+            'home_avg_shots_on_target_last_5': home_team.avg_shots_on_target_last_5,
+            'home_avg_xG_last_5': home_team.avg_xG_last_5,
+            'home_avg_xGA_last_5': home_team.avg_xGA_last_5,
+            'home_days_since_last_game': home_team.days_since_last_game,
+            'home_elo_rating': home_team.elo_rating,
+            'home_glicko2_rating': home_team.glicko2_rating,
+            'home_market_value': home_team.market_value,
+            'home_matches_14_days': home_team.matches_14_days,
+            'home_rd': home_team.rd,
+            'home_volatility': home_team.volatility,
+            'league_strength_home': home_team.league_strength,
+            'team_strength_home': home_team.team_strength,
+            'home_wins_last_5': home_team.wins_last_5,
+            'home_losses_last_5': home_team.losses_last_5,
+            'home_draws_last_5': home_team.draws_last_5,
         }
+
+        features['home_att_vs_diff'] = home_team.avg_xG_last_5 + away_team.avg_xGA_last_5
+        features['away_att_vs_diff'] = away_team.avg_xG_last_5 + home_team.avg_xGA_last_5
 
         try:
             match = Match.objects.filter(home_team=home_team, away_team=away_team).order_by('date').first()
             if match:
-                features['B365H'] = match.home
-                features['B365D'] = match.draw
-                features['B365A'] = match.away
+                features['date'] = match.date
+                features['home_win_odd'] = match.home
+                features['away_win_odd'] = match.away
             else:
-                features['B365H'] = 1
-                features['B365D'] = 1
-                features['B365A'] = 1
-        except Exception:
-            features['B365H'] = 1
-            features['B365D'] = 1
-            features['B365A'] = 1
+                headers = {"apikey": API_KEY}
+                url = f"https://api.sstats.net/games/list?bothTeams={home_team.api_id},{away_team.api_id}&ended=true&order=-1&limit=1"
+                response = requests.get(url, headers=headers)
+                data = response.json().get('data', [])
+                if not data:
+                    features['home_win_odd'] = 1
+                    features['away_win_odd'] = 1
+                else:
+                    match_data = data[0]  # берем первый матч
+                    odds = match_data.get('odds', [])
 
-        for k, v in features.items():
-            if v is None or (isinstance(v, float) and (v != v)):
-                features[k] = 0.0
+                    features['date'] = datetime.now(timezone.utc)
+                    home_odd = odds[0]['value'] if len(odds) > 0 and 'value' in odds[0] else 1
+                    away_odd = odds[1]['value'] if len(odds) > 1 and 'value' in odds[1] else 1
+                    
+                    features['home_win_odd'] = home_odd
+                    features['away_win_odd'] = away_odd
+        except Exception:
+            headers = {"apikey": API_KEY}
+            url = f"https://api.sstats.net/games/list?bothTeams={home_team.api_id},{away_team.api_id}&ended=true&order=-1&limit=1"
+            response = requests.get(url, headers=headers)
+            data = response.json().get('data', [])
+            if not data:
+                    features['home_win_odd'] = 1
+                    features['away_win_odd'] = 1
+            else:
+                match_data = data[0]  # берем первый матч
+                odds = match_data.get('odds', [])
+
+                features['date'] = datetime.now(timezone.utc)
+                home_odd = odds[0]['value'] if len(odds) > 0 and 'value' in odds[0] else 1
+                away_odd = odds[1]['value'] if len(odds) > 1 and 'value' in odds[1] else 1
+                
+                features['home_win_odd'] = home_odd
+                features['away_win_odd'] = away_odd
+        logger.info(f"Prediction result: {features}")
         result = prediction_service.predict(features)
         result['logo_url_64_home'] = home_team.logo_url_64
         result['logo_url_64_away'] = away_team.logo_url_64
+        logger.info(f"Prediction result: {result}")
         response_data = MatchPredictionSerializer(result).data
         return Response(response_data)
     except json.JSONDecodeError:

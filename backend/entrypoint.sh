@@ -12,6 +12,9 @@ python manage.py migrate
 echo "📥 Importing teams..."
 python manage.py import_teams
 
+echo "📥 Importing new data..."
+python manage.py import_new_data
+
 echo "📥 Importing matches..."
 python manage.py fetch_matches
 

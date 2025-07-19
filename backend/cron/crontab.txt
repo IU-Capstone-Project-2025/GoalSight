@@ -1,1 +1,1 @@
-0 * * * * /usr/local/bin/python /app/goalsight/manage.py fetch_matches >> /var/log/cron.log 2>&1
+0 * * * * /usr/local/bin/python /app/goalsight/manage.py import_new_data >> /var/log/cron.log 2>&1

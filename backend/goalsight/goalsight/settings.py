@@ -182,3 +182,17 @@ SWAGGER_SETTINGS = {
     'DEFAULT_INFO': 'GoalSight API',
     'DEFAULT_API_URL': 'http://localhost:8000',
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
