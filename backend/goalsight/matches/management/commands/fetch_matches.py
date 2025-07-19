@@ -4,7 +4,7 @@ from matches.models import Match
 from teams.models import Team
 from datetime import datetime
 
-API_KEY = "75kwgw7361l0l1ir"
+API_KEY = "lwio9jbltr776z7q"
 API_URL = "https://api.sstats.net/games/list?leagueid=15&year=2025&IncludeOdds=true"  
 
 class Command(BaseCommand):
