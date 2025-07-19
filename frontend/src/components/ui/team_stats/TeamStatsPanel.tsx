@@ -16,25 +16,29 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
     if (loadingStats) return <div className="p-3 md:p-6">Loading statistics...</div>;
     if (!stats) return <div className="p-3 md:p-6">No data</div>;
 
+    function roundStatValue(val: any) {
+        return typeof val === 'number' ? Number(val.toFixed(1)) : val;
+    }
+
     // Stats for each tab
     const teamStrengthStats = [
         {
-            value: stats.team_strength + '%',
+            value: roundStatValue(stats.team_strength) + '%',
             label: 'Team Strength',
             description: 'The normalized score assigned to a team according to the Opta’s Power Rankings. A team\'s strength indicator consisting of several inputs.'
         },
         {
-            value: stats.league_strength + '%',
+            value: roundStatValue(stats.league_strength) + '%',
             label: 'League Strength',
             description: 'The normalized score assigned to the league in accordance with the Opta\'s Power Rankings. A league strength indicator consisting of several inputs, including the strength indicators of the teams in this league.'
         },
         {
-            value: stats.glicko2_rating,
+            value: roundStatValue(stats.glicko2_rating),
             label: 'Glicko-2 Rating',
             description: 'A rating that evaluates the strength of a team based on the results of past matches. It takes into account such indicators as: wins, losses, form stability and accuracy of rating fame.'
         },
         {
-            value: stats.elo_rating,
+            value: roundStatValue(stats.elo_rating),
             label: 'Elo Rating',
             description: 'A system for evaluating the strength of a team based on the results of matches. Defeating a strong opponent gives you more points than defeating a weak one. Defeat from the weak - reduces the rating more.'
         }
@@ -42,32 +46,32 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
 
     const formStats = [
         {
-            value: stats.wins_last_5,
+            value: roundStatValue(stats.wins_last_5),
             label: 'Wins (last 5)',
             description: 'Number of matches won in the last 5 games.'
         },
         {
-            value: stats.drawns_last_5,
+            value: roundStatValue(stats.draws_last_5),
             label: 'Draws (last 5)',
             description: 'Number of matches drawn in the last 5 games.'
         },
         {
-            value: stats.losses_last_5,
+            value: roundStatValue(stats.losses_last_5),
             label: 'Losses (last 5)',
             description: 'Number of matches lost in the last 5 games.'
         },
         {
-            value: stats.goal_avg_last_5,
+            value: roundStatValue(stats.goal_avg_last_5),
             label: 'Goals Avg (last 5)',
             description: 'Average number of goals scored per match in the last 5 games.'
         },
         {
-            value: stats.avg_xG_last_5,
+            value: roundStatValue(stats.avg_xG_last_5),
             label: 'Avg xG (last 5)',
             description: 'Expected goals per match in the last 5 games, showing attacking quality.'
         },
         {
-            value: stats.avg_xGA_last_5,
+            value: roundStatValue(stats.avg_xGA_last_5),
             label: 'Avg xGA (last 5)',
             description: 'Expected goals against per match in the last 5 games, showing defensive quality.'
         }
@@ -75,12 +79,12 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
 
     const freshnessStats = [
         {
-            value: stats.days_since_last_game,
+            value: roundStatValue(stats.days_since_last_game),
             label: 'Days Since Last Game',
             description: 'Number of days since the team played their last match. Indicates freshness and rest.'
         },
         {
-            value: stats.matches_14_days,
+            value: roundStatValue(stats.matches_14_days),
             label: 'Matches in Last 14 Days',
             description: 'Number of matches played in the last 2 weeks. Higher values may indicate fatigue.'
         }
@@ -88,12 +92,12 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ name }) => {
 
     const financeStats = [
         {
-            value: '€' + stats.market_value + 'M',
+            value: '€' + roundStatValue(stats.market_value) + 'M',
             label: 'Market Value',
             description: 'Total market value of the team in million euros.'
         },
         {
-            value: stats.avg_age,
+            value: roundStatValue(stats.avg_age),
             label: 'Average Age',
             description: 'Average age of the team squad.'
         }
