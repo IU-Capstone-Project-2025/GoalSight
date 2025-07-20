@@ -48,18 +48,3 @@ def test_prediction_success(model_service):
         "Probabilities do not sum to 1"
     assert 0.0 <= home_p <= 1.0
     assert 0.0 <= away_p <= 1.0
-
-# ------- Input checks ------
-# @pytest.mark.parametrize("bad_input", [
-#     {},                                    # пустой словарь
-#     {'stage': 1},                          # недостаточно полей
-#     {'stage': 1, 'season_encoded': 'foo'}  # неверный тип
-# ])
-
-
-# def test_prediction_invalid_input(model_service, bad_input):
-#     """
-#     Проверяет, что при некорректном вводе возвращается ошибка.
-#     """
-#     res = model_service.predict(bad_input)
-#     assert 'error' in res, f"Expected error for input {bad_input!r}, got {res}"

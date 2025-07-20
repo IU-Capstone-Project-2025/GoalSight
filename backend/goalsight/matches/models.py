@@ -11,7 +11,6 @@ class Match(models.Model):
     date = models.DateTimeField()
     home = models.FloatField(null=True, blank=True)
     away = models.FloatField(null=True, blank=True)
-    draw = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.home_team} vs {self.away_team} ({self.date})"

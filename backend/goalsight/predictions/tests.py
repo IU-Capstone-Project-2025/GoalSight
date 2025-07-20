@@ -15,19 +15,17 @@ class PredictionSerializerTest(TestCase):
         Test serializer with valid prediction data.
         """
         data = {
-            "prediction": "home_win",
-            "confidence": 0.85,
-            "probabilities": {
-                "home_win": 0.85,
-                "away_win": 0.10,
-                "draw": 0.05
-            },
-            "model_type": "logistic_regression",
-            "model_accuracy": 0.92
+            "home_win": 0.85,
+            "away_win": 0.10,
+            "logo_url_64_home": "http://example.com/logo_home.png",
+            "logo_url_64_away": "http://example.com/logo_away.png"
         }
         serializer = MatchPredictionSerializer(data=data)
-        self.assertTrue(serializer.is_valid())
-        self.assertEqual(serializer.validated_data["prediction"], "home_win")
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        self.assertEqual(serializer.validated_data["home_win"], 0.85)
+        self.assertEqual(serializer.validated_data["away_win"], 0.10)
+        self.assertEqual(serializer.validated_data["logo_url_64_home"], "http://example.com/logo_home.png")
+        self.assertEqual(serializer.validated_data["logo_url_64_away"], "http://example.com/logo_away.png")
 
 class PredictMatchAPITest(APITestCase):
     """
@@ -36,43 +34,51 @@ class PredictMatchAPITest(APITestCase):
     def setUp(self):
         self.team_a = Team.objects.create(
             name="Team A",
-            country="Country A",
-            coach="Coach A",
-            market_value=1.0,
-            avg_age=25.0,
-            last_5_matches_wdl=["W","D","L","W","W"],
-            xG=1.2,
-            ball_possession=55.0,
-            shots_on_target=5,
-            big_chances_created=3,
-            buildUpPlaySpeed=50,
-            buildUpPlayPassing=60,
-            chanceCreationPassing=70,
-            chanceCreationCrossing=40,
-            chanceCreationShooting=65,
-            defencePressure=55,
-            defenceAggression=60,
-            defenceTeamWidth=45
+            logo_url_32="http://example.com/logo32a.png",
+            logo_url_64="http://example.com/logo64a.png",
+            country="Testland",
+            market_value=123.45,
+            avg_age=27.5,
+            api_id=1,
+            team_strength=90.0,
+            league_strength=85.0,
+            glicko2_rating=1700.0,
+            rd=80.0,
+            volatility=0.06,
+            elo_rating=1750.0,
+            wins_last_5=3,
+            draws_last_5=1,
+            losses_last_5=1,
+            goal_avg_last_5=1.8,
+            avg_shots_on_target_last_5=5.0,
+            avg_xG_last_5=1.5,
+            avg_xGA_last_5=1.2,
+            days_since_last_game=5,
+            matches_14_days=3,
         )
         self.team_b = Team.objects.create(
             name="Team B",
-            country="Country B",
-            coach="Coach B",
-            market_value=1.1,
+            logo_url_32="http://example.com/logo32b.png",
+            logo_url_64="http://example.com/logo64b.png",
+            country="Testland",
+            market_value=120.0,
             avg_age=26.0,
-            last_5_matches_wdl=["L","L","W","D","W"],
-            xG=1.0,
-            ball_possession=50.0,
-            shots_on_target=4,
-            big_chances_created=2,
-            buildUpPlaySpeed=48,
-            buildUpPlayPassing=58,
-            chanceCreationPassing=67,
-            chanceCreationCrossing=42,
-            chanceCreationShooting=60,
-            defencePressure=53,
-            defenceAggression=62,
-            defenceTeamWidth=47
+            api_id=2,
+            team_strength=80.0,
+            league_strength=75.0,
+            glicko2_rating=1600.0,
+            rd=70.0,
+            volatility=0.05,
+            elo_rating=1650.0,
+            wins_last_5=2,
+            draws_last_5=2,
+            losses_last_5=1,
+            goal_avg_last_5=1.2,
+            avg_shots_on_target_last_5=4.0,
+            avg_xG_last_5=1.1,
+            avg_xGA_last_5=1.3,
+            days_since_last_game=7,
+            matches_14_days=2,
         )
         self.match = Match.objects.create(
             home_team=self.team_a,
@@ -80,7 +86,6 @@ class PredictMatchAPITest(APITestCase):
             date="2025-07-01",
             home=1.5,
             away=2.5,
-            draw=3.0
         )
         self.url = reverse('predict-match')  
 
@@ -89,7 +94,12 @@ class PredictMatchAPITest(APITestCase):
         """
         Test successful prediction API response.
         """
-        mock_predict.return_value = {'win_prob': 0.7, 'draw_prob': 0.2, 'lose_prob': 0.1}
+        mock_predict.return_value = {
+            "home_win": 0.7,
+            "away_win": 0.2,
+            "logo_url_64_home": "http://example.com/logo_home.png",
+            "logo_url_64_away": "http://example.com/logo_away.png"
+        }
 
         data = {
             "home_team": "Team A",

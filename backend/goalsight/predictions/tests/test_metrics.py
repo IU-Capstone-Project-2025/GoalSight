@@ -22,7 +22,7 @@ def test_cv_accuracy_threshold(metrics):
     )
 
 def test_f1_macro_threshold(metrics):
-    macro = metrics.get('macro avg') or metrics.get('macro_avg')  # в зависимости от формата
+    macro = metrics.get('macro avg') or metrics.get('macro_avg') 
     assert isinstance(macro, dict), "key 'macro avg' must be a float or int"
     f1 = macro.get('f1-score') or macro.get('f1_score')
     assert isinstance(f1, (float, int)), "F1-score in 'macro avg' must be a float or int"

@@ -27,6 +27,20 @@ const MatchForecastPanel: React.FC<MatchForecastPanelProps> = ({
     // State for showing/hiding the ML info modal
     const [showModal, setShowModal] = useState(false);
 
+    // Calculate color logic for chances
+    const diff = Math.abs(team1Chance - team2Chance);
+    let team1Color = 'text-yellow-400';
+    let team2Color = 'text-yellow-400';
+    if (diff >= 20) {
+        if (team1Chance > team2Chance) {
+            team1Color = 'text-green-400';
+            team2Color = 'text-red-400';
+        } else {
+            team1Color = 'text-red-400';
+            team2Color = 'text-green-400';
+        }
+    }
+
     return (
         <div className="bg-gray-800 text-white rounded-lg p-3 md:p-6 shadow-lg flex flex-1 flex-col items-center justify-center border border-red-600 w-full h-full">
             <div className="flex items-center mb-2 md:mb-4">
@@ -102,7 +116,7 @@ const MatchForecastPanel: React.FC<MatchForecastPanelProps> = ({
                         <img src={logoUrl1} alt={team1} className="w-12 h-12 object-contain mr-2" />
                         <div className="flex flex-col items-center">
                             <div className="text-lg md:text-2xl font-semibold text-left" data-cy="team1-name">{team1}</div>
-                            <div className="text-base md:text-xl font-bold text-green-400 text-center w-full mt-1" data-cy="team1-chance">{team1Chance}%</div>
+                            <div className={`text-base md:text-xl font-bold ${team1Color} text-center w-full mt-1`} data-cy="team1-chance">{team1Chance}%</div>
                         </div>
                     </div>
                 </div>
@@ -111,7 +125,7 @@ const MatchForecastPanel: React.FC<MatchForecastPanelProps> = ({
                     <div className="flex items-center justify-center w-full mb-1 md:mb-2">
                         <div className="flex flex-col items-center">
                             <div className="text-lg md:text-2xl font-semibold text-right" data-cy="team2-name">{team2}</div>
-                            <div className="text-base md:text-xl font-bold text-green-400 text-center w-full mt-1" data-cy="team2-chance">{team2Chance}%</div>
+                            <div className={`text-base md:text-xl font-bold ${team2Color} text-center w-full mt-1`} data-cy="team2-chance">{team2Chance}%</div>
                         </div>
                         <img src={logoUrl2} alt={team2} className="w-12 h-12 object-contain ml-2" />
                     </div>

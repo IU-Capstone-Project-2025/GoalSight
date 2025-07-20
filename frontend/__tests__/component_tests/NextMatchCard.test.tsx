@@ -211,7 +211,7 @@ describe('NextMatchCard Component', () => {
         expect(percent1.className).toMatch(/text-green-400/);
         expect(percent1.className).toMatch(/font-bold/);
         expect(percent2.className).toMatch(/text-lg/);
-        expect(percent2.className).toMatch(/text-green-400/);
+        expect(percent2.className).toMatch(/text-red-400/);
         expect(percent2.className).toMatch(/font-bold/);
     });
 }); 

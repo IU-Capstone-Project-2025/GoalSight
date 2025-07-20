@@ -35,18 +35,29 @@ from drf_yasg import openapi
 @api_view(['GET'])
 def matches_list(request):
     """
-    Returns a list of upcoming matches, starting from the specified date (or current date if not provided).
+    Returns up to 5 upcoming matches from the specified date.
+    If there are fewer than 5, returns previous matches instead.
     Query parameter: date (ISO format)
     """
-    #date_str = request.query_params.get('date', "2025-06-09T18:00:00Z")
-    date_str = "2025-06-30T10:00:00Z"
+    date_str = request.query_params.get('date', None)
+
     if date_str:
         try:
             date = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
         except ValueError:
-            return Response({'error': 'Invalid date format. Use YYYY-MM-DD.'}, status=400)
+            return Response({'error': 'Invalid date format. Use ISO format.'}, status=400)
     else:
         date = timezone.now()
-    matches = Match.objects.filter(date__gte=date).order_by('date')[:5]
-    data = MatchSerializer(matches, many=True).data
+
+    upcoming_matches = Match.objects.filter(date__gte=date).order_by('date')[:5]
+
+    if upcoming_matches.count() < 5:
+        needed = 5 - upcoming_matches.count()
+        previous_matches = Match.objects.filter(date__lt=date).order_by('-date')[:needed]
+
+        combined_matches = list(upcoming_matches) + list(reversed(previous_matches))
+    else:
+        combined_matches = upcoming_matches
+
+    data = MatchSerializer(combined_matches, many=True).data
     return Response(data)

@@ -9,7 +9,7 @@ export type TeamStats = {
     elo_rating: number;
     wins_last_5: number;
     losses_last_5: number;
-    drawns_last_5: number;
+    draws_last_5: number;
     goal_avg_last_5: number;
     avg_xG_last_5: number;
     avg_xGA_last_5: number;
