@@ -3,11 +3,6 @@ from django.core.management.base import BaseCommand
 from teams.models import Team
 import os
 
-# BASE_URL = "https://github.com/Leo4815162342/football-logos/tree/main/logos"
-
-# def sanitize_name(name):
-#     return name.replace(" ", "-").replace(".", "").replace("/", "-")
-
 class Command(BaseCommand):
     help = 'Import teams from a new-format CSV file'
 

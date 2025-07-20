@@ -80,7 +80,7 @@ class MatchesViewTest(APITestCase):
         )
 
     def test_matches_list_view(self):
-        url = reverse("matches-list")  # Имя должно быть определено в urls.py
+        url = reverse("matches-list")
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

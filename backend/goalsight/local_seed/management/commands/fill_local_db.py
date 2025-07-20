@@ -10,7 +10,6 @@ class Command(BaseCommand):
     help = "Заполняет базу тестовыми командами, матчами и турниром FIFA Club World Cup 2025"
 
     def handle(self, *args, **options):
-        # Чистим старые данные
         Match.objects.all().delete()
         Tournament.objects.all().delete()
         Team.objects.all().delete()

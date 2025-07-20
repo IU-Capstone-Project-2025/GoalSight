@@ -134,7 +134,7 @@ def predict_match(request):
                     features['home_win_odd'] = 1
                     features['away_win_odd'] = 1
                 else:
-                    match_data = data[0]  # берем первый матч
+                    match_data = data[0]
                     odds = match_data.get('odds', [])
 
                     features['date'] = datetime.now(timezone.utc)
@@ -152,7 +152,7 @@ def predict_match(request):
                     features['home_win_odd'] = 1
                     features['away_win_odd'] = 1
             else:
-                match_data = data[0]  # берем первый матч
+                match_data = data[0]
                 odds = match_data.get('odds', [])
 
                 features['date'] = datetime.now(timezone.utc)
