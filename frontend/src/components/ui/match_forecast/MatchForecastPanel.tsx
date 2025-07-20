@@ -136,4 +136,4 @@ const MatchForecastPanel: React.FC<MatchForecastPanelProps> = ({
     );
 };
 
-export default MatchForecastPanel;
+export default MatchForecastPanel;  
