@@ -109,8 +109,6 @@ class PredictionService:
             # Generate prediction using the trained model
             prediction = self.model.predict(features_processed)[0]
             probabilities = self.model.predict_proba(features_processed)[0]
-            # home_win_prob_index = np.where(self.model.classes_ == 1)[0][0]
-            # away_win_prob_index = np.where(self.model.classes_ == 0)[0][0]
             prediction_label = self.reverse_mapping[prediction]
             return {
                 'home_win': float(probabilities[1]),

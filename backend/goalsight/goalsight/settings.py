@@ -8,7 +8,7 @@ load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 DJANGO_ENV = os.getenv("DJANGO_ENV", "development")
-DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
+
 
 allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = allowed_hosts_env.split(",") if allowed_hosts_env else ['*']
@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     "channels",
+    "local_seed",
 ]
 
 MIDDLEWARE = [

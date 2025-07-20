@@ -49,13 +49,11 @@ class Command(BaseCommand):
             odds_data = item.get("odds", [])
             home_odds = away_odds = draw_odds = None
 
-            # Parse odds if available
-            if odds_data and odds_data[0].get("odds"):
-                for odd in odds_data[0]["odds"]:
-                    if odd["name"] == "Home":
-                        home_odds = odd["value"]
-                    elif odd["name"] == "Away":
-                        away_odds = odd["value"]
+            for odd in odds_data[0]["odds"]:
+                if odd["name"] == "Home":
+                    home_odds = odd["value"]
+                elif odd["name"] == "Away":
+                    away_odds = odd["value"]
 
             match, created = Match.objects.get_or_create(
                 home_team=home_team,
