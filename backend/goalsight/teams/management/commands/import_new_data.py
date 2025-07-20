@@ -21,7 +21,6 @@ class Command(BaseCommand):
         for idx, team in enumerate(teams, start=1):
             team_id = team.api_id
 
-            # === Запрос матчей за последние 14 дней ===
             params_14d = {
                 "team": team_id,
                 "ended": "true",
@@ -41,7 +40,6 @@ class Command(BaseCommand):
                 self.stderr.write(self.style.ERROR(f"Ошибка при получении матчей за 14 дней для {team.name}: {e}"))
                 matches_count = 0
 
-            # === Запрос последнего матча без ограничения по дате ===
             params_last = {
                 "team": team_id,
                 "ended": "true",
@@ -50,7 +48,7 @@ class Command(BaseCommand):
                 "timezone": 3
             }
 
-            days_since_last_game = -1  # По умолчанию
+            days_since_last_game = -1
             try:
                 response_last = requests.get(API_URL, headers=headers, params=params_last)
                 response_last.raise_for_status()
