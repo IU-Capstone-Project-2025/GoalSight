@@ -74,15 +74,15 @@ const MatchForecastPanel: React.FC<MatchForecastPanelProps> = ({
                             ×
                         </button>
                         <div className="prose prose-invert prose-xs md:prose-base max-w-none">
-                            <h2 className="text-base md:text-xl font-bold text-red-400 mb-2">How the ML Match Outcome Prediction Works</h2>
                             <p>Our <b>Logistic Regression</b> model analyzes a rich set of match-related data to estimate the probability of a home-team victory. Here’s what you need to know:</p>
+
                             <h3 className="text-xs md:text-lg font-semibold mt-3 mb-1">Key Features and Inputs</h3>
                             <ul className="list-disc ml-5">
-                                <li>Tactical team attributes (8 per side) – build-up speed, passing, chance-creation passing, crossing, shooting, defensive pressure, aggression, team width</li>
-                                <li>Pre-match betting odds from Bet365 (home/draw/away)</li>
+                                <li>Tactical team attributes</li>
                                 <li>Season and stage information</li>
                             </ul>
-                            <p className="mt-1">Altogether, the model uses <b>20 features</b> to capture both in-game style and external signals (betting markets).</p>
+                            <p className="mt-1">Altogether, the model uses <b>38 features</b> to capture both in-game style and external signals (betting markets).</p>
+
                             <h3 className="text-xs md:text-lg font-semibold mt-3 mb-1">Prediction Process</h3>
                             <ol className="list-decimal ml-5">
                                 <li><b>Data Collection</b><br />
@@ -91,7 +91,7 @@ const MatchForecastPanel: React.FC<MatchForecastPanelProps> = ({
                                 </li>
                                 <li><b>Feature Scaling & PCA</b><br />
                                     – Features are standardized (zero mean, unit variance).<br />
-                                    – We apply Principal Component Analysis to reduce dimensionality to 10 orthogonal components, retaining 78% of variance.
+                                    – We apply Principal Component Analysis to reduce dimensionality to 32 orthogonal components, retaining 100% of variance.
                                 </li>
                                 <li><b>Logistic Regression Scoring</b><br />
                                     1) The model computes a weighted sum of features<br />
@@ -101,9 +101,10 @@ const MatchForecastPanel: React.FC<MatchForecastPanelProps> = ({
                                     – A single probability score between 0 and 1. Values above 0.5 indicate a predicted home-team win; below 0.5 favor an away-team win.
                                 </li>
                             </ol>
+
                             <h3 className="text-xs md:text-lg font-semibold mt-3 mb-1">Performance Highlights</h3>
                             <ul className="list-disc ml-5">
-                                <li>Test accuracy: <b>71%</b></li>
+                                <li>Test accuracy: <b>72%</b></li>
                             </ul>
                         </div>
                     </div>

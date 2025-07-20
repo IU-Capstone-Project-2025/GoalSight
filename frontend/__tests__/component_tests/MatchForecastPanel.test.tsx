@@ -69,11 +69,40 @@ describe('MatchForecastPanel Component', () => {
         render(<MatchForecastPanel {...defaultProps} />);
         const questionBtn = screen.getByRole('button', { name: /show prediction info/i });
         fireEvent.click(questionBtn);
-        expect(screen.getByText(/How the ML Match Outcome Prediction Works/i)).toBeInTheDocument();
+        expect(
+            screen.getByText((content, node) => {
+                const hasText = (text: string) =>
+                    text.includes('model analyzes a rich set of match-related data to estimate the probability of a home-team victory. Here’s what you need to know:');
+                const isBold = node && node.nodeName === 'B' && node.textContent?.includes('Logistic Regression');
+                if (!node) return false;
+                if (node.nodeName === 'P') {
+                    return Array.from(node.childNodes).some(
+                        (child) =>
+                            child.nodeName === 'B' &&
+                            child.textContent?.includes('Logistic Regression')
+                    ) && hasText(node.textContent || '');
+                }
+                return false;
+            })
+        ).toBeInTheDocument();
         // Close modal
         const closeBtn = screen.getByRole('button', { name: /close modal/i });
         fireEvent.click(closeBtn);
-        expect(screen.queryByText(/How the ML Match Outcome Prediction Works/i)).not.toBeInTheDocument();
+        expect(
+            screen.queryByText((content, node) => {
+                const hasText = (text: string) =>
+                    text.includes('model analyzes a rich set of match-related data to estimate the probability of a home-team victory. Here’s what you need to know:');
+                if (!node) return false;
+                if (node.nodeName === 'P') {
+                    return Array.from(node.childNodes).some(
+                        (child) =>
+                            child.nodeName === 'B' &&
+                            child.textContent?.includes('Logistic Regression')
+                    ) && hasText(node.textContent || '');
+                }
+                return false;
+            })
+        ).not.toBeInTheDocument();
     });
 
     it('modal contains all key ML info sections', () => {
@@ -84,7 +113,7 @@ describe('MatchForecastPanel Component', () => {
         expect(screen.getByText(/Prediction Process/i)).toBeInTheDocument();
         expect(screen.getByText(/Performance Highlights/i)).toBeInTheDocument();
         expect(screen.getByText(/Test accuracy:/i)).toBeInTheDocument();
-        expect(screen.getByText(/71%/)).toBeInTheDocument();
+        expect(screen.getByText(/72%/)).toBeInTheDocument();
     });
 
     it('team names and chances have correct classes', () => {
