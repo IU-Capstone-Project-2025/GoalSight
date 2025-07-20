@@ -6,22 +6,26 @@ on:
       - main
       
 jobs:
-    deploy:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Deploy to production server
-          uses: appleboy/ssh-action@v1.0.3
-          with:
-            host: ${{ secrets.DEPLOY_HOST }}
-            username: ${{ secrets.DEPLOY_USER }}
-            key: ${{ secrets.DEPLOY_SSH_KEY }}
-            script: |
-              cd GoalSight
-              git fetch origin
-              git checkout main
-              git pull
-              cd docker/production
-              docker compose down
-              docker compose pull
-              docker compose up --build -d
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to production server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            cd GoalSight
+            git fetch origin
+            git checkout main
+            git pull
+            cd docker/production
+            docker compose down
+
+            echo "Cleaning up unused Docker volumes..."
+            docker volume prune -f
+
+            docker compose pull
+            docker compose up --build -d
   

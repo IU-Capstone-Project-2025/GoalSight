@@ -323,4 +323,3 @@ test.py
 /notebooks/Data/EuroSoccer.sqlite
 /notebooks/Data/WorldSoccer.sqlite
 /notebooks/embeddings_data.pkl
-/notebooks/final_data.csv
