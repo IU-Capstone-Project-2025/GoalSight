@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     "channels",
+    "local_seed",
 ]
 
 MIDDLEWARE = [
