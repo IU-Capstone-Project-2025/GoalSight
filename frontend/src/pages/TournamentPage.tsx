@@ -11,19 +11,20 @@ import { useMatchPrediction } from '../components/ui/match_forecast/useMatchFore
 import InstructionPanel from '../components/ui/match_forecast/InstructionPanel';
 
 function TournamentPage() {
-  // Fetch the list of teams and loading state
-  const { teams, loadingTeams } = useTeams();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    const title = searchParams.get('title');
-    const year = searchParams.get('year');
+  const title = searchParams.get('title') ?? 'FIFA Club World Cup';
+  const year = Number(searchParams.get('year') ?? 2025);
 
-    if (!title || !year) {
-      setSearchParams({ title: 'FIFA Club World Cup', year: '2025' });
+  useEffect(() => {
+    if (!searchParams.get('title') || !searchParams.get('year')) {
+      setSearchParams({ title, year: String(year) });
     }
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams, title, year]);
+
+  // Fetch the list of teams and loading state
+  const { teams, loadingTeams } = useTeams(title, year);
 
   // Manage selected and expanded teams in state
   const [selectedTeams, setSelectedTeams] = useState<number[]>([]);
