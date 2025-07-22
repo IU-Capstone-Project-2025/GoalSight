@@ -7,10 +7,10 @@ function getTournamentParamsFromUrl() {
     const title = params.get('title') ?? 'FIFA Club World Cup';
     const year = Number(params.get('year') ?? 2025);
     return { title, year };
-  }
+}
 
 // Returns { teams, loadingTeams } for the current tournament and year
-export function useTeams() {
+export function useTeams(title: string, year: number) {
     const [teams, setTeams] = useState<TeamListItem[]>([]);
     const [loadingTeams, setLoadingTeams] = useState(true);
 
@@ -46,7 +46,7 @@ export function useTeams() {
         return () => {
             isMounted = false;
         };
-    }, []);
+    }, [title, year]);
 
     return { teams, loadingTeams };
 }
