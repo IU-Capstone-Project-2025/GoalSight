@@ -2,8 +2,12 @@ import { useState, useEffect } from 'react';
 import { fetchTeams } from './teamApi';
 import { TeamListItem, TeamsApiResponse } from './Team.types';
 
-const TOURNAMENT_TITLE = 'FIFA Club World Cup';
-const YEAR = 2025;
+function getTournamentParamsFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const title = params.get('title') ?? 'FIFA Club World Cup';
+    const year = Number(params.get('year') ?? 2025);
+    return { title, year };
+  }
 
 // Returns { teams, loadingTeams } for the current tournament and year
 export function useTeams() {
@@ -12,10 +16,12 @@ export function useTeams() {
 
     useEffect(() => {
         let isMounted = true;
+        const { title, year } = getTournamentParamsFromUrl();
+
         const loadTeams = async () => {
             try {
                 // Fetch teams from API
-                const teamResponses: TeamsApiResponse[] = await fetchTeams(TOURNAMENT_TITLE, YEAR);
+                const teamResponses: TeamsApiResponse[] = await fetchTeams(title, year);
                 if (isMounted) {
                     // Map API response to TeamListItem format
                     setTeams(teamResponses.map((team, idx) => ({
