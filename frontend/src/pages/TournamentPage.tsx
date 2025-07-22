@@ -1,5 +1,5 @@
 // React and hook imports
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // UI components
 import NavigationBar from '../components/navigation/NavigationBar';
@@ -8,10 +8,21 @@ import MatchForecastPanel from '../components/ui/match_forecast/MatchForecastPan
 import { useTeams } from '../components/ui/team_item/useTeams';
 import { useMatchPrediction } from '../components/ui/match_forecast/useMatchForecast';
 import InstructionPanel from '../components/ui/match_forecast/InstructionPanel';
+import { useSearchParams } from 'react-router-dom';
 
 function TournamentPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const tournament_title = searchParams.get('tournament_title') ?? 'FIFA Club World Cup';
+  const year = Number(searchParams.get('year') ?? 2025);
+
+  useEffect(() => {
+    if (!searchParams.get('tournament_title') || !searchParams.get('year')) {
+      setSearchParams({ tournament_title, year: String(year) });
+    }
+  }, [searchParams, setSearchParams, tournament_title, year]);
   // Fetch the list of teams and loading state
-  const { teams, loadingTeams } = useTeams();
+  const { teams, loadingTeams } = useTeams(tournament_title, year);
 
   // Manage selected and expanded teams in state
   const [selectedTeams, setSelectedTeams] = useState<number[]>([]);
