@@ -1,6 +1,5 @@
 // React and hook imports
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
 
 // UI components
 import NavigationBar from '../components/navigation/NavigationBar';
@@ -11,20 +10,8 @@ import { useMatchPrediction } from '../components/ui/match_forecast/useMatchFore
 import InstructionPanel from '../components/ui/match_forecast/InstructionPanel';
 
 function TournamentPage() {
-
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const title = searchParams.get('title') ?? 'FIFA Club World Cup';
-  const year = Number(searchParams.get('year') ?? 2025);
-
-  useEffect(() => {
-    if (!searchParams.get('title') || !searchParams.get('year')) {
-      setSearchParams({ title, year: String(year) });
-    }
-  }, [searchParams, setSearchParams, title, year]);
-
   // Fetch the list of teams and loading state
-  const { teams, loadingTeams } = useTeams(title, year);
+  const { teams, loadingTeams } = useTeams();
 
   // Manage selected and expanded teams in state
   const [selectedTeams, setSelectedTeams] = useState<number[]>([]);
@@ -98,7 +85,6 @@ function TournamentPage() {
                 <div className="h-4 md:h-6 bg-gray-700 rounded w-1/2 mx-auto" />
               </div>
             )}
-
             {/* Show prediction panel when data is available */}
             {prediction && selectedTeams.length === 2 && (
               <div className="w-full" data-cy="prediction-panel">
